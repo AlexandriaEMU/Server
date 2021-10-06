@@ -1,0 +1,70 @@
+# Fichero de configuracion de AlexandriaEMU - SERVER
+
+# IP de interconexion con el multi
+REALM_IP = 127.0.0.1
+
+# Configuracion a la base de datos del multi
+REALM_DB_HOST = 127.0.0.1
+REALM_DB_USER = root
+REALM_DB_PASS = 
+REALM_DB_NAME = alexandria_multi
+
+# Logs/Debug
+DEBUG = true
+LOG = true
+
+# IP del server
+USE_IP = true
+HOST_IP = 127.0.0.1
+LOCALIP_LOOPBACK = true
+
+# Llave de identificacion
+AUTH_KEY = server1
+
+# Puerto del server
+GAME_PORT = 5400
+COM_PORT = 435
+
+# Configuracion general
+MOTD =Bienvenue sur le serveur <i>Semi-Ankalike</i> d'<b>Axeryon</b>
+MOTD_COLOR = 173ff
+PLAYER_LIMIT = 100
+LOAD_ACTION_DELAY = 10
+SAVE_TIME = 30
+
+# Configuracion de la base de datos del server
+DB_HOST = 127.0.0.1
+DB_USER = root
+DB_PASS =
+DB_NAME = alexandria_server
+
+# Rates
+XP_PVP = 1
+XP_METIER = 5
+XP_PVM = 3
+DROP = 3
+KAMAS = 3
+HONOR = 3
+
+# Configuracion del juego
+ALLOW_MULTI_ACCOUNT = true
+MAX_PERSO_PAR_COMPTE = 8
+USE_MOBS = true
+USE_CUSTOM_START = false
+START_MAP = 10298
+START_CELL = 314
+START_LEVEL = 1
+START_KAMAS = 0
+ZAAP = true
+LVL_PVP = 10
+ALLOW_MULE_PVP = false
+AURA_SYSTEM = true
+MAX_IDLE_TIME = 30
+NOT_IN_HDV = 4820
+
+# Abonado
+USE_SUBSCRIBE = false
+
+# Arenas
+ARENA_MAP = 10134,10132,10131,10133,10137,10135,10136,10138
+ARENA_TIMER = 10
