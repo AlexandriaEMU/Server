@@ -35,11 +35,11 @@ public class SQLManager {
 	
 	public synchronized static ResultSet executeQuery(String query,String DBNAME) throws SQLException
 	{
-		if(!Ancestra.isInit)
+		if(!Main.isInit)
 			return null;
 		
 		Connection DB;
-		if(DBNAME.equals(Ancestra.DB_NAME))
+		if(DBNAME.equals(Main.DB_NAME))
 			DB = gameCon;
 		else
 			DB = realmCon;
@@ -93,10 +93,10 @@ public class SQLManager {
 	{
 		try
 		{
-			gameCon = DriverManager.getConnection("jdbc:mysql://"+Ancestra.DB_HOST+"/"+Ancestra.DB_NAME,Ancestra.DB_USER,Ancestra.DB_PASS);
+			gameCon = DriverManager.getConnection("jdbc:mysql://"+ Main.DB_HOST+"/"+ Main.DB_NAME, Main.DB_USER, Main.DB_PASS);
 			gameCon.setAutoCommit(false);
 			
-			realmCon = DriverManager.getConnection("jdbc:mysql://"+Ancestra.REALM_DB_HOST+"/"+Ancestra.REALM_DB_NAME,Ancestra.REALM_DB_USER,Ancestra.REALM_DB_PASS);
+			realmCon = DriverManager.getConnection("jdbc:mysql://"+ Main.REALM_DB_HOST+"/"+ Main.REALM_DB_NAME, Main.REALM_DB_USER, Main.REALM_DB_PASS);
 			realmCon.setAutoCommit(false);
 			
 			if(!gameCon.isValid(1000) || !realmCon.isValid(1000))
@@ -209,7 +209,7 @@ public class SQLManager {
 	public static void LOAD_ACCOUNTS_DATA()
 	{
 		try{
-			ResultSet RS = executeQuery("SELECT * FROM account_data", Ancestra.DB_NAME);
+			ResultSet RS = executeQuery("SELECT * FROM account_data", Main.DB_NAME);
 			while (RS.next())
 			{
 				World.AddFriendList(RS.getInt("guid"), new FriendList(RS.getString("friends")));
@@ -229,7 +229,7 @@ public class SQLManager {
 	{
 		try
 		{
-			ResultSet RS = SQLManager.executeQuery("SELECT * from crafts;",Ancestra.DB_NAME);
+			ResultSet RS = SQLManager.executeQuery("SELECT * from crafts;", Main.DB_NAME);
 			while(RS.next())
 			{
 				ArrayList<Couple<Integer,Integer>> m = new ArrayList<>();
@@ -264,7 +264,7 @@ public class SQLManager {
 	{
 		try
 		{
-			ResultSet RS = SQLManager.executeQuery("SELECT * from guilds;",Ancestra.DB_NAME);
+			ResultSet RS = SQLManager.executeQuery("SELECT * from guilds;", Main.DB_NAME);
 			while(RS.next())
 			{
 				World.addGuild
@@ -293,7 +293,7 @@ public class SQLManager {
 	{
 		try
 		{
-			ResultSet RS = SQLManager.executeQuery("SELECT * from guild_members;",Ancestra.DB_NAME);
+			ResultSet RS = SQLManager.executeQuery("SELECT * from guild_members;", Main.DB_NAME);
 			while(RS.next())
 			{
 				Guild G = World.getGuild(RS.getInt("guild"));
@@ -311,7 +311,7 @@ public class SQLManager {
 	{
 		try
 		{
-			ResultSet RS = SQLManager.executeQuery("SELECT * from mounts_data;",Ancestra.DB_NAME);
+			ResultSet RS = SQLManager.executeQuery("SELECT * from mounts_data;", Main.DB_NAME);
 			while(RS.next())
 			{
 				World.addDragodinde
@@ -348,7 +348,7 @@ public class SQLManager {
 		int i = 0;
 		try
 		{
-			ResultSet RS = SQLManager.executeQuery("SELECT * from drops;",Ancestra.DB_NAME);
+			ResultSet RS = SQLManager.executeQuery("SELECT * from drops;", Main.DB_NAME);
 			while(RS.next())
 			{
 				Monstre MT = World.getMonstre(RS.getInt("mob"));
@@ -372,7 +372,7 @@ public class SQLManager {
 	{
 		try
 		{
-			ResultSet RS = SQLManager.executeQuery("SELECT * from itemsets;",Ancestra.DB_NAME);
+			ResultSet RS = SQLManager.executeQuery("SELECT * from itemsets;", Main.DB_NAME);
 			while(RS.next())
 			{
 				World.addItemSet(
@@ -395,7 +395,7 @@ public class SQLManager {
 	{
 		try
 		{
-			ResultSet RS = SQLManager.executeQuery("SELECT * from interactive_objects_data;",Ancestra.DB_NAME);
+			ResultSet RS = SQLManager.executeQuery("SELECT * from interactive_objects_data;", Main.DB_NAME);
 			while(RS.next())
 			{
 				World.addIOTemplate(
@@ -421,7 +421,7 @@ public class SQLManager {
 		int nbr = 0;
 		try
 		{
-			ResultSet RS = SQLManager.executeQuery("SELECT * from mountpark_data;",Ancestra.DB_NAME);
+			ResultSet RS = SQLManager.executeQuery("SELECT * from mountpark_data;", Main.DB_NAME);
 			while(RS.next())
 			{
 				Carte map = World.getCarte(RS.getShort("mapid"));
@@ -451,7 +451,7 @@ public class SQLManager {
 	{
 		try
 		{
-			ResultSet RS = SQLManager.executeQuery("SELECT * from jobs_data;",Ancestra.DB_NAME);
+			ResultSet RS = SQLManager.executeQuery("SELECT * from jobs_data;", Main.DB_NAME);
 			while(RS.next())
 			{
 				World.addJob(
@@ -474,7 +474,7 @@ public class SQLManager {
 	{
 		try
 		{
-			ResultSet RS = SQLManager.executeQuery("SELECT * from area_data;",Ancestra.DB_NAME);
+			ResultSet RS = SQLManager.executeQuery("SELECT * from area_data;", Main.DB_NAME);
 			while(RS.next())
 			{
 				Area A = new Area
@@ -498,7 +498,7 @@ public class SQLManager {
 	{
 		try
 		{
-			ResultSet RS = SQLManager.executeQuery("SELECT * from subarea_data;",Ancestra.DB_NAME);
+			ResultSet RS = SQLManager.executeQuery("SELECT * from subarea_data;", Main.DB_NAME);
 			while(RS.next())
 			{
 				SubArea SA = new SubArea
@@ -526,7 +526,7 @@ public class SQLManager {
 		int nbr = 0;
 		try
 		{
-			ResultSet RS = SQLManager.executeQuery("SELECT * from npcs;",Ancestra.DB_NAME);
+			ResultSet RS = SQLManager.executeQuery("SELECT * from npcs;", Main.DB_NAME);
 			while(RS.next())
 			{
 				Carte map = World.getCarte(RS.getShort("mapid"));
@@ -549,7 +549,7 @@ public class SQLManager {
 		int nbr = 0;
 		try
 		{
-			ResultSet RS = SQLManager.executeQuery("SELECT * from percepteurs;",Ancestra.DB_NAME);
+			ResultSet RS = SQLManager.executeQuery("SELECT * from percepteurs;", Main.DB_NAME);
 			while(RS.next())
 			{
 				Carte map = World.getCarte(RS.getShort("mapid"));
@@ -584,7 +584,7 @@ public class SQLManager {
 		int nbr = 0;
 		try
 		{
-			ResultSet RS = SQLManager.executeQuery("SELECT * from houses;",Ancestra.DB_NAME);
+			ResultSet RS = SQLManager.executeQuery("SELECT * from houses;", Main.DB_NAME);
 			while(RS.next())
 			{
 				Carte map = World.getCarte(RS.getShort("map_id"));
@@ -620,7 +620,7 @@ public class SQLManager {
 	{
 		try
 		{
-			ResultSet RS = executeQuery("SELECT guid FROM personnages ORDER BY guid DESC LIMIT 1;",Ancestra.DB_NAME);
+			ResultSet RS = executeQuery("SELECT guid FROM personnages ORDER BY guid DESC LIMIT 1;", Main.DB_NAME);
 			if(!RS.first())return 1;
 			int guid = RS.getInt("guid");
 			guid++;
@@ -630,7 +630,7 @@ public class SQLManager {
 		{
 			GameServer.addToLog("SQL ERROR: "+e.getMessage());
 			e.printStackTrace();
-			Ancestra.closeServers();
+			Main.closeServers();
 		}
 		return 0;
 	}
@@ -638,7 +638,7 @@ public class SQLManager {
 	{
 		try
 		{
-			ResultSet RS = SQLManager.executeQuery("SELECT * FROM personnages WHERE account = '"+accID+"';", Ancestra.DB_NAME);
+			ResultSet RS = SQLManager.executeQuery("SELECT * FROM personnages WHERE account = '"+accID+"';", Main.DB_NAME);
 			while(RS.next())
 			{
 				TreeMap<Integer,Integer> stats = new TreeMap<>();
@@ -706,14 +706,14 @@ public class SQLManager {
 		{
 			GameServer.addToLog("SQL ERROR: "+e.getMessage());
 			e.printStackTrace();
-			Ancestra.closeServers();
+			Main.closeServers();
 		}
 	}
 	public static void LOAD_PERSO(int persoID)
 	{
 				try
 				{
-					ResultSet RS = SQLManager.executeQuery("SELECT * FROM personnages WHERE guid = '"+persoID+"';", Ancestra.DB_NAME);
+					ResultSet RS = SQLManager.executeQuery("SELECT * FROM personnages WHERE guid = '"+persoID+"';", Main.DB_NAME);
 					int accID;
 					while(RS.next())
 					{
@@ -784,14 +784,14 @@ public class SQLManager {
 				{
 					GameServer.addToLog("SQL ERROR: "+e.getMessage());
 					e.printStackTrace();
-					Ancestra.closeServers();
+					Main.closeServers();
 				}
 	}
 	public static void LOAD_PERSOS()
 	{
 		try
 		{
-			ResultSet RS = SQLManager.executeQuery("SELECT * FROM personnages;", Ancestra.DB_NAME);
+			ResultSet RS = SQLManager.executeQuery("SELECT * FROM personnages;", Main.DB_NAME);
 			while(RS.next())
 			{
 				TreeMap<Integer,Integer> stats = new TreeMap<>();
@@ -853,7 +853,7 @@ public class SQLManager {
 		{
 			GameServer.addToLog("SQL ERROR: "+e.getMessage());
 			e.printStackTrace();
-			Ancestra.closeServers();
+			Main.closeServers();
 		}
 	}
 	public static boolean DELETE_PERSO_IN_BDD(Personnage perso)
@@ -944,7 +944,7 @@ public class SQLManager {
 	{
 		try
 		{
-			ResultSet RS = SQLManager.executeQuery("SELECT * from experience;",Ancestra.DB_NAME);
+			ResultSet RS = SQLManager.executeQuery("SELECT * from experience;", Main.DB_NAME);
 			while(RS.next())World.addExpLevel(RS.getInt("lvl"),new ExpLevel(RS.getLong("perso"),RS.getInt("metier"),RS.getInt("dinde"),RS.getInt("pvp")));
 			closeResultSet(RS);
 		}catch(SQLException e)
@@ -958,7 +958,7 @@ public class SQLManager {
 		try
 		{
 			int nbr = 0;
-			ResultSet RS = SQLManager.executeQuery("SELECT * FROM `scripted_cells`",Ancestra.DB_NAME);
+			ResultSet RS = SQLManager.executeQuery("SELECT * FROM `scripted_cells`", Main.DB_NAME);
 			while(RS.next())
 			{
 				if(World.getCarte(RS.getShort("MapID")) == null) continue;
@@ -990,7 +990,7 @@ public class SQLManager {
 		try
 		{
 			ResultSet RS;
-			RS = SQLManager.executeQuery("SELECT  * from maps LIMIT "+Constants.DEBUG_MAP_LIMIT+";",Ancestra.DB_NAME);
+			RS = SQLManager.executeQuery("SELECT  * from maps LIMIT "+Constants.DEBUG_MAP_LIMIT+";", Main.DB_NAME);
 			while(RS.next())
 			{
 					World.addCarte(
@@ -1010,7 +1010,7 @@ public class SQLManager {
 							));
 			}
 			SQLManager.closeResultSet(RS);
-			RS = SQLManager.executeQuery("SELECT  * from mobgroups_fix;",Ancestra.DB_NAME);
+			RS = SQLManager.executeQuery("SELECT  * from mobgroups_fix;", Main.DB_NAME);
 			while(RS.next())
 			{
 					Carte c = World.getCarte(RS.getShort("mapid"));
@@ -1180,7 +1180,7 @@ public class SQLManager {
 	{
 		try
 		{
-			ResultSet RS = SQLManager.executeQuery("SELECT  * from sorts;",Ancestra.DB_NAME);
+			ResultSet RS = SQLManager.executeQuery("SELECT  * from sorts;", Main.DB_NAME);
 			while(RS.next())
 			{
 				int id = RS.getInt("id");
@@ -1214,7 +1214,7 @@ public class SQLManager {
 	{
 		try
 		{
-			ResultSet RS = SQLManager.executeQuery("SELECT  * from item_template;",Ancestra.DB_NAME);
+			ResultSet RS = SQLManager.executeQuery("SELECT  * from item_template;", Main.DB_NAME);
 			while(RS.next())
 			{
 					World.addObjTemplate
@@ -1289,7 +1289,7 @@ public class SQLManager {
 	public static void LOAD_MOB_TEMPLATE() {
 		try
 		{
-			ResultSet RS = SQLManager.executeQuery("SELECT * FROM monsters;",Ancestra.DB_NAME);
+			ResultSet RS = SQLManager.executeQuery("SELECT * FROM monsters;", Main.DB_NAME);
 			while(RS.next())
 			{
 				int id = RS.getInt("id");
@@ -1349,7 +1349,7 @@ public class SQLManager {
 	{
 		try
 		{
-			ResultSet RS = SQLManager.executeQuery("SELECT * FROM npc_template;",Ancestra.DB_NAME);
+			ResultSet RS = SQLManager.executeQuery("SELECT * FROM npc_template;", Main.DB_NAME);
 			while(RS.next())
 			{
 				int id = RS.getInt("id");
@@ -1432,7 +1432,7 @@ public class SQLManager {
 	{
 		try
 		{
-			ResultSet RS = SQLManager.executeQuery("SELECT * FROM npc_questions;",Ancestra.DB_NAME);
+			ResultSet RS = SQLManager.executeQuery("SELECT * FROM npc_questions;", Main.DB_NAME);
 			while(RS.next())
 			{
 				World.addNPCQuestion
@@ -1458,7 +1458,7 @@ public class SQLManager {
 	{
 		try
 		{
-			ResultSet RS = SQLManager.executeQuery("SELECT * FROM npc_reponses_actions;",Ancestra.DB_NAME);
+			ResultSet RS = SQLManager.executeQuery("SELECT * FROM npc_reponses_actions;", Main.DB_NAME);
 			while(RS.next())
 			{
 				int id = RS.getInt("ID");
@@ -1481,7 +1481,7 @@ public class SQLManager {
 		int nbr = 0;
 		try
 		{
-			ResultSet RS = SQLManager.executeQuery("SELECT * FROM endfight_action;",Ancestra.DB_NAME);
+			ResultSet RS = SQLManager.executeQuery("SELECT * FROM endfight_action;", Main.DB_NAME);
 			while(RS.next())
 			{
 				Carte map = World.getCarte(RS.getShort("map"));
@@ -1504,7 +1504,7 @@ public class SQLManager {
 		int nbr = 0;
 		try
 		{
-			ResultSet RS = SQLManager.executeQuery("SELECT * FROM use_item_actions;",Ancestra.DB_NAME);
+			ResultSet RS = SQLManager.executeQuery("SELECT * FROM use_item_actions;", Main.DB_NAME);
 			while(RS.next())
 			{
 				int id = RS.getInt("template");
@@ -1528,7 +1528,7 @@ public class SQLManager {
 		String req = "SELECT * FROM items WHERE guid IN ("+ids+");";
 		try
 		{
-			ResultSet RS = SQLManager.executeQuery(req,Ancestra.DB_NAME);
+			ResultSet RS = SQLManager.executeQuery(req, Main.DB_NAME);
 			while(RS.next())
 			{
 				int guid 	= RS.getInt("guid");
@@ -2052,7 +2052,7 @@ public class SQLManager {
 		
 		try
 		{
-			ResultSet GuildQuery = SQLManager.executeQuery("SELECT guild FROM `guild_members` WHERE guid="+guid+";", Ancestra.DB_NAME);
+			ResultSet GuildQuery = SQLManager.executeQuery("SELECT guild FROM `guild_members` WHERE guid="+guid+";", Main.DB_NAME);
 			
 			boolean found = GuildQuery.first();
 			
@@ -2074,7 +2074,7 @@ public class SQLManager {
 		int guid = -1;
 		try
 		{
-			ResultSet GuildQuery = SQLManager.executeQuery("SELECT guild,guid FROM `guild_members` WHERE name='"+name+"';", Ancestra.DB_NAME);
+			ResultSet GuildQuery = SQLManager.executeQuery("SELECT guild,guid FROM `guild_members` WHERE name='"+name+"';", Main.DB_NAME);
 			boolean found = GuildQuery.first();
 			
 			if(found)
@@ -2171,7 +2171,7 @@ public class SQLManager {
 			int action;
 			int nombre;
 			int id;
-			Ancestra.addToShopLog("Lancement de l'application des Lives Actions ...");
+			Main.addToShopLog("Lancement de l'application des Lives Actions ...");
 			String sortie;
 			String couleur = "DF0101"; //La couleur du message envoyer a l'utilisateur (couleur en code HTML)
 			ObjTemplate t;
@@ -2180,29 +2180,29 @@ public class SQLManager {
 			/*FIN*/
 			try
 			{
-				ResultSet RS = executeQuery("SELECT * from live_action;",Ancestra.DB_NAME);
+				ResultSet RS = executeQuery("SELECT * from live_action;", Main.DB_NAME);
 
 				while(RS.next())
 				{
 					perso = World.getPersonnage(RS.getInt("PlayerID"));
 					if(perso == null)
 					{
-						Ancestra.addToShopLog("Personnage "+RS.getInt("PlayerID")+" non trouve, personnage non charge ?");
+						Main.addToShopLog("Personnage "+RS.getInt("PlayerID")+" non trouve, personnage non charge ?");
 						continue;
 					}
 					if(!perso.isOnline())
 					{
-						Ancestra.addToShopLog("Personnage "+RS.getInt("PlayerID")+" hors ligne");
+						Main.addToShopLog("Personnage "+RS.getInt("PlayerID")+" hors ligne");
 						continue;
 					}
 					if(perso.get_compte() == null)
 					{
-						Ancestra.addToShopLog("Le Personnage "+RS.getInt("PlayerID")+" n'est attribue a aucun compte charge");
+						Main.addToShopLog("Le Personnage "+RS.getInt("PlayerID")+" n'est attribue a aucun compte charge");
 						continue;
 					}
 					if(perso.get_compte().getGameThread() == null)
 					{
-						Ancestra.addToShopLog("Le Personnage "+RS.getInt("PlayerID")+" n'a pas thread associe, le personnage est il hors ligne ?");
+						Main.addToShopLog("Le Personnage "+RS.getInt("PlayerID")+" n'a pas thread associe, le personnage est il hors ligne ?");
 						continue;
 					}
 					if(perso.get_fight() != null) continue; // Perso en combat  @ Nami-Doc
@@ -2291,18 +2291,18 @@ public class SQLManager {
 					SocketManager.GAME_SEND_STATS_PACKET(perso);
 					if(action < 20 || action >100) SocketManager.GAME_SEND_MESSAGE(perso,sortie+" a votre personnage",couleur); //Si l'action n'est pas un ajout d'objet on envoye un message a l'utilisateur
 					
-					Ancestra.addToShopLog("(Commande "+id+")Action "+action+" Nombre: "+nombre+" appliquee sur le personnage "+RS.getInt("PlayerID")+"("+perso.get_name()+")");
+					Main.addToShopLog("(Commande "+id+")Action "+action+" Nombre: "+nombre+" appliquee sur le personnage "+RS.getInt("PlayerID")+"("+perso.get_name()+")");
 				try
 				{
 					String query = "DELETE FROM live_action WHERE ID="+id+";";
 					p = newTransact(query, gameCon);
 					p.execute();
 					closePreparedStatement(p);
-					Ancestra.addToShopLog("Commande "+id+" supprimee.");
+					Main.addToShopLog("Commande "+id+" supprimee.");
 				}catch(SQLException e)
 				{
 					GameServer.addToLog("SQL ERROR: "+e.getMessage());
-					Ancestra.addToShopLog("Error Delete From: "+e.getMessage());
+					Main.addToShopLog("Error Delete From: "+e.getMessage());
 					e.printStackTrace();
 				}
 				SQLManager.SAVE_PERSONNAGE(perso,true);
@@ -2311,14 +2311,14 @@ public class SQLManager {
 		}catch(Exception e)
 		{
 			GameServer.addToLog("ERROR: "+e.getMessage());
-			Ancestra.addToShopLog("Error: "+e.getMessage());
+			Main.addToShopLog("Error: "+e.getMessage());
 			e.printStackTrace();
 		}
 	}
 	public static void LOAD_ITEMS() 
 	{
 		    try {
-		      ResultSet RS = executeQuery("SELECT * FROM items;", Ancestra.DB_NAME);
+		      ResultSet RS = executeQuery("SELECT * FROM items;", Main.DB_NAME);
 		      while (RS.next()) {
 		        int guid = RS.getInt("guid");
 		        int tempID = RS.getInt("template");
@@ -2347,7 +2347,7 @@ public class SQLManager {
 						needCommit = false;
 						
 					}
-				}, Ancestra.CONFIG_DB_COMMIT, Ancestra.CONFIG_DB_COMMIT);
+				}, Main.CONFIG_DB_COMMIT, Main.CONFIG_DB_COMMIT);
 			}
 			else
 				timerCommit.cancel();
@@ -2357,7 +2357,7 @@ public class SQLManager {
 			boolean exist = false;
 			try
 			{
-				ResultSet RS =  executeQuery("SELECT COUNT(*) AS exist FROM personnages WHERE name LIKE '"+name+"';", Ancestra.DB_NAME);
+				ResultSet RS =  executeQuery("SELECT COUNT(*) AS exist FROM personnages WHERE name LIKE '"+name+"';", Main.DB_NAME);
 				RS.next();
 				int nb = RS.getInt("exist");
 				
@@ -2530,7 +2530,7 @@ public class SQLManager {
 			{
 				String query = "SELECT `guid` FROM `percepteurs` ORDER BY `guid` ASC LIMIT 0 , 1;";
 				
-				ResultSet RS = executeQuery(query,Ancestra.DB_NAME);
+				ResultSet RS = executeQuery(query, Main.DB_NAME);
 				while (RS.next()) 
 				{
 					i = RS.getInt("guid")-1; 
@@ -2552,7 +2552,7 @@ public class SQLManager {
 			StringBuilder Neutre = new StringBuilder();
 			try
 			{
-				ResultSet RS = SQLManager.executeQuery("SELECT mapid, align from zaapi;",Ancestra.DB_NAME); 
+				ResultSet RS = SQLManager.executeQuery("SELECT mapid, align from zaapi;", Main.DB_NAME);
 				while (RS.next()) 
 				{ 
 					if(RS.getInt("align") == Constants.ALIGNEMENT_BONTARIEN)
@@ -2588,7 +2588,7 @@ public class SQLManager {
 			int i = 0;
 			try
 			{
-				ResultSet RS = SQLManager.executeQuery("SELECT mapID, cellID from zaaps;",Ancestra.DB_NAME); 
+				ResultSet RS = SQLManager.executeQuery("SELECT mapID, cellID from zaaps;", Main.DB_NAME);
 				while (RS.next()) 
 				{ 
 					Constants.ZAAPS.put(RS.getInt("mapID"), RS.getInt("cellID"));
@@ -2606,7 +2606,7 @@ public class SQLManager {
 		{
 			try
 			{
-				ResultSet RS = executeQuery("SELECT MAX(guid) AS max FROM items;",Ancestra.DB_NAME);
+				ResultSet RS = executeQuery("SELECT MAX(guid) AS max FROM items;", Main.DB_NAME);
 				
 				int guid = 1;
 				boolean found = RS.first();
@@ -2620,7 +2620,7 @@ public class SQLManager {
 			{
 				GameServer.addToLog("SQL ERROR: "+e.getMessage());
 				e.printStackTrace();
-				Ancestra.closeServers();
+				Main.closeServers();
 			}
 			return 0;
 		}
@@ -2629,7 +2629,7 @@ public class SQLManager {
 			int i = 0;
 			try
 			{
-				ResultSet RS = executeQuery("SELECT * FROM `hdvs` ORDER BY map ASC",Ancestra.DB_NAME);
+				ResultSet RS = executeQuery("SELECT * FROM `hdvs` ORDER BY map ASC", Main.DB_NAME);
 				
 				while(RS.next())
 				{
@@ -2655,7 +2655,7 @@ public class SQLManager {
 			int i = 0;
 			try
 			{
-				ResultSet RS = executeQuery("SELECT * FROM `hdvs_items`",Ancestra.DB_NAME);
+				ResultSet RS = executeQuery("SELECT * FROM `hdvs_items`", Main.DB_NAME);
 				while(RS.next())
 				{
 					Hdv tempHdv = World.getHdv(RS.getInt("hdvmapid"));
@@ -2718,7 +2718,7 @@ public class SQLManager {
 		{
 			try
 			{
-				ResultSet RS = executeQuery("SELECT * from animations;",Ancestra.DB_NAME);
+				ResultSet RS = executeQuery("SELECT * from animations;", Main.DB_NAME);
 				while(RS.next())
 				{
 					World.addAnimation(new Animations(
@@ -2742,7 +2742,7 @@ public class SQLManager {
                 int nbr = 0;
                 try
                 {
-                        ResultSet RS = SQLManager.executeQuery("SELECT * from coffres;",Ancestra.DB_NAME);
+                        ResultSet RS = SQLManager.executeQuery("SELECT * from coffres;", Main.DB_NAME);
                         while(RS.next())
                         {                      
                                 World.addTrunk(
@@ -2857,7 +2857,7 @@ public class SQLManager {
 			int i = 0;
 			try
 			{
-				ResultSet RS = executeQuery("SELECT * from pets;",Ancestra.DB_NAME);
+				ResultSet RS = executeQuery("SELECT * from pets;", Main.DB_NAME);
 				while(RS.next())
 				{
 					i++;
@@ -2885,7 +2885,7 @@ public class SQLManager {
 			int i = 0;
 			try
 			{
-				ResultSet RS = executeQuery("SELECT * from pets_data;",Ancestra.DB_NAME);
+				ResultSet RS = executeQuery("SELECT * from pets_data;", Main.DB_NAME);
 				while(RS.next())
 				{
 					i++;
@@ -2966,7 +2966,7 @@ public class SQLManager {
     		int i = 0;
     		try
     		{
-    			ResultSet RS = executeQuery("SELECT * from challenge;",Ancestra.DB_NAME);
+    			ResultSet RS = executeQuery("SELECT * from challenge;", Main.DB_NAME);
     			while(RS.next())
     			{
     				StringBuilder chal = new StringBuilder();
@@ -2992,7 +2992,7 @@ public class SQLManager {
     		int i = 0;
     		try
     		{
-    			ResultSet RS = executeQuery("SELECT * from gift;", Ancestra.DB_NAME);
+    			ResultSet RS = executeQuery("SELECT * from gift;", Main.DB_NAME);
     			
     			while(RS.next())
     			{

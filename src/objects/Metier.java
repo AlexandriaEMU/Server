@@ -131,7 +131,7 @@ public class Metier {
 		{
 			if(_curAction == null)return;
 			_curAction.endAction(P,IO,GA,cell);
-			addXp(P,_curAction.getXpWin()*Ancestra.RATE_METIER);
+			addXp(P,_curAction.getXpWin()* Main.RATE_METIER);
 			//Packet JX
 			//on créer la listes des statsMetier a envoyer (Seulement celle ci)
 			ArrayList<StatsMetier> list = new ArrayList<>();
@@ -508,7 +508,7 @@ public class Metier {
 			
 			
 			//On donne l'xp
-			int winXP =  Constants.calculXpWinCraft(SM.get_lvl(),_ingredients.size()) * Ancestra.RATE_METIER;
+			int winXP =  Constants.calculXpWinCraft(SM.get_lvl(),_ingredients.size()) * Main.RATE_METIER;
 			if(success)
 			{
 				SM.addXp(_P,winXP);
@@ -1315,7 +1315,7 @@ public class Metier {
 					
 					if(ViewActualStatsItem(obj, Integer.toHexString(stat)) == 1 || ViewActualStatsItem(obj, Integer.toHexString(stat)) == 2)//L'item possède le stats négatif ou positif
 					{
-						if(Ancestra.CONFIG_DEBUG) System.out.println("Modification d'un stat existant : "+stat+". Ajout de "+add);
+						if(Main.CONFIG_DEBUG) System.out.println("Modification d'un stat existant : "+stat+". Ajout de "+add);
 						int OldStat = obj.getStats().getMap().get(stat);
 						if(negatif && OldStat-add == 0)//Si stat négatif et si on lui retranche le add == 0 alorso n le supprime
 						{
@@ -1332,7 +1332,7 @@ public class Metier {
 					}
 					else//L'item ne possède pas le stats.
 					{
-						if(Ancestra.CONFIG_DEBUG) System.out.println("Ajout d'un stat inexistant : "+stat+". Ajout de "+add); 
+						if(Main.CONFIG_DEBUG) System.out.println("Ajout d'un stat inexistant : "+stat+". Ajout de "+add);
 						obj.getStats().addOneStat(stat, add);
 					}
 				}

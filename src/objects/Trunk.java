@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
-import common.Ancestra;
+import common.Main;
 import common.Constants;
 import common.SQLManager;
 import common.SocketManager;
@@ -161,7 +161,7 @@ public class Trunk {
 		}
 		else if(P.get_guild() == null && h.canDo(Constants.C_OCANTOPEN))//si on compare par id ça bug (guild null)
 		{
-			SocketManager.GAME_SEND_MESSAGE(P, "Ce coffre ne peut être ouvert que par les membres de la guilde !", Ancestra.CONFIG_MOTD_COLOR);
+			SocketManager.GAME_SEND_MESSAGE(P, "Ce coffre ne peut être ouvert que par les membres de la guilde !", Main.CONFIG_MOTD_COLOR);
 		return;
 		}
 		else if(t.get_owner_id() > 0)//Une personne autre le possède, il faut le code pour rentrer
@@ -238,7 +238,7 @@ public class Trunk {
 		
 		if(_object.size() >= 80) // Le plus grand c'est pour si un admin ajoute des objets via la bdd...
 		{
-			SocketManager.GAME_SEND_MESSAGE(P, "Le nombre d'objets maximal de ce coffre à été atteint !", Ancestra.CONFIG_MOTD_COLOR);
+			SocketManager.GAME_SEND_MESSAGE(P, "Le nombre d'objets maximal de ce coffre à été atteint !", Main.CONFIG_MOTD_COLOR);
 			return;
 		}
 		

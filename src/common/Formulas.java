@@ -471,7 +471,7 @@ public class Formulas {
 			Guild G = World.getGuild(perco.get_guildID());
 			float sag = G.get_Stats(Constants.STATS_ADD_SAGE);
 			float coef = (sag + 100)/100;
-			int taux = Ancestra.RATE_PVM;
+			int taux = Main.RATE_PVM;
 			long xpWin = 0;
 			int lvlmax = 0;
 			for(Fighter entry : winners)
@@ -527,7 +527,7 @@ public class Formulas {
 		{
 			float sag = perso.getTotalStats().getEffect(Constants.STATS_ADD_SAGE);
 			float coef = (sag + 100)/100;
-			int taux = Ancestra.RATE_PVM;
+			int taux = Main.RATE_PVM;
 			long xpWin = 0;
 			int lvlmax = 0;
 			for(Fighter entry : winners)
@@ -664,14 +664,14 @@ public class Formulas {
 	{
 		maxk++;
 		int rkamas = (int)(Math.random() * (maxk-mink)) + mink;
-		return rkamas*Ancestra.RATE_KAMAS;
+		return rkamas* Main.RATE_KAMAS;
 	}
 	
 	public static int getKamasWinPerco(int maxk, int mink)
 	{
 		maxk++;
 		int rkamas = (int)(Math.random() * (maxk-mink)) + mink;
-		return rkamas*Ancestra.RATE_KAMAS;
+		return rkamas* Main.RATE_KAMAS;
 	}
 	
 	public static int calculElementChangeChance(int lvlM,int lvlA,int lvlP)
@@ -704,11 +704,11 @@ public class Formulas {
 
 		}
 		
-		if(totalLevelWin-totalLevelLoose > Ancestra.CONFIG_LVL_PVP) return 0;
+		if(totalLevelWin-totalLevelLoose > Main.CONFIG_LVL_PVP) return 0;
 
 		int base = (int)(100 * (float)(totalGradeLoose/totalGradeWin))/winners.size();
 		if(loosers.contains(F))base = -base;
-		return base * Ancestra.RATE_HONOR;
+		return base * Main.RATE_HONOR;
 	}
 	
 	public static Couple<Integer, Integer> decompPierreAme(Objet toDecomp)
@@ -798,27 +798,27 @@ public class Formulas {
 	
 	public static int getTraqueXP(int lvl)
 	{
-		if(lvl < 50)return 10000 * Ancestra.RATE_PVM;
-		if(lvl < 60)return 65000 * Ancestra.RATE_PVM;
-		if(lvl < 70)return 90000 * Ancestra.RATE_PVM;
-		if(lvl < 80)return 120000 * Ancestra.RATE_PVM;
-		if(lvl < 90)return 160000 * Ancestra.RATE_PVM;
-		if(lvl < 100)return 210000 * Ancestra.RATE_PVM;
-		if(lvl < 110)return 270000 * Ancestra.RATE_PVM;
-		if(lvl < 120)return 350000 * Ancestra.RATE_PVM;
-		if(lvl < 130)return 440000 * Ancestra.RATE_PVM;
-		if(lvl < 140)return 540000 * Ancestra.RATE_PVM;
-		if(lvl < 150)return 650000 * Ancestra.RATE_PVM;
-		if(lvl < 155)return 760000 * Ancestra.RATE_PVM;
-		if(lvl < 160)return 880000 * Ancestra.RATE_PVM;
-		if(lvl < 165)return 1000000 * Ancestra.RATE_PVM;
-		if(lvl < 170)return 1130000 * Ancestra.RATE_PVM;
-		if(lvl < 175)return 1300000 * Ancestra.RATE_PVM;
-		if(lvl < 180)return 1500000 * Ancestra.RATE_PVM;
-		if(lvl < 185)return 1700000 * Ancestra.RATE_PVM;
-		if(lvl < 190)return 2000000 * Ancestra.RATE_PVM;
-		if(lvl < 195)return 2500000 * Ancestra.RATE_PVM;
-		if(lvl < 200)return 3000000 * Ancestra.RATE_PVM;
+		if(lvl < 50)return 10000 * Main.RATE_PVM;
+		if(lvl < 60)return 65000 * Main.RATE_PVM;
+		if(lvl < 70)return 90000 * Main.RATE_PVM;
+		if(lvl < 80)return 120000 * Main.RATE_PVM;
+		if(lvl < 90)return 160000 * Main.RATE_PVM;
+		if(lvl < 100)return 210000 * Main.RATE_PVM;
+		if(lvl < 110)return 270000 * Main.RATE_PVM;
+		if(lvl < 120)return 350000 * Main.RATE_PVM;
+		if(lvl < 130)return 440000 * Main.RATE_PVM;
+		if(lvl < 140)return 540000 * Main.RATE_PVM;
+		if(lvl < 150)return 650000 * Main.RATE_PVM;
+		if(lvl < 155)return 760000 * Main.RATE_PVM;
+		if(lvl < 160)return 880000 * Main.RATE_PVM;
+		if(lvl < 165)return 1000000 * Main.RATE_PVM;
+		if(lvl < 170)return 1130000 * Main.RATE_PVM;
+		if(lvl < 175)return 1300000 * Main.RATE_PVM;
+		if(lvl < 180)return 1500000 * Main.RATE_PVM;
+		if(lvl < 185)return 1700000 * Main.RATE_PVM;
+		if(lvl < 190)return 2000000 * Main.RATE_PVM;
+		if(lvl < 195)return 2500000 * Main.RATE_PVM;
+		if(lvl < 200)return 3000000 * Main.RATE_PVM;
 		return 0;
 	}
 	

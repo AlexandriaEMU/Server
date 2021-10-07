@@ -78,7 +78,7 @@ public class GameThread implements Runnable
 			String packet = "";
 			char charCur[] = new char[1];
 			SocketManager.GAME_SEND_HELLOGAME_PACKET(_out);
-	    	while(_in.read(charCur, 0, 1)!=-1 && Ancestra.isRunning)
+	    	while(_in.read(charCur, 0, 1)!=-1 && Main.isRunning)
 	    	{
 	    		if (charCur[0] != '\u0000' && charCur[0] != '\n' && charCur[0] != '\r')
 		    	{
@@ -1128,7 +1128,7 @@ public class GameThread implements Runnable
 					bk.setBankKamas(NewSellerBankKamas);
 					if(Seller.isOnline())
 					{
-						SocketManager.GAME_SEND_MESSAGE(_perso, "Un enclo a ete vendu a "+MP.get_price()+".", Ancestra.CONFIG_MOTD_COLOR);
+						SocketManager.GAME_SEND_MESSAGE(_perso, "Un enclo a ete vendu a "+MP.get_price()+".", Main.CONFIG_MOTD_COLOR);
 					}
 				}
 				MP.set_price(0);//On vide le prix
@@ -1168,7 +1168,7 @@ public class GameThread implements Runnable
 				MountPark MP1 = _perso.get_curCarte().getMountPark();
 				if(!MP1.getData().isEmpty())
 				{
-					SocketManager.GAME_SEND_MESSAGE(_perso, "[ENCLO] Impossible de vendre un enclo plein.", Ancestra.CONFIG_MOTD_COLOR);
+					SocketManager.GAME_SEND_MESSAGE(_perso, "[ENCLO] Impossible de vendre un enclo plein.", Main.CONFIG_MOTD_COLOR);
 					return;
 				}
 				if(MP1.get_owner() == -1)
@@ -1751,7 +1751,7 @@ public class GameThread implements Runnable
 				}
 			}
 			
-			if(pos == Constants.ITEM_POS_FAMILIER && _perso.get_compte().get_subscriber() == 0 && Ancestra.USE_SUBSCRIBE)//Non abonn� il envoi qqch sur la place familier
+			if(pos == Constants.ITEM_POS_FAMILIER && _perso.get_compte().get_subscriber() == 0 && Main.USE_SUBSCRIBE)//Non abonn� il envoi qqch sur la place familier
 			{
 				SocketManager.GAME_SEND_EXCHANGE_REQUEST_ERROR(_out,'S');
 				return;
@@ -2147,7 +2147,7 @@ public class GameThread implements Runnable
 				_perso.is_away() || _perso.get_isCraftingWith() != 0 || _perso.get_curExchange() != null ||
 				_perso.getCurJobAction() != null || _perso.getInMountPark() != null || _perso.isInBank() ||
 				_perso.get_isOnPercepteurID() != 0 || _perso.getInTrunk() != null)return;
-				if(_perso.get_compte().get_subscriber() == 0 && Ancestra.USE_SUBSCRIBE)
+				if(_perso.get_compte().get_subscriber() == 0 && Main.USE_SUBSCRIBE)
 				{
 					SocketManager.GAME_SEND_EXCHANGE_REQUEST_ERROR(_out,'S');
 					return;
@@ -3172,7 +3172,7 @@ public class GameThread implements Runnable
 							return;
 						}
 						
-						if(_perso.get_curCarte().getSubArea().get_subscribe() && _perso.get_compte().get_subscriber() == 0 && Ancestra.USE_SUBSCRIBE)
+						if(_perso.get_curCarte().getSubArea().get_subscribe() && _perso.get_compte().get_subscriber() == 0 && Main.USE_SUBSCRIBE)
 						{
 							SocketManager.GAME_SEND_EXCHANGE_REQUEST_ERROR(_out,'S');
 							return;
@@ -3204,7 +3204,7 @@ public class GameThread implements Runnable
 							return;
 						}
 						
-						if(_perso.get_curCarte().getSubArea().get_subscribe() && _perso.get_compte().get_subscriber() == 0 && Ancestra.USE_SUBSCRIBE)
+						if(_perso.get_curCarte().getSubArea().get_subscribe() && _perso.get_compte().get_subscriber() == 0 && Main.USE_SUBSCRIBE)
 						{
 							SocketManager.GAME_SEND_EXCHANGE_REQUEST_ERROR(_out,'S');
 							return;
@@ -3440,11 +3440,11 @@ public class GameThread implements Runnable
 		
 		int id = Integer.parseInt(packet.substring(2));
 		
-		if(Ancestra.CONFIG_DEBUG) GameServer.addToLog("Info: "+_perso.get_name()+": Tente Oublie sort id="+id);
+		if(Main.CONFIG_DEBUG) GameServer.addToLog("Info: "+_perso.get_name()+": Tente Oublie sort id="+id);
 		
 		if(_perso.forgetSpell(id))
 		{
-			if(Ancestra.CONFIG_DEBUG) GameServer.addToLog("Info: "+_perso.get_name()+": OK pour Oublie sort id="+id);
+			if(Main.CONFIG_DEBUG) GameServer.addToLog("Info: "+_perso.get_name()+": OK pour Oublie sort id="+id);
 			SocketManager.GAME_SEND_SPELL_UPGRADE_SUCCED(_out, id, _perso.getSortStatBySortIfHas(id).getLevel());
 			SocketManager.GAME_SEND_STATS_PACKET(_perso);
 			_perso.setisForgetingSpell(false);
@@ -3585,7 +3585,7 @@ public class GameThread implements Runnable
 					//Retour au point de sauvegarde
 					if(msg.length() > 7 && msg.substring(1, 8).equalsIgnoreCase("command"))
 					{
-						SocketManager.GAME_SEND_MESSAGE(_perso, "Commandes Disponibles : \n.start\n.infos\n.save", Ancestra.CONFIG_MOTD_COLOR);
+						SocketManager.GAME_SEND_MESSAGE(_perso, "Commandes Disponibles : \n.start\n.infos\n.save", Main.CONFIG_MOTD_COLOR);
 						return;
 					}else
 					if(msg.length() > 5 && msg.substring(1, 6).equalsIgnoreCase("start"))
@@ -3596,7 +3596,7 @@ public class GameThread implements Runnable
 					}else
 					if(msg.length() > 5 && msg.substring(1, 6).equalsIgnoreCase("infos"))
 					{
-						long uptime = System.currentTimeMillis() - Ancestra.gameServer.getStartTime();
+						long uptime = System.currentTimeMillis() - Main.gameServer.getStartTime();
 						int jour = (int) (uptime/(1000*3600*24));
 						uptime %= (1000*3600*24);
 						int hour = (int) (uptime/(1000*3600));
@@ -3605,12 +3605,12 @@ public class GameThread implements Runnable
 						uptime %= (1000*60);
 						int sec = (int) (uptime/(1000));
 						
-						String mess =	"===========\n"+Ancestra.makeHeader()
+						String mess =	"===========\n"+ Main.makeHeader()
 							+			"Uptime: "+jour+"j "+hour+"h "+min+"m "+sec+"s\n"
-							+			"Joueurs en lignes: "+Ancestra.gameServer.getPlayerNumber()+"\n"
-							+			"Record de connexion: "+Ancestra.gameServer.getMaxPlayer()+"\n"
+							+			"Joueurs en lignes: "+ Main.gameServer.getPlayerNumber()+"\n"
+							+			"Record de connexion: "+ Main.gameServer.getMaxPlayer()+"\n"
 							+			"===========";
-						SocketManager.GAME_SEND_MESSAGE(_perso, mess, Ancestra.CONFIG_MOTD_COLOR);
+						SocketManager.GAME_SEND_MESSAGE(_perso, mess, Main.CONFIG_MOTD_COLOR);
 						return;
 					}else
 					if(msg.length() > 4 && msg.substring(1, 5).equalsIgnoreCase("save"))
@@ -3622,7 +3622,7 @@ public class GameThread implements Runnable
 						_timeLastsave = System.currentTimeMillis();
 						if(_perso.get_fight() != null)return;
 						SQLManager.SAVE_PERSONNAGE(_perso,true);
-						SocketManager.GAME_SEND_MESSAGE(_perso,  _perso.get_name()+" sauvegard�.", Ancestra.CONFIG_MOTD_COLOR);
+						SocketManager.GAME_SEND_MESSAGE(_perso,  _perso.get_name()+" sauvegard�.", Main.CONFIG_MOTD_COLOR);
 						return;
 					}
 				}
@@ -3650,9 +3650,9 @@ public class GameThread implements Runnable
 			case ':'://Canal commerce
 				if(!_perso.get_canaux().contains(packet.charAt(2)+""))return;
 				long l;
-				if((l = System.currentTimeMillis() - _timeLastTradeMsg) < Ancestra.FLOOD_TIME)
+				if((l = System.currentTimeMillis() - _timeLastTradeMsg) < Main.FLOOD_TIME)
 				{
-					l = (Ancestra.FLOOD_TIME  - l)/1000;//On calcul la diff�rence en secondes
+					l = (Main.FLOOD_TIME  - l)/1000;//On calcul la diff�rence en secondes
 					SocketManager.GAME_SEND_Im_PACKET(_perso, "0115;"+((int)Math.ceil(l)+1));
 					return;
 				}
@@ -3671,9 +3671,9 @@ public class GameThread implements Runnable
 			case '^':// Canal Incarnam 
 				msg = packet.split("\\|", 2)[1];
 				long x;
-				if((x = System.currentTimeMillis() - _timeLastIncarnamMsg) < Ancestra.FLOOD_TIME)
+				if((x = System.currentTimeMillis() - _timeLastIncarnamMsg) < Main.FLOOD_TIME)
 				{ 
-					x = (Ancestra.FLOOD_TIME - x)/1000;//Calculamos a diferen�a em segundos
+					x = (Main.FLOOD_TIME - x)/1000;//Calculamos a diferen�a em segundos
 					SocketManager.GAME_SEND_Im_PACKET(_perso, "0115;"+((int)Math.ceil(x)+1));
 					return;
 				}
@@ -3685,9 +3685,9 @@ public class GameThread implements Runnable
 			case '?'://Canal recrutement
 				if(!_perso.get_canaux().contains(packet.charAt(2)+""))return;
 				long j;
-				if((j = System.currentTimeMillis() - _timeLastRecrutmentMsg) < Ancestra.FLOOD_TIME)
+				if((j = System.currentTimeMillis() - _timeLastRecrutmentMsg) < Main.FLOOD_TIME)
 				{
-					j = (Ancestra.FLOOD_TIME  - j)/1000;//On calcul la diff�rence en secondes
+					j = (Main.FLOOD_TIME  - j)/1000;//On calcul la diff�rence en secondes
 					SocketManager.GAME_SEND_Im_PACKET(_perso, "0115;"+((int)Math.ceil(j)+1));
 					return;
 				}
@@ -3712,9 +3712,9 @@ public class GameThread implements Runnable
 					return;
 				}
 				long k;
-				if((k = System.currentTimeMillis() - _timeLastAlignMsg) < Ancestra.FLOOD_TIME)
+				if((k = System.currentTimeMillis() - _timeLastAlignMsg) < Main.FLOOD_TIME)
 				{
-					k = (Ancestra.FLOOD_TIME  - k)/1000;//On calcul la diff�rence en secondes
+					k = (Main.FLOOD_TIME  - k)/1000;//On calcul la diff�rence en secondes
 					SocketManager.GAME_SEND_Im_PACKET(_perso, "0115;"+((int)Math.ceil(k)+1));
 					return;
 				}
@@ -4103,7 +4103,7 @@ public class GameThread implements Runnable
 				{
 					return;
 				}
-			if(_perso.get_compte().get_subscriber() == 0 && Ancestra.USE_SUBSCRIBE)
+			if(_perso.get_compte().get_subscriber() == 0 && Main.USE_SUBSCRIBE)
 			{
 				SocketManager.GAME_SEND_EXCHANGE_REQUEST_ERROR(_out,'S');
 				return;
@@ -4137,7 +4137,7 @@ public class GameThread implements Runnable
 			|| !target.canAggro())
 				return;
 			
-			if(_perso.get_compte().get_subscriber() == 0 && Ancestra.USE_SUBSCRIBE)
+			if(_perso.get_compte().get_subscriber() == 0 && Main.USE_SUBSCRIBE)
 			{
 				SocketManager.GAME_SEND_EXCHANGE_REQUEST_ERROR(_out,'S');
 				return;
@@ -4230,7 +4230,7 @@ public class GameThread implements Runnable
 				if(FightStarter == null)return;
 				if((FightStarter.get_fight().get_type() == Constants.FIGHT_TYPE_AGRESSION || 
 					FightStarter.get_fight().get_type() == Constants.FIGHT_TYPE_CHALLENGE || 
-					FightStarter.get_fight().get_type() == Constants.FIGHT_TYPE_PVT) && _perso.get_compte().get_subscriber() == 0 && Ancestra.USE_SUBSCRIBE)
+					FightStarter.get_fight().get_type() == Constants.FIGHT_TYPE_PVT) && _perso.get_compte().get_subscriber() == 0 && Main.USE_SUBSCRIBE)
 				{
 					SocketManager.GAME_SEND_EXCHANGE_REQUEST_ERROR(_out,'S');
 					return;
@@ -4288,7 +4288,7 @@ public class GameThread implements Runnable
 				SocketManager.GAME_SEND_DUEL_E_AWAY(_out, _perso.get_GUID());
 				return;
 			}
-			if(_perso.get_compte().get_subscriber() == 0 && Ancestra.USE_SUBSCRIBE)
+			if(_perso.get_compte().get_subscriber() == 0 && Main.USE_SUBSCRIBE)
 			{
 				SocketManager.GAME_SEND_EXCHANGE_REQUEST_ERROR(_out,'S');
 				return;
@@ -4359,7 +4359,7 @@ public class GameThread implements Runnable
 	{
 		try
 		{
-			Ancestra.gameServer.delClient(this);
+			Main.gameServer.delClient(this);
 			
     		if(_compte != null)
     		{
@@ -4437,7 +4437,7 @@ public class GameThread implements Runnable
 					SocketManager.GAME_SEND_NAME_ALREADY_EXIST(_out);
 					return;
 				}
-				if(_compte.GET_PERSO_NUMBER() >= Ancestra.CONFIG_MAX_PERSOS)
+				if(_compte.GET_PERSO_NUMBER() >= Main.CONFIG_MAX_PERSOS)
 				{
 					SocketManager.GAME_SEND_CREATE_PERSO_FULL(_out);
 					return;
@@ -4562,7 +4562,7 @@ public class GameThread implements Runnable
 					kick();
 					return;
 				}
-				_compte = Ancestra.gameServer.getWaitingCompte(guid);
+				_compte = Main.gameServer.getWaitingCompte(guid);
 				if(_compte != null)
 				{
 					String ip = _s.getInetAddress().getHostAddress();
@@ -4578,9 +4578,9 @@ public class GameThread implements Runnable
 					_compte.setGameThread(this);
 					_compte.setCurIP(ip);
 					
-					Ancestra.gameServer.delWaitingCompte(_compte);
+					Main.gameServer.delWaitingCompte(_compte);
 					
-					if(Ancestra.gameServer.getPlayerNumber() > Ancestra.CONFIG_PLAYER_LIMIT && Ancestra.CONFIG_PLAYER_LIMIT != -1)
+					if(Main.gameServer.getPlayerNumber() > Main.CONFIG_PLAYER_LIMIT && Main.CONFIG_PLAYER_LIMIT != -1)
 					{
 						kick();
 						return;

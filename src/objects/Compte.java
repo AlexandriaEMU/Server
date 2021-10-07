@@ -337,7 +337,7 @@ public class Compte {
 		String msg = "";
 		if(_mute)msg = "Vous avez ete mute";
 		else msg = "Vous n'etes plus mute";
-		SocketManager.GAME_SEND_MESSAGE(_curPerso, msg, Ancestra.CONFIG_MOTD_COLOR);
+		SocketManager.GAME_SEND_MESSAGE(_curPerso, msg, Main.CONFIG_MOTD_COLOR);
 		if(time == 0)return;
 		if(_muteTimer == null && time >0)
 		{
@@ -477,7 +477,7 @@ public class Compte {
 	public int get_subscriber()
 	{
 		//Retourne le temps restant
-		if(!Ancestra.USE_SUBSCRIBE) return 525600;
+		if(!Main.USE_SUBSCRIBE) return 525600;
 		if(_subscriber == 0)
 		{
 			//Si non abo ou abo dépasser

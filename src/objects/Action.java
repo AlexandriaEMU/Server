@@ -8,7 +8,7 @@ import objects.NPC_tmpl.NPC_question;
 import objects.Objet.ObjTemplate;
 import objects.Personnage.traque;
 
-import common.Ancestra;
+import common.Main;
 import common.ConditionParser;
 import common.Constants;
 import common.Formulas;
@@ -511,7 +511,7 @@ public class Action {
 						
 						if(World.getMonstre(monsterID) == null || World.getMonstre(monsterID).getGradeByLevel(monsterLevel) == null)
 						{
-							if(Ancestra.CONFIG_DEBUG) GameServer.addToLog("Monstre invalide : monsterID:"+monsterID+" monsterLevel:"+monsterLevel);
+							if(Main.CONFIG_DEBUG) GameServer.addToLog("Monstre invalide : monsterID:"+monsterID+" monsterLevel:"+monsterLevel);
 							continue;
 						}
 						ValidMobGroup.append(monsterID).append(",").append(monsterLevel).append(",").append(monsterLevel).append(";");
@@ -552,8 +552,8 @@ public class Action {
 					int diff = 0;
 					for(byte b = 0; b < 100; b++)
 					{
-					if(b == Ancestra.gameServer.getClients().size())break;
-					GameThread GT = Ancestra.gameServer.getClients().get(b);
+					if(b == Main.gameServer.getClients().size())break;
+					GameThread GT = Main.gameServer.getClients().get(b);
 					Personnage P = GT.getPerso();
 					if(P == null || P == perso)continue;
 					if(P.get_compte().get_curIP().compareTo(perso.get_compte().get_curIP()) == 0)continue;

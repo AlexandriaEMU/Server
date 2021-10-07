@@ -40,22 +40,22 @@ public class GameServer implements Runnable{
 					_saveTimer++;
 					_loadActionTimer++;
 					_reloadMobTimer++;
-					if(_saveTimer == (Ancestra.CONFIG_SAVE_TIME/60000))
+					if(_saveTimer == (Main.CONFIG_SAVE_TIME/60000))
 					{
-						if(!Ancestra.isSaving)
+						if(!Main.isSaving)
 						{
 							Thread t = new Thread(new SaveThread());
 							t.start();
 						}
 						_saveTimer = 0;
 					}
-					if(_loadActionTimer == (Ancestra.CONFIG_LOAD_DELAY/60000))
+					if(_loadActionTimer == (Main.CONFIG_LOAD_DELAY/60000))
 					{
 						SQLManager.LOAD_ACTION();
 						GameServer.addToLog("Les live actions ont ete appliquees");
 						_loadActionTimer = 0;
 					}
-					if(_reloadMobTimer == (Ancestra.CONFIG_RELOAD_MOB_DELAY/60000))
+					if(_reloadMobTimer == (Main.CONFIG_RELOAD_MOB_DELAY/60000))
 					{
 						World.RefreshAllMob();
 						GameServer.addToLog("La recharge des mobs est finie");
@@ -63,7 +63,7 @@ public class GameServer implements Runnable{
 					}
 					for(Personnage perso : World.getOnlinePersos()) 
 					{
-						if (perso.getLastPacketTime() + Ancestra.CONFIG_MAX_IDLE_TIME < System.currentTimeMillis())
+						if (perso.getLastPacketTime() + Main.CONFIG_MAX_IDLE_TIME < System.currentTimeMillis())
 						{
 							
 							if(perso != null && perso.get_compte().getGameThread() != null && perso.isOnline())
@@ -78,15 +78,15 @@ public class GameServer implements Runnable{
 				}
 			}, 60000,60000);
 			
-			_SS = new ServerSocket(Ancestra.CONFIG_GAME_PORT);
-			if(Ancestra.CONFIG_USE_IP)
-				Ancestra.GAMESERVER_IP = CryptManager.CryptIP(Ip)+CryptManager.CryptPort(Ancestra.CONFIG_GAME_PORT);
+			_SS = new ServerSocket(Main.CONFIG_GAME_PORT);
+			if(Main.CONFIG_USE_IP)
+				Main.GAMESERVER_IP = CryptManager.CryptIP(Ip)+CryptManager.CryptPort(Main.CONFIG_GAME_PORT);
 			_startTime = System.currentTimeMillis();
 			_t = new Thread(this);
 			_t.start();
 		} catch (IOException e) {
 			addToLog("IOException: "+e.getMessage());
-			Ancestra.closeServers();
+			Main.closeServers();
 		}
 	}
 	
@@ -94,7 +94,7 @@ public class GameServer implements Runnable{
 	{
 		public void run()
 		{
-			if(Ancestra.isSaving == false)
+			if(Main.isSaving == false)
 			{
 				SocketManager.GAME_SEND_Im_PACKET_TO_ALL("1164");
 				World.saveAll(null);
@@ -123,7 +123,7 @@ public class GameServer implements Runnable{
 	}
 	public void run()
 	{	
-		while(Ancestra.isRunning)//bloque sur _SS.accept()
+		while(Main.isRunning)//bloque sur _SS.accept()
 		{
 			try
 			{
@@ -135,7 +135,7 @@ public class GameServer implements Runnable{
 				try
 				{
 					if(!_SS.isClosed())_SS.close();
-					Ancestra.closeServers();
+					Main.closeServers();
 				}
 				catch(IOException e1){}
 			}
@@ -161,27 +161,27 @@ public class GameServer implements Runnable{
 	public synchronized static void addToLog(String str)
 	{
 		System.out.println(str);
-		if(Ancestra.canLog)
+		if(Main.canLog)
 		{
 			try {
 				String date = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)+":"+Calendar.getInstance().get(+Calendar.MINUTE)+":"+Calendar.getInstance().get(Calendar.SECOND);
-				Ancestra.Log_Game.write(date+": "+str);
-				Ancestra.Log_Game.newLine();
-				Ancestra.Log_Game.flush();
+				Main.Log_Game.write(date+": "+str);
+				Main.Log_Game.newLine();
+				Main.Log_Game.flush();
 			} catch (IOException e) {e.printStackTrace();}//ne devrait pas avoir lieu
 		}
 	}
 	
 	public synchronized static void addToSockLog(String str)
 	{
-		if(Ancestra.CONFIG_DEBUG)System.out.println(str);
-		if(Ancestra.canLog)
+		if(Main.CONFIG_DEBUG)System.out.println(str);
+		if(Main.canLog)
 		{
 			try {
 				String date = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)+":"+Calendar.getInstance().get(+Calendar.MINUTE)+":"+Calendar.getInstance().get(Calendar.SECOND);
-				Ancestra.Log_GameSock.write(date+": "+str);
-				Ancestra.Log_GameSock.newLine();
-				Ancestra.Log_GameSock.flush();
+				Main.Log_GameSock.write(date+": "+str);
+				Main.Log_GameSock.newLine();
+				Main.Log_GameSock.flush();
 			} catch (IOException e) {}//ne devrait pas avoir lieu
 		}
 	}

@@ -79,7 +79,7 @@ public class ConditionParser
 		StringBuilder copyCond = new StringBuilder();
 		int finalLength = 0;
 		
-		if(Ancestra.CONFIG_DEBUG) GameServer.addToLog("Entered Cond : "+cond);
+		if(Main.CONFIG_DEBUG) GameServer.addToLog("Entered Cond : "+cond);
 		
 		if(cond.contains("&&"))
 		{
@@ -266,7 +266,7 @@ public class ConditionParser
 			finalLength = (copyCond.length()-2);//On retire les deux derniers carractères (|| ou &&)
 			copyCond = new StringBuilder(copyCond.substring(0, finalLength));
 		}
-		if(Ancestra.CONFIG_DEBUG) GameServer.addToLog("Returned Cond : "+copyCond);
+		if(Main.CONFIG_DEBUG) GameServer.addToLog("Returned Cond : "+copyCond);
 		return copyCond.toString();
 	}
 	

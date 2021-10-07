@@ -1338,7 +1338,7 @@ public class Carte {
 		}
 		if(_cases.isEmpty())return;
 		
-		if (Ancestra.CONFIG_USE_MOBS)
+		if (Main.CONFIG_USE_MOBS)
 		{
 			if(_maxGroup == 0)return;
 			spawnGroup(Constants.ALIGNEMENT_NEUTRE,_maxGroup,false,-1);//Spawn des groupes d'alignement neutre 
@@ -1439,7 +1439,7 @@ public class Carte {
 		group.setCondition(condition);
 		group.setIsFix(false);
 		
-		if(Ancestra.CONFIG_DEBUG) GameServer.addToLog("Groupe de monstres ajoutes sur la map: "+_id+" ID: "+_nextObjectID);
+		if(Main.CONFIG_DEBUG) GameServer.addToLog("Groupe de monstres ajoutes sur la map: "+_id+" ID: "+_nextObjectID);
 		
 		SocketManager.GAME_SEND_MAP_MOBS_GM_PACKET(this, group);
 		_nextObjectID--;
@@ -1455,7 +1455,7 @@ public class Carte {
 		_mobGroups.put(_nextObjectID, group);
 		group.setIsFix(false);
 
-		if(Ancestra.CONFIG_DEBUG) GameServer.addToLog("Groupe de monstres ajoutes sur la map: "+_id+" ID: "+_nextObjectID);
+		if(Main.CONFIG_DEBUG) GameServer.addToLog("Groupe de monstres ajoutes sur la map: "+_id+" ID: "+_nextObjectID);
 
 		SocketManager.GAME_SEND_MAP_MOBS_GM_PACKET(this, group);
 		_nextObjectID--;
@@ -1709,7 +1709,7 @@ public class Carte {
 				{
 					if((group.getAlignement() == -1 || ((perso.get_align() == 1 || perso.get_align() == 2) && (perso.get_align() != group.getAlignement()))) && ConditionParser.validConditions(perso, group.getCondition()))
 					{
-						if(perso.get_compte().get_subscriber() == 0 && getSubArea().get_subscribe() && Ancestra.USE_SUBSCRIBE) return;
+						if(perso.get_compte().get_subscriber() == 0 && getSubArea().get_subscribe() && Main.USE_SUBSCRIBE) return;
 						GameServer.addToLog(perso.get_name()+" lance un combat contre le groupe "+group.getID()+" sur la map "+_id);
 						startFigthVersusMonstres(perso,group);
 						return;

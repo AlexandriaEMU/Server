@@ -5,10 +5,7 @@ import communication.ComServer
 import java.io.BufferedWriter
 import java.io.PrintStream
 import kotlin.jvm.JvmStatic
-import common.Ancestra
 import java.io.UnsupportedEncodingException
-import common.SQLManager
-import common.World
 import java.net.InetAddress
 import java.lang.InterruptedException
 import java.io.BufferedReader
@@ -21,7 +18,7 @@ import java.lang.Exception
 import java.lang.StringBuilder
 import java.util.ArrayList
 
-object Ancestra {
+object Main {
     /** RealmServer  */
 	@JvmField
 	var REALM_IP: String? = null
@@ -83,7 +80,7 @@ object Ancestra {
     @JvmField
 	var CONFIG_MOTD_COLOR: String? = ""
 
-    //Nombre de joueurs max
+    //Jugadores maximos
 	@JvmField
 	var CONFIG_PLAYER_LIMIT = 30
 
@@ -179,21 +176,22 @@ object Ancestra {
         } catch (e: UnsupportedEncodingException) {
             e.printStackTrace()
         }
-        println("==============================================================\n\n")
-        println(makeHeader())
+        println("==============================================================")
+        println("AlexandriaEMU - SERVER")
+        println("Por Player-xD, basado en AncestraR v54 - Gracias DIABU")
         println("==============================================================\n")
-        print("Chargement de la configuration : ")
+        print("Cargando la configuracion: ")
         loadConfiguration()
         isInit = true
-        println("Configuration OK!")
-        print("Connexion a la base de donnee : ")
-        if (SQLManager.setUpConnexion()) println("Connexion OK!") else {
+        println("OK")
+        print("Conectando a la base de datos: ")
+        if (SQLManager.setUpConnexion()) println("OK") else {
             println("Connexion echouee!")
             System.exit(0)
         }
-        println("Utilisation des monstres : " + CONFIG_USE_MOBS)
+        println("Utiliza monstruos: " + CONFIG_USE_MOBS)
         println("\n")
-        println("Creation du Monde :")
+        println("Creando el mundo:")
         val startTime = System.currentTimeMillis()
         World.createWorld()
         val endTime = System.currentTimeMillis()

@@ -89,9 +89,9 @@ public class Commands {
 		if(infos.length == 0)return;
 		String command = infos[0];
 		
-		if(Ancestra.canLog)
+		if(Main.canLog)
 		{
-			Ancestra.addToMjLog(_compte.get_curIP()+": "+_compte.get_name()+" "+_perso.get_name()+"=>"+msg);
+			Main.addToMjLog(_compte.get_curIP()+": "+_compte.get_name()+" "+_perso.get_name()+"=>"+msg);
 		}
 		
 		if(_compte.get_gmLvl() == 1)
@@ -123,7 +123,7 @@ public class Commands {
 		}
 		if(command.equalsIgnoreCase("INFOS"))
 		{
-			long uptime = System.currentTimeMillis() - Ancestra.gameServer.getStartTime();
+			long uptime = System.currentTimeMillis() - Main.gameServer.getStartTime();
 			int jour = (int) (uptime/(1000*3600*24));
 			uptime %= (1000*3600*24);
 			int hour = (int) (uptime/(1000*3600));
@@ -132,10 +132,10 @@ public class Commands {
 			uptime %= (1000*60);
 			int sec = (int) (uptime/(1000));
 			
-			String mess =	"===========\n"+Ancestra.makeHeader()
+			String mess =	"===========\n"+ Main.makeHeader()
 				+			"Uptime: "+jour+"j "+hour+"h "+min+"m "+sec+"s\n"
-				+			"Joueurs en lignes: "+Ancestra.gameServer.getPlayerNumber()+"\n"
-				+			"Record de connexion: "+Ancestra.gameServer.getMaxPlayer()+"\n"
+				+			"Joueurs en lignes: "+ Main.gameServer.getPlayerNumber()+"\n"
+				+			"Record de connexion: "+ Main.gameServer.getMaxPlayer()+"\n"
 				+			"===========";
 			SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out, mess);
 			return;
@@ -181,11 +181,11 @@ public class Commands {
 			String mess = 	"==========\n"
 				+			"Liste des joueurs en ligne:";
 			SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out, mess);
-			int diff = Ancestra.gameServer.getClients().size() -  30;
+			int diff = Main.gameServer.getClients().size() -  30;
 			for(byte b = 0; b < 30; b++)
 			{
-				if(b == Ancestra.gameServer.getClients().size())break;
-				GameThread GT = Ancestra.gameServer.getClients().get(b);
+				if(b == Main.gameServer.getClients().size())break;
+				GameThread GT = Main.gameServer.getClients().get(b);
 				Personnage P = GT.getPerso();
 				if(P == null)continue;
 				mess = P.get_name()+"("+P.get_GUID()+") ";
@@ -349,7 +349,7 @@ public class Commands {
 		if(command.equalsIgnoreCase("ANNOUNCE"))
 		{
 			infos = msg.split(" ",2);
-			SocketManager.GAME_SEND_MESSAGE_TO_ALL(infos[1], Ancestra.CONFIG_MOTD_COLOR);
+			SocketManager.GAME_SEND_MESSAGE_TO_ALL(infos[1], Main.CONFIG_MOTD_COLOR);
 			return;
 		}else
 		if(command.equalsIgnoreCase("DEMORPH"))
@@ -449,7 +449,7 @@ public class Commands {
 		{
 			infos = msg.split(" ",2);
 			String prefix = "["+_perso.get_name()+"]";
-			SocketManager.GAME_SEND_MESSAGE_TO_ALL(prefix+infos[1], Ancestra.CONFIG_MOTD_COLOR);
+			SocketManager.GAME_SEND_MESSAGE_TO_ALL(prefix+infos[1], Main.CONFIG_MOTD_COLOR);
 			return;
 		}else
 		if(command.equalsIgnoreCase("TELEPORT"))
@@ -1255,7 +1255,7 @@ public class Commands {
 		{
 			System.exit(0);
 		}else
-		if(command.equalsIgnoreCase("SAVE") && !Ancestra.isSaving)
+		if(command.equalsIgnoreCase("SAVE") && !Main.isSaving)
 		{
 			Thread t = new Thread(new SaveThread());
 			t.start();
@@ -1762,7 +1762,7 @@ public class Commands {
 			if(LockValue == 0) c = 'D';
 			if(LockValue == 1) c = 'O';
 			if(LockValue == 2) c = 'S';
-			Ancestra.comServer.sendChangeState(c);
+			Main.comServer.sendChangeState(c);
 			
 			if(LockValue == 1)
 			{
@@ -1785,7 +1785,7 @@ public class Commands {
 				KickPlayer = Byte.parseByte(infos[2]);
 			}catch(Exception e){};
 			
-			Ancestra.comServer.lockGMlevel(GmAccess);
+			Main.comServer.lockGMlevel(GmAccess);
 			SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out, "Serveur bloque au GmLevel : "+GmAccess);
 			if(KickPlayer > 0)
 			{
@@ -1811,7 +1811,7 @@ public class Commands {
 				return;
 			}
 			
-			Ancestra.comServer.addBanIP(P.get_compte().get_curIP());
+			Main.comServer.addBanIP(P.get_compte().get_curIP());
 			SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out, "L'IP a ete banni.");	
 			if(P.isOnline())
 			{
@@ -1868,7 +1868,7 @@ public class Commands {
 		{
 			try
 			{
-				if(Ancestra.NOTINHDV.contains(curTemp.getID())) continue;
+				if(Main.NOTINHDV.contains(curTemp.getID())) continue;
 				
 				for (int j = 0; j < ofEachTemplate; j++)//Ajouter plusieur fois le template
 				{
@@ -1902,7 +1902,7 @@ public class Commands {
 		}
 		SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out,"Remplissage fini en "+(System.currentTimeMillis() - time1) + "ms");
 		World.saveAll(null);
-		SocketManager.GAME_SEND_MESSAGE_TO_ALL("HDV remplis!",Ancestra.CONFIG_MOTD_COLOR);
+		SocketManager.GAME_SEND_MESSAGE_TO_ALL("HDV remplis!", Main.CONFIG_MOTD_COLOR);
 	}
 	
 	private int getHdv(int type)

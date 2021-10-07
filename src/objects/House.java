@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 
 import objects.Others.Bank;
 
-import common.Ancestra;
+import common.Main;
 import common.Constants;
 import common.SQLManager;
 import common.SocketManager;
@@ -325,7 +325,7 @@ public class House
 			//Petit message pour le prévenir si il est on?
 			if(Seller != null)
 			{
-				SocketManager.GAME_SEND_MESSAGE(Seller.get_curPerso(), "Une maison vous appartenant à été vendue "+h.get_sale()+" kamas.", Ancestra.CONFIG_MOTD_COLOR);
+				SocketManager.GAME_SEND_MESSAGE(Seller.get_curPerso(), "Une maison vous appartenant à été vendue "+h.get_sale()+" kamas.", Main.CONFIG_MOTD_COLOR);
 				SQLManager.SAVE_PERSONNAGE(Seller.get_curPerso(), true);
 			}
 		}

@@ -23,7 +23,7 @@ import objects.Guild.GuildMember;
 import objects.Metier.*;
 import objects.Sort.SortStats;
 
-import common.Ancestra;
+import common.Main;
 import common.Constants;
 import common.Formulas;
 import common.SQLManager;
@@ -514,22 +514,22 @@ public class Personnage {
 		this._canaux = canaux;
 		this._curCarte = World.getCarte(map);
 		this._savePos = savePos;
-		if(_curCarte == null && World.getCarte(Ancestra.CONFIG_START_MAP) != null)
+		if(_curCarte == null && World.getCarte(Main.CONFIG_START_MAP) != null)
 		{
-			this._curCarte = World.getCarte(Ancestra.CONFIG_START_MAP);
-			this._curCell = _curCarte.getCase(Ancestra.CONFIG_START_CELL);
-		}else if (_curCarte == null && World.getCarte(Ancestra.CONFIG_START_MAP) == null)
+			this._curCarte = World.getCarte(Main.CONFIG_START_MAP);
+			this._curCell = _curCarte.getCase(Main.CONFIG_START_CELL);
+		}else if (_curCarte == null && World.getCarte(Main.CONFIG_START_MAP) == null)
 		{
 			GameServer.addToLog("Personnage mal positione, et position de d�part non valide. Fermeture du serveur.");
-			Ancestra.closeServers();
+			Main.closeServers();
 		}
 		else if(_curCarte != null)
 		{
 			this._curCell = _curCarte.getCase(cell);
 			if(_curCell == null)
 			{
-				this._curCarte = World.getCarte(Ancestra.CONFIG_START_MAP);
-				this._curCell = _curCarte.getCase(Ancestra.CONFIG_START_CELL);
+				this._curCarte = World.getCarte(Main.CONFIG_START_MAP);
+				this._curCell = _curCarte.getCase(Main.CONFIG_START_CELL);
 			}
 		}
 		for(String str : z.split(","))
@@ -547,7 +547,7 @@ public class Personnage {
 			try {
 				Thread.sleep(10000);
 			} catch (InterruptedException e) {}
-			Ancestra.closeServers();
+			Main.closeServers();
 		}
 
 		if(!stuff.equals(""))
@@ -629,7 +629,7 @@ public class Personnage {
 	public static Personnage CREATE_PERSONNAGE(String name, int sexe, int classe, int color1, int color2, int color3,Compte compte)
 	{
 		StringBuilder z = new StringBuilder();
-		if(Ancestra.CONFIG_ZAAP)
+		if(Main.CONFIG_ZAAP)
 		{
 			for(Entry<Integer, Integer> i : Constants.ZAAPS.entrySet())
 			{
@@ -645,12 +645,12 @@ public class Personnage {
 				color1,
 				color2,
 				color3,
-				Ancestra.CONFIG_START_KAMAS,
-				((Ancestra.CONFIG_START_LEVEL-1)*1),
-				((Ancestra.CONFIG_START_LEVEL-1)*5),
+				Main.CONFIG_START_KAMAS,
+				((Main.CONFIG_START_LEVEL-1)*1),
+				((Main.CONFIG_START_LEVEL-1)*5),
 				10000,
-				Ancestra.CONFIG_START_LEVEL,
-				World.getPersoXpMin(Ancestra.CONFIG_START_LEVEL),
+				Main.CONFIG_START_LEVEL,
+				World.getPersoXpMin(Main.CONFIG_START_LEVEL),
 				100,
 				Integer.parseInt(classe+""+sexe),
 				(byte)0,
@@ -900,12 +900,12 @@ public class Personnage {
 		//Actualisation dans la DB
 		SQLManager.UPDATE_LASTCONNECTION_INFO(get_compte());
 		
-		if(!Ancestra.CONFIG_MOTD.equals(""))//Si le motd est notifi�
+		if(!Main.CONFIG_MOTD.equals(""))//Si le motd est notifi�
 		{
-			String color = Ancestra.CONFIG_MOTD_COLOR;
+			String color = Main.CONFIG_MOTD_COLOR;
 			if(color.equals(""))color = "000000";//Noir
 			
-			SocketManager.GAME_SEND_MESSAGE(this, Ancestra.CONFIG_MOTD, color);
+			SocketManager.GAME_SEND_MESSAGE(this, Main.CONFIG_MOTD, color);
 		}
 		//on d�marre le Timer pour la Regen de Pdv
 		_sitTimer.start();
@@ -931,7 +931,7 @@ public class Personnage {
 		{
 			SocketManager.MESSAGE_BOX(this.get_compte().getGameThread().get_out(), "111|" + _energy);      
 		}
-		if(get_compte().get_subscriber() == 0 && Ancestra.USE_SUBSCRIBE)//Non abonn�
+		if(get_compte().get_subscriber() == 0 && Main.USE_SUBSCRIBE)//Non abonn�
 		{
 			if(_curCarte.getSubArea().get_subscribe())//Se connecte dans une zone abo
 			{
@@ -1020,7 +1020,7 @@ public class Personnage {
 			str.append((_color2==-1?"-1":Integer.toHexString(_color2))).append(";");
 			str.append((_color3==-1?"-1":Integer.toHexString(_color3))).append(";");
 			str.append(getGMStuffString()).append(";");
-			if(Ancestra.CONFIG_AURA_SYSTEM)
+			if(Main.CONFIG_AURA_SYSTEM)
 			{
 				str.append((_lvl>99?(_lvl>199?(2):(1)):(0))).append(";");
 			}else
@@ -1794,7 +1794,7 @@ public class Personnage {
 					_Follower.remove(t.get_GUID());
 			}
 		}
-		if(get_compte().get_subscriber() == 0 && _curCarte.getSubArea().get_subscribe() && get_compte().get_subscriberMessage() && Ancestra.USE_SUBSCRIBE)///Non abonn�, zone abo et premier message
+		if(get_compte().get_subscriber() == 0 && _curCarte.getSubArea().get_subscribe() && get_compte().get_subscriberMessage() && Main.USE_SUBSCRIBE)///Non abonn�, zone abo et premier message
 		{
 			SocketManager.GAME_SEND_SUBSCRIBE_MESSAGE(this, "+10");
 			get_compte().set_subscriberMessage(false);
@@ -2141,7 +2141,7 @@ public class Personnage {
 	{
 		if(getSortStatBySortIfHas(spellID)== null)
 		{
-			if(Ancestra.CONFIG_DEBUG) GameServer.addToLog(_name+" n'a pas le sort "+spellID);
+			if(Main.CONFIG_DEBUG) GameServer.addToLog(_name+" n'a pas le sort "+spellID);
 			return false;
 		}
 		int AncLevel = getSortStatBySortIfHas(spellID).getLevel();
@@ -2155,7 +2155,7 @@ public class Personnage {
 			return true;
 		}else
 		{
-			if(Ancestra.CONFIG_DEBUG) GameServer.addToLog(_name+" : Echec LearnSpell "+spellID);
+			if(Main.CONFIG_DEBUG) GameServer.addToLog(_name+" : Echec LearnSpell "+spellID);
 			return false;
 		}
 		
@@ -3422,7 +3422,7 @@ public class Personnage {
 	
 	public void toogleOnMount()
 	{
-		if(!isOnMount() && get_compte().get_subscriber() == 0 && Ancestra.USE_SUBSCRIBE)
+		if(!isOnMount() && get_compte().get_subscriber() == 0 && Main.USE_SUBSCRIBE)
 		{
 			SocketManager.GAME_SEND_EXCHANGE_REQUEST_ERROR(get_compte().getGameThread().get_out(),'S');
 			return;

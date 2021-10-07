@@ -523,9 +523,9 @@ public class Constants
 		{
 			//TODO
 		}
-		if(Ancestra.CONFIG_CUSTOM_STARTMAP)
+		if(Main.CONFIG_CUSTOM_STARTMAP)
 		{
-			return Ancestra.CONFIG_START_MAP;
+			return Main.CONFIG_START_MAP;
 		}
 		return pos;
 	}
@@ -537,9 +537,9 @@ public class Constants
 		{
 		//TODO
 		}
-		if(Ancestra.CONFIG_CUSTOM_STARTMAP)
+		if(Main.CONFIG_CUSTOM_STARTMAP)
 		{
-			return Ancestra.CONFIG_START_CELL;
+			return Main.CONFIG_START_CELL;
 		}
 		return pos;
 	}

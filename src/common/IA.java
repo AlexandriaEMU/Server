@@ -710,7 +710,7 @@ public class IA {
 			if(Pathfinding.isNextTo(F.get_fightCell().getID(), T.get_fightCell().getID()))
 				return false;
 			
-			if(Ancestra.CONFIG_DEBUG) GameServer.addToLog("Tentative d'approche par "+F.getPacketsName()+" de "+T.getPacketsName());
+			if(Main.CONFIG_DEBUG) GameServer.addToLog("Tentative d'approche par "+F.getPacketsName()+" de "+T.getPacketsName());
 			
 			int cellID = Pathfinding.getNearestCellAround(fight.get_map(),T.get_fightCell().getID(),F.get_fightCell().getID(),null);
 			//On demande le chemin plus court

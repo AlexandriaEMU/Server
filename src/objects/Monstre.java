@@ -325,7 +325,7 @@ public class Monstre
 					condition = "";
 					
 				}
-			}, Ancestra.CONFIG_ARENA_TIMER);
+			}, Main.CONFIG_ARENA_TIMER);
 		}
 		public void stopConditionTimer()
 		{
