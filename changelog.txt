@@ -3,3 +3,6 @@ v0.00.0
 - Java 17 - BellSoft
 - Actualizacion libreria MULTI - MYSQL
 - Optimizaciones varias
+- Eliminado de columnas inecesarias en la BDD - Tabla miembros de gremio
+
+v0.00.1

@@ -289,35 +289,29 @@ public class SQLManager {
 			e.printStackTrace();
 		}
 	}
-	public static void LOAD_GUILD_MEMBERS()
-	{
-		try
-		{
-			ResultSet RS = SQLManager.executeQuery("SELECT * from guild_members;", Main.DB_NAME);
-			while(RS.next())
-			{
+
+	//v0.00.0 - Eliminado de columnas inecesarias
+	public static void LOAD_GUILD_MEMBERS() {
+		try {
+			ResultSet RS = SQLManager.executeQuery("SELECT * FROM guild_members;", Main.DB_NAME);
+			while(RS.next()) {
 				Guild G = World.getGuild(RS.getInt("guild"));
 				if(G == null)continue;
-				G.addMember(RS.getInt("guid"), RS.getString("name"), RS.getInt("level"), RS.getInt("gfxid"), RS.getInt("rank"), RS.getByte("pxp"), RS.getLong("xpdone"), RS.getInt("rights"), RS.getByte("align"),RS.getDate("lastConnection").toString().replaceAll("-","~"));
+				G.addMember(RS.getInt("guid"), RS.getInt("rank"), RS.getByte("pxp"), RS.getLong("xpdone"), RS.getInt("rights"),RS.getDate("lastConnection").toString().replaceAll("-","~"));
 			}
 			closeResultSet(RS);
-		}catch(SQLException e)
-		{
+		}catch(SQLException e) {
 			GameServer.addToLog("SQL ERROR: "+e.getMessage());
 			e.printStackTrace();
 		}
 	}
-	public static void LOAD_MOUNTS()
-	{
-		try
-		{
-			ResultSet RS = SQLManager.executeQuery("SELECT * from mounts_data;", Main.DB_NAME);
-			while(RS.next())
-			{
+
+	public static void LOAD_MOUNTS() {
+		try {
+			ResultSet RS = SQLManager.executeQuery("SELECT * FROM mounts_data;", Main.DB_NAME);
+			while(RS.next()) {
 				World.addDragodinde
-				(
-					new Dragodinde
-					(
+				(new Dragodinde(
 						RS.getInt("id"),
 						RS.getInt("color"),
 						RS.getInt("sexe"),
@@ -333,24 +327,20 @@ public class SQLManager {
 						RS.getInt("serenite"),
 						RS.getString("items"),
 						RS.getString("ancetres")
-					)
-				);
+					));
 			}
 			closeResultSet(RS);
-		}catch(SQLException e)
-		{
+		}catch(SQLException e) {
 			GameServer.addToLog("SQL ERROR: "+e.getMessage());
 			e.printStackTrace();
 		}
 	}
-	public static int LOAD_DROPS()
-	{
+
+	public static int LOAD_DROPS() {
 		int i = 0;
-		try
-		{
+		try {
 			ResultSet RS = SQLManager.executeQuery("SELECT * from drops;", Main.DB_NAME);
-			while(RS.next())
-			{
+			while(RS.next()) {
 				Monstre MT = World.getMonstre(RS.getInt("mob"));
 				MT.addDrop(new Drop(
 						RS.getInt("item"),
@@ -361,13 +351,13 @@ public class SQLManager {
 				i++;
 			}
 			closeResultSet(RS);
-		}catch(SQLException e)
-		{
+		}catch(SQLException e) {
 			GameServer.addToLog("SQL ERROR: "+e.getMessage());
 			e.printStackTrace();
 		}
 		return i;
 	}
+
 	public static void LOAD_ITEMSETS()
 	{
 		try
@@ -1907,8 +1897,7 @@ public class SQLManager {
 		return false;
 	}
 
-	public static boolean DEL_ENDFIGHTACTION(int mapID, int type, int aid)
-	{
+	public static boolean DEL_ENDFIGHTACTION(int mapID, int type, int aid) {
 		String baseQuery = "DELETE FROM `endfight_action` " +
 				"WHERE map = ? AND " +
 				"fighttype = ? AND " +
@@ -1928,8 +1917,8 @@ public class SQLManager {
 			return false;
 		}
 	}
-	public static void SAVE_NEWGUILD(Guild g)
-	{
+
+	public static void SAVE_NEWGUILD(Guild g) {
 		String baseQuery = "INSERT INTO `guilds` " +
 				"VALUES (?,?,?,1,0,0,0,?,?);";
 		try {
@@ -1947,8 +1936,8 @@ public class SQLManager {
 			GameServer.addToLog("Game: Query: "+baseQuery);
 		}
 	}
-	public static void DEL_GUILD(int id)
-	{
+
+	public static void DEL_GUILD(int id) {
 		String baseQuery = "DELETE FROM `guilds` " +
 				"WHERE `id` = ?;";
 		try {
@@ -1962,8 +1951,8 @@ public class SQLManager {
 			GameServer.addToLog("Game: Query: "+baseQuery);
 		}
 	}
-	public static void DEL_ALL_GUILDMEMBER(int guildid)
-	{
+
+	public static void DEL_ALL_GUILDMEMBER(int guildid) {
 		String baseQuery = "DELETE FROM `guild_members` " +
 				"WHERE `guild` = ?;";
 		try {
@@ -1977,8 +1966,8 @@ public class SQLManager {
 			GameServer.addToLog("Game: Query: "+baseQuery);
 		}
 	}
-	public static void DEL_GUILDMEMBER(int id)
-	{
+
+	public static void DEL_GUILDMEMBER(int id) {
 		String baseQuery = "DELETE FROM `guild_members` " +
 				"WHERE `guid` = ?;";
 		try {
@@ -1992,8 +1981,8 @@ public class SQLManager {
 			GameServer.addToLog("Game: Query: "+baseQuery);
 		}
 	}
-	public static void UPDATE_GUILD(Guild g)
-	{
+
+	public static void UPDATE_GUILD(Guild g) {
 		String baseQuery = "UPDATE `guilds` SET "+
 		"`lvl` = ?,"+
 		"`xp` = ?," +
@@ -2020,24 +2009,21 @@ public class SQLManager {
 			GameServer.addToLog("Game: Query: "+baseQuery);
 		}
 	}
-	public static void UPDATE_GUILDMEMBER(GuildMember gm)
-	{
+
+	//v0.00.0 - Modificamos la carga de columnas inecesarias
+	public static void UPDATE_GUILDMEMBER(GuildMember gm) {
 		String baseQuery = "REPLACE INTO `guild_members` " +
-						"VALUES(?,?,?,?,?,?,?,?,?,?,?);";
+						"VALUES(?,?,?,?,?,?,?);";
 						
 		try {
 			PreparedStatement p = newTransact(baseQuery, gameCon);
 			p.setInt(1,gm.getGuid());
 			p.setInt(2,gm.getGuild().get_id());
-			p.setString(3,gm.getName());
-			p.setInt(4,gm.getLvl());
-			p.setInt(5,gm.getGfx());
-			p.setInt(6,gm.getRank());
-			p.setLong(7,gm.getXpGave());
-			p.setInt(8,gm.getPXpGive());
-			p.setInt(9,gm.getRights());
-			p.setInt(10,gm.getAlign());
-			p.setString(11,gm.getLastCo());
+			p.setInt(3,gm.getRank());
+			p.setLong(4,gm.getXpGave());
+			p.setInt(5,gm.getPXpGive());
+			p.setInt(6,gm.getRights());
+			p.setString(7,gm.getLastCo());
 			
 			p.execute();
 			closePreparedStatement(p);
@@ -2046,12 +2032,10 @@ public class SQLManager {
 			GameServer.addToLog("Game: Query: "+baseQuery);
 		}
 	}
-	public static int isPersoInGuild(int guid)
-	{
+	public static int isPersoInGuild(int guid) {
 		int guildId = -1;
 		
-		try
-		{
+		try {
 			ResultSet GuildQuery = SQLManager.executeQuery("SELECT guild FROM `guild_members` WHERE guid="+guid+";", Main.DB_NAME);
 			
 			boolean found = GuildQuery.first();
@@ -2060,40 +2044,36 @@ public class SQLManager {
 				guildId = GuildQuery.getInt("guild");
 			
 			closeResultSet(GuildQuery);
-		}catch(SQLException e)
-		{
+		}catch(SQLException e) {
 			GameServer.addToLog("SQL ERROR: "+e.getMessage());
 			e.printStackTrace();
 		}
 		
 		return guildId;
 	}
-	public static int[] isPersoInGuild(String name)
-	{
+
+	public static int[] isPersoInGuild(String name) {
 		int guildId = -1;
 		int guid = -1;
-		try
-		{
+		try {
 			ResultSet GuildQuery = SQLManager.executeQuery("SELECT guild,guid FROM `guild_members` WHERE name='"+name+"';", Main.DB_NAME);
 			boolean found = GuildQuery.first();
 			
-			if(found)
-			{
+			if(found) {
 				guildId = GuildQuery.getInt("guild");
 				guid = GuildQuery.getInt("guid");
 			}
 			
 			closeResultSet(GuildQuery);
-		}catch(SQLException e)
-		{
+		}catch(SQLException e) {
 			GameServer.addToLog("SQL ERROR: "+e.getMessage());
 			e.printStackTrace();
 		}
 		int[] toReturn = {guid,guildId};
 		return toReturn;
 	}
-	public static boolean ADD_REPONSEACTION(int repID, int type, String args)
-	{
+
+	public static boolean ADD_REPONSEACTION(int repID, int type, String args) {
 		String baseQuery = "DELETE FROM `npc_reponses_actions` " +
 						"WHERE `ID` = ? AND " +
 						"`type` = ?;";
@@ -2126,8 +2106,8 @@ public class SQLManager {
 		}
 		return false;
 	}
-	public static boolean UPDATE_INITQUESTION(int id, int q)
-	{
+
+	public static boolean UPDATE_INITQUESTION(int id, int q) {
 		String baseQuery = "UPDATE `npc_template` SET " +
 							"`initQuestion` = ? " +
 							"WHERE `id` = ?;";
