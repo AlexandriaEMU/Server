@@ -175,8 +175,7 @@ public class Fight
 		private Case _cell;
 		private ArrayList<SpellEffect> _fightBuffs = new ArrayList<>();
 		private Map<Integer,Integer> _chatiValue = new TreeMap<>();
-		private int _orientation; 
-		private Fighter _invocator;
+        private Fighter _invocator;
 		public int _nbInvoc = 0;
 		private int _PDVMAX;
 		private int _PDV;
@@ -395,7 +394,7 @@ public class Fight
 			StringBuilder str = new StringBuilder();
 			str.append("GM|").append(c);
 			str.append(_cell.getID()).append(";");
-			_orientation = 1;
+            int _orientation = 1;
 			str.append(_orientation).append(";");
 			str.append("0;");
 			str.append(getGUID()).append(";");
@@ -1738,7 +1737,7 @@ public class Fight
 		try
 		{
 			Thread.sleep(100);
-		}catch(Exception e){};
+		}catch(Exception e){}
 		startTurn();
 	}
 
@@ -1881,7 +1880,7 @@ public class Fight
 				try
 				{
 					val = Integer.parseInt(SE.getArgs().split(";")[1]);
-				}catch(Exception e){};
+				}catch(Exception e){}
 				if(val == -1)continue;
 				
 				int nbr = (int) Math.floor((double)_curFighterUsedPA/(double)pas);
@@ -2158,7 +2157,7 @@ public class Fight
 	{	
 		try {
 			Thread.sleep(700);
-		} catch (InterruptedException e) {};
+		} catch (InterruptedException e) {}
 		Fighter current_Join = null;
 		Case cell = getRandomCell(_start1);
 		if(cell == null)return;
@@ -2431,8 +2430,8 @@ public class Fight
         {
         	try {
     			Thread.sleep(900+100*nStep);//Estimation de la dur�e du d�placement
-    		} catch (InterruptedException e) {};
-        	SocketManager.GAME_SEND_GAMEACTION_TO_FIGHT(this,7,_curAction);
+    		} catch (InterruptedException e) {}
+			SocketManager.GAME_SEND_GAMEACTION_TO_FIGHT(this,7,_curAction);
     		_curAction = "";
     		ArrayList<Piege> P = new ArrayList<>();
     		P.addAll(_traps);
@@ -2476,8 +2475,8 @@ public class Fight
 		}
 		try {
 			Thread.sleep(500);
-		} catch (InterruptedException e) {};
-		
+		} catch (InterruptedException e) {}
+
 		_curAction = "";
 	}
 
@@ -2552,13 +2551,13 @@ public class Fight
 			
 			try {
 				Thread.sleep(500);
-			} catch (InterruptedException e) {};
+			} catch (InterruptedException e) {}
 			if((isEc && Spell.isEcEndTurn()))
 			{
 				_curAction = "";
 				try {
 					Thread.sleep(500);
-				} catch (InterruptedException e) {};
+				} catch (InterruptedException e) {}
 				if(fighter.getMob() != null || fighter.isInvocation())//Mob, Invoque
 				{
 					return 5;
@@ -2575,7 +2574,7 @@ public class Fight
 		}
 		try {
 			Thread.sleep(500);
-		} catch (InterruptedException e) {};
+		} catch (InterruptedException e) {}
 		_curAction = "";
 		return 0;
 	}
@@ -3324,13 +3323,13 @@ public class Fight
 				try
 				{
 					Thread.sleep(1000);
-				}catch(Exception E){};
+				}catch(Exception E){}
 				if(_type != Constants.FIGHT_TYPE_CHALLENGE) player.get_curCarte().applyEndFightAction(_type, F.getPersonnage());
 				
 				try
 				{
 					Thread.sleep(200);
-				}catch(Exception E){};
+				}catch(Exception E){}
 				player.refreshMapAfterFight();
 			}
 			//Pour les perdant ont TP au point de sauvegarde
@@ -3363,7 +3362,7 @@ public class Fight
 					try
 					{
 						Thread.sleep(1000);
-					}catch(Exception E){};
+					}catch(Exception E){}
 					/**Energie**/
 					int EnergyLoos = Formulas.getLoosEnergy(F.get_lvl(), _type==1, _type==5);
 					int Energy = player.get_energy() - EnergyLoos;
@@ -3399,7 +3398,7 @@ public class Fight
 				try
 				{
 					Thread.sleep(200);
-				}catch(Exception E){};
+				}catch(Exception E){}
 				player.refreshMapAfterFight();
 			}
 			
@@ -3509,7 +3508,7 @@ public class Fight
 					else if (_team1.containsKey(target.getGUID()))_team1.remove(target.getGUID());
 					SocketManager.GAME_SEND_GA_PACKET_TO_FIGHT(this, 7, 999, target.getGUID()+"", getGTL());
 				}
-			}catch(Exception e){e.printStackTrace();};
+			}catch(Exception e){e.printStackTrace();}
 		}
 		
 		if((this._type == Constants.FIGHT_TYPE_PVM) && (this._challenges.size() > 0))
@@ -3572,7 +3571,7 @@ public class Fight
 		}
 		try {
 			Thread.sleep(500);
-		} catch (InterruptedException e) {};
+		} catch (InterruptedException e) {}
 	}
 	
 	public int getTeamID(int guid)
@@ -3803,8 +3802,8 @@ public class Fight
 								try
 								{
 									Thread.sleep(1000);
-								}catch(Exception E){};
-								
+								}catch(Exception E){}
+
 								if(Energy == 0)
 								{
 									P.set_FuneralStone();
@@ -3820,7 +3819,7 @@ public class Fight
 								try
 								{
 									Thread.sleep(200);
-								}catch(Exception E){};
+								}catch(Exception E){}
 								SocketManager.GAME_SEND_GV_PACKET(P);
 								P.refreshMapAfterFight();
 							}
@@ -3873,7 +3872,7 @@ public class Fight
 									try
 									{
 										Thread.sleep(200);
-									}catch(Exception E){};
+									}catch(Exception E){}
 									SocketManager.GAME_SEND_GV_PACKET(P);
 									P.refreshMapAfterFight();
 								}
@@ -3928,7 +3927,7 @@ public class Fight
 											try
 											{
 												Thread.sleep(200);
-											}catch(Exception E){};
+											}catch(Exception E){}
 											SocketManager.GAME_SEND_GV_PACKET(P);
 											P.refreshMapAfterFight();
 										}
@@ -3972,7 +3971,7 @@ public class Fight
 											try
 											{
 												Thread.sleep(1000);
-											}catch(Exception E){};
+											}catch(Exception E){}
 											if(Energy == 0)
 											{
 												P.set_FuneralStone();
@@ -3988,7 +3987,7 @@ public class Fight
 											try
 											{
 												Thread.sleep(200);
-											}catch(Exception E){};
+											}catch(Exception E){}
 											SocketManager.GAME_SEND_GV_PACKET(P);
 											P.refreshMapAfterFight();
 										}
@@ -4012,7 +4011,7 @@ public class Fight
 											try
 											{
 												Thread.sleep(200);
-											}catch(Exception E){};
+											}catch(Exception E){}
 											SocketManager.GAME_SEND_GV_PACKET(P);
 											P.refreshMapAfterFight();
 										}
@@ -4103,7 +4102,7 @@ public class Fight
 									try
 									{
 										Thread.sleep(1000);
-									}catch(Exception E){};
+									}catch(Exception E){}
 									if(Energy == 0)
 									{
 										P.set_FuneralStone();
@@ -4119,7 +4118,7 @@ public class Fight
 									try
 									{
 										Thread.sleep(200);
-									}catch(Exception E){};
+									}catch(Exception E){}
 									SocketManager.GAME_SEND_GV_PACKET(P);
 									P.refreshMapAfterFight();
 								}

@@ -119,7 +119,7 @@ public class Challenge
             case 3, 4, 32, 35 -> {//Tueur � gages
                 if (_cible == null && _ordreJeu.size() > 0)//Si aucun cible n'est choise on en choisie une
                 {
-                    List<Fighter> Choix = new ArrayList<Fighter>();
+                    List<Fighter> Choix = new ArrayList<>();
                     Choix.addAll(_ordreJeu);
                     Collections.shuffle(Choix);//M�lange l'ArrayList
                     for (Fighter f : Choix) {

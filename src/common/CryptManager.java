@@ -21,9 +21,9 @@ public class CryptManager {
             {
                 if (((i & 15) << 4 | o & 15) == Integer.parseInt(Splitted[Count]))
                 {
-                    Character A = (char)(i+48);
-                    Character B = (char)(o + 48);
-                    Encrypted.append(A.toString()).append(B.toString());
+                    char A = (char)(i+48);
+                    char B = (char)(o + 48);
+                    Encrypted.append(Character.toString(A)).append(Character.toString(B));
                     i = 0;
                     o = 0;
                     Count++;

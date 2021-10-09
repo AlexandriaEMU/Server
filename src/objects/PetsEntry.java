@@ -17,8 +17,7 @@ public class PetsEntry {
 	private long LastEatDate;
 	private int quaEat;
 	private int PDV;
-	private int Poids;
-	private int Corpulence;
+    private int Corpulence;
 	private boolean isEupeoh;
 	
 	public PetsEntry(int Oid, long LastEatDate, int quaEat, int PDV, int corpulence, boolean isEPO) 
@@ -119,8 +118,8 @@ public class PetsEntry {
 				cumul = cumul+(1*entry.getValue());
 				
 		}
-		this.Poids = cumul;
-		return this.Poids;
+        int poids = cumul;
+		return poids;
 	}
 	
 	public void LooseFight(Personnage p)

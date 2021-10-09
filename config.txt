@@ -26,7 +26,7 @@ GAME_PORT = 5400
 COM_PORT = 435
 
 # Configuracion general
-MOTD =Bienvenue sur le serveur <i>Semi-Ankalike</i> d'<b>Axeryon</b>
+MOTD = Bienvenido a <b>AlexandriaEMU</b> - http://rltech.click
 MOTD_COLOR = 173ff
 PLAYER_LIMIT = 100
 LOAD_ACTION_DELAY = 10

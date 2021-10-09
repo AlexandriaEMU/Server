@@ -71,8 +71,8 @@ public class Carte {
 					Dragodinde DD = World.getDragoByID(Integer.parseInt(secondCut[1]));
 					if(DD == null) continue;
 					MountParkDATA.put(Integer.parseInt(secondCut[1]), Integer.parseInt(secondCut[0]));
-				}catch(Exception E){};
-			}
+				}catch(Exception E){}
+            }
 		}
 
 		public int get_owner() {
@@ -1314,8 +1314,8 @@ public class Carte {
 				{
 					obj = Integer.parseInt(cellInfos[3]);
 				}
-			}catch(Exception d){};
-			if(Number == -1)continue;
+			}catch(Exception d){}
+            if(Number == -1)continue;
 			
             _cases.put(Number, new Case(this,Number,Walkable,LineOfSight,obj));	
 		}
@@ -1330,8 +1330,8 @@ public class Carte {
 			{
 				id = Integer.parseInt(mob.split(",")[0]);
 				lvl = Integer.parseInt(mob.split(",")[1]);
-			}catch(NumberFormatException e){continue;};
-			if(id == 0 || lvl == 0)continue;
+			}catch(NumberFormatException e){continue;}
+            if(id == 0 || lvl == 0)continue;
 			if(World.getMonstre(id) == null)continue;
 			if(World.getMonstre(id).getGradeByLevel(lvl) == null)continue;
 			_mobPossibles.add(World.getMonstre(id).getGradeByLevel(lvl));

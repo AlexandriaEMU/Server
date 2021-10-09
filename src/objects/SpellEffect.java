@@ -49,8 +49,8 @@ public class SpellEffect
 				chance= Integer.parseInt(args.split(";")[4]);
 				jet = args.split(";")[5];
 				
-			}catch(Exception e){};
-		}
+			}catch(Exception e){}
+        }
 				
 		public SpellEffect(int id, int value2, int aduration, int turns2, boolean debuff,Fighter aCaster, String args2, int aspell)
 		{
@@ -65,8 +65,8 @@ public class SpellEffect
 			try
 			{
 				jet = args.split(";")[5];
-			}catch(Exception e){};
-		}
+			}catch(Exception e){}
+        }
 
 		public boolean getSpell2(int id)
 		{
@@ -183,8 +183,8 @@ public class SpellEffect
 							try
 							{
 								nbrCase = Integer.parseInt(buff.getArgs().split(";")[1]);	
-							}catch(Exception e){};
-							if(nbrCase == 0)continue;
+							}catch(Exception e){}
+                            if(nbrCase == 0)continue;
 							int exCase = target.get_fightCell().getID();
 							int newCellID = Pathfinding.newCaseAfterPush(fight.get_map(), caster.get_fightCell(), target.get_fightCell(), nbrCase);
 							if(newCellID <0)//S'il a été bloqué
@@ -230,8 +230,8 @@ public class SpellEffect
 									if(-finalDommage > (target.getPDVMAX() - target.getPDV()))finalDommage = -(target.getPDVMAX() - target.getPDV());
 								}else//Dommage
 									finalDommage = finalDommage*coefDom;
-							}catch(Exception e){};
-						break;
+							}catch(Exception e){}
+                            break;
 						
 						case 107://renvoie Dom
 							String[] args = buff.getArgs().split(";");
@@ -246,8 +246,8 @@ public class SpellEffect
 								{
 									renvoie = (int)(coef * Integer.parseInt(args[0]));
 								}
-							}catch(Exception e){return finalDommage;};
-							if(renvoie > finalDommage)renvoie = finalDommage;
+							}catch(Exception e){return finalDommage;}
+                            if(renvoie > finalDommage)renvoie = finalDommage;
 							finalDommage -= renvoie;
 							SocketManager.GAME_SEND_GA_PACKET_TO_FIGHT(fight, 7, 107, "-1", target.getGUID()+","+renvoie);
 							if(renvoie>caster.getPDV())renvoie = caster.getPDV();
@@ -264,8 +264,8 @@ public class SpellEffect
 							try
 							{
 								max = Integer.parseInt(buff.getArgs().split(";")[1]);
-							}catch(Exception e){};
-							if(max == 0)continue;
+							}catch(Exception e){}
+                            if(max == 0)continue;
 							if(stat == 108)
 							{
 								target.addBuff(stat, max, 5, 1, false, buff.getSpell(), buff.getArgs(), caster);
@@ -859,8 +859,8 @@ public class SpellEffect
 			}catch(Exception e1){
 				GameServer.addToLog("Erreur sur le monstre id:"+mobID);
 				return;
-			};
-			if(mobID == -1 || level == -1 || MG == null)return;
+			}
+            if(mobID == -1 || level == -1 || MG == null)return;
 			int id = fight.getNextLowerFighterGuid();
 			MG.setInFightID(id);
 			Fighter F = new Fighter(fight,MG);
@@ -1258,8 +1258,8 @@ public class SpellEffect
 			try
 			{
 				val = Integer.parseInt(args.split(";")[1]);//Niveau de sort max
-			}catch(Exception e){};
-			if(val == -1)return;
+			}catch(Exception e){}
+            if(val == -1)return;
 			for(Fighter target : cibles)
 			{
 				target.addBuff(effectID, val, turns, 1, false, spell, args, caster);
@@ -1372,8 +1372,8 @@ public class SpellEffect
 			try
 			{
 				id = Integer.parseInt(args.split(";")[2]);
-			}catch(Exception e){};
-			for(Fighter target : cibles)
+			}catch(Exception e){}
+            for(Fighter target : cibles)
 			{
 				if(spell == 686)
 				{
@@ -1687,9 +1687,9 @@ public class SpellEffect
 			}catch(Exception e1){
 				GameServer.addToLog("Erreur sur le monstre id:"+mobID);
 				return;
-			};
-			
-			if(mobID == -1 || level == -1 || MG == null)return;
+			}
+
+            if(mobID == -1 || level == -1 || MG == null)return;
             int id = fight.getNextLowerFighterGuid()-caster._nbInvoc;
 			MG.setInFightID(id);
 			MG.modifStatByInvocator(caster);
@@ -1924,8 +1924,8 @@ public class SpellEffect
 			try
 			{
 				value = Integer.parseInt(args.split(";")[0]);
-			}catch(NumberFormatException e){};
-			int num = 0;
+			}catch(NumberFormatException e){}
+            int num = 0;
 			for(Fighter target : cibles)
 			{
 				int val = Formulas.getPointsLost('m', value, caster, target);
@@ -1953,8 +1953,8 @@ public class SpellEffect
 			try
 			{
 				value = Integer.parseInt(args.split(";")[0]);
-			}catch(NumberFormatException e){};
-			int num = 0;
+			}catch(NumberFormatException e){}
+            int num = 0;
 			for(Fighter target : cibles)
 			{
 				int val = Formulas.getPointsLost('m', value, caster, target);
@@ -3176,8 +3176,8 @@ public class SpellEffect
 							try
 							{
 								add = Integer.parseInt(SE.getArgs().split(";")[2]);
-							}catch(Exception e){};
-							if(add <= 0)continue;
+							}catch(Exception e){}
+                            if(add <= 0)continue;
 							dmg += add;
 						}
 					}
@@ -3228,8 +3228,8 @@ public class SpellEffect
 							try
 							{
 								add = Integer.parseInt(SE.getArgs().split(";")[2]);
-							}catch(Exception e){};
-							if(add <= 0)continue;
+							}catch(Exception e){}
+                            if(add <= 0)continue;
 							dmg += add;
 						}
 					}
@@ -3285,8 +3285,8 @@ public class SpellEffect
 							try
 							{
 								add = Integer.parseInt(SE.getArgs().split(";")[2]);
-							}catch(Exception e){};
-							if(add <= 0)continue;
+							}catch(Exception e){}
+                            if(add <= 0)continue;
 							dmg += add;
 						}
 					}
@@ -3337,8 +3337,8 @@ public class SpellEffect
 							try
 							{
 								add = Integer.parseInt(SE.getArgs().split(";")[2]);
-							}catch(Exception e){};
-							if(add <= 0)continue;
+							}catch(Exception e){}
+                            if(add <= 0)continue;
 							dmg += add;
 						}
 					}
@@ -3409,8 +3409,8 @@ public class SpellEffect
 							try
 							{
 								add = Integer.parseInt(SE.getArgs().split(";")[2]);
-							}catch(Exception e){};
-							if(add <= 0)continue;
+							}catch(Exception e){}
+                            if(add <= 0)continue;
 							dmg += add;
 						}
 					}
@@ -3461,8 +3461,8 @@ public class SpellEffect
 							try
 							{
 								add = Integer.parseInt(SE.getArgs().split(";")[2]);
-							}catch(Exception e){};
-							if(add <= 0)continue;
+							}catch(Exception e){}
+                            if(add <= 0)continue;
 							dmg += add;
 						}
 					}
@@ -3519,8 +3519,8 @@ public class SpellEffect
 							try
 							{
 								add = Integer.parseInt(SE.getArgs().split(";")[2]);
-							}catch(Exception e){};
-							if(add <= 0)continue;
+							}catch(Exception e){}
+                            if(add <= 0)continue;
 							dmg += add;
 						}
 					}
@@ -3574,8 +3574,8 @@ public class SpellEffect
 							try
 							{
 								add = Integer.parseInt(SE.getArgs().split(";")[2]);
-							}catch(Exception e){};
-							if(add <= 0)continue;
+							}catch(Exception e){}
+                            if(add <= 0)continue;
 							dmg += add;
 						}
 					}
@@ -3631,8 +3631,8 @@ public class SpellEffect
 							try
 							{
 								add = Integer.parseInt(SE.getArgs().split(";")[2]);
-							}catch(Exception e){};
-							if(add <= 0)continue;
+							}catch(Exception e){}
+                            if(add <= 0)continue;
 							dmg += add;
 						}
 					}
@@ -3682,8 +3682,8 @@ public class SpellEffect
 							try
 							{
 								add = Integer.parseInt(SE.getArgs().split(";")[2]);
-							}catch(Exception e){};
-							if(add <= 0)continue;
+							}catch(Exception e){}
+                            if(add <= 0)continue;
 							dmg += add;
 						}
 					}
@@ -3842,8 +3842,8 @@ public class SpellEffect
 			try
 			{
 				value = Integer.parseInt(args.split(";")[0]);
-			}catch(NumberFormatException e){};
-			int num = 0;
+			}catch(NumberFormatException e){}
+            int num = 0;
 			for(Fighter target : cibles)
 			{
 				target.addBuff(Constants.STATS_REM_PO, value, turns,0, true, spell,args,caster);

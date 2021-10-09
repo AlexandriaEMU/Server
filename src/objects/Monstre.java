@@ -206,8 +206,8 @@ public class Monstre
 					//On prend un grade au hasard entre 0 et size -1 parmis les mobs possibles
 					_Mobs.put(guid, mgs.get(Formulas.getRandomValue(0, mgs.size()-1)));
 					guid--;
-				}catch(Exception e){continue;};
-			}
+				}catch(Exception e){continue;}
+            }
 			orientation = (Formulas.getRandomValue(0, 3)*2)+1;
 			creationTime = System.currentTimeMillis();
 		}
@@ -385,9 +385,9 @@ public class Monstre
 				intell = Integer.parseInt(statsArray[2]);
 				chance = Integer.parseInt(statsArray[3]);
 				agilite = Integer.parseInt(statsArray[4]);
-			}catch(Exception e){e.printStackTrace();};
-			
-			stats.clear();
+			}catch(Exception e){e.printStackTrace();}
+
+            stats.clear();
 			stats.put(Constants.STATS_ADD_FORC, force);
 			stats.put(Constants.STATS_ADD_SAGE, sagesse);
 			stats.put(Constants.STATS_ADD_INTE, intell);
@@ -413,8 +413,8 @@ public class Monstre
 				{
 					spellID = Integer.parseInt(spellInfo[0]);
 					spellLvl = Integer.parseInt(spellInfo[1]);
-				}catch(Exception e){continue;};
-				if(spellID == 0 || spellLvl == 0)continue;
+				}catch(Exception e){continue;}
+                if(spellID == 0 || spellLvl == 0)continue;
 				
 				Sort sort = World.getSort(spellID);
 				if(sort == null)continue;
@@ -578,8 +578,8 @@ public class Monstre
 				{
 					pdvmax = Integer.parseInt(aPdvs.split("\\|")[n]);
 					init = Integer.parseInt(aInit.split("\\|")[n]);
-				}catch(Exception e){};
-				//PA / PM
+				}catch(Exception e){}
+                //PA / PM
 				int PA = 3;
 				int PM = 3;
 				int xp = 10;
@@ -589,17 +589,17 @@ public class Monstre
 					try
 					{
 						PA = Integer.parseInt(pts[0]);
-					}catch(Exception e1){};
-					try
+					}catch(Exception e1){}
+                    try
 					{
 						PM = Integer.parseInt(pts[1]);
-					}catch(Exception e1){};
-					try
+					}catch(Exception e1){}
+                    try
 					{
 						xp = Integer.parseInt(xpstr.split("\\|")[n]);
-					}catch(Exception e1){e1.printStackTrace();};
-				}catch(Exception e){e.printStackTrace();};
-				grades.put
+					}catch(Exception e1){e1.printStackTrace();}
+                }catch(Exception e){e.printStackTrace();}
+                grades.put
 					(G,
 						new MobGrade
 						(
@@ -617,8 +617,8 @@ public class Monstre
 						)
 					);
 				G++;
-			}catch(Exception e){continue;};	
-		}	
+			}catch(Exception e){continue;}
+        }
 	}
 	
 	public int getID() {

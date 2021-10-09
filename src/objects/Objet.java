@@ -55,9 +55,9 @@ public class Objet {
 				TauxEC = Integer.parseInt(infos[4]);
 				BonusCC = Integer.parseInt(infos[5]);
 				isTwoHanded = infos[6].equals("1");
-			}catch(Exception e){};
-	
-		}
+			}catch(Exception e){}
+
+        }
 		
 		public void addAction(Action A)
 		{
@@ -200,10 +200,10 @@ public class Objet {
 							int max = Integer.parseInt(stats[2],16);
 							value = min;
 							if(max != 0)value = max;
-						}catch(Exception e){value = Formulas.getRandomJet(jet);};			
-					}
-				}catch(Exception e){};
-				itemStats.addOneStat(statID, value);
+						}catch(Exception e){value = Formulas.getRandomJet(jet);}
+                    }
+				}catch(Exception e){}
+                itemStats.addOneStat(statID, value);
 			}
 			return itemStats;
 		}
@@ -317,8 +317,8 @@ public class Objet {
 				if(!follow)continue;//Si c'était un effet Actif d'arme ou une signature
 				int value = Integer.parseInt(stats[1],16);
 				Stats.addOneStat(statID, value);
-			}catch(Exception e){continue;};
-		}
+			}catch(Exception e){continue;}
+        }
 	}
 	
 	public void addSoulStat(int i, int j)
@@ -424,9 +424,9 @@ public class Objet {
 			{
 				e.printStackTrace();
 				continue;
-			};
-			
-			isFirst = false;
+			}
+
+            isFirst = false;
 		}
 		
 		for(Entry<Integer,Integer> entry : Stats.getMap().entrySet())
@@ -518,10 +518,10 @@ public class Objet {
 						int max = Integer.parseInt(stats[2],16);
 						value = min;
 						if(max != 0)value = max;
-					}catch(Exception e){value = Formulas.getRandomJet(jet);};			
-			}catch(Exception e){};
-			
-			int multi = 1;
+					}catch(Exception e){value = Formulas.getRandomJet(jet);}
+            }catch(Exception e){}
+
+            int multi = 1;
 			if(statID == 118 || statID == 126 || statID == 125 || statID == 119 || statID == 123 || statID == 158 || statID == 174)//Force,Intel,Vita,Agi,Chance,Pod,Initiative
 			{
 				multi = 1;
@@ -604,10 +604,10 @@ public class Objet {
 						int max = Integer.parseInt(stats[2],16);
 						value = min;
 						if(max != 0)value = max;
-					}catch(Exception e){value = Formulas.getRandomJet(jet);};			
-			}catch(Exception e){};
-			
-			int multi = 1;
+					}catch(Exception e){value = Formulas.getRandomJet(jet);}
+            }catch(Exception e){}
+
+            int multi = 1;
 			if(statID == 118 || statID == 126 || statID == 125 || statID == 119 || statID == 123 || statID == 158 || statID == 174)//Force,Intel,Vita,Agi,Chance,Pod,Initiative
 			{
 				multi = 1;
@@ -686,8 +686,8 @@ public class Objet {
 				//osef du minMax, vu qu'on se sert du jet pour calculer les dégats
 				String newArgs = "0;0;0;-1;0;"+jet;
 				effets.add(new SpellEffect(SE.getEffectID(),newArgs,0,-1));
-			}catch(Exception e){continue;};
-		}
+			}catch(Exception e){continue;}
+        }
 		return effets;
 	}
 	

@@ -105,8 +105,8 @@ public class Action {
 					int newCellID = Integer.parseInt(args.split(",",2)[1]);
 					
 					perso.teleport(newMapID,newCellID);	
-				}catch(Exception e ){return;};
-			break;
+				}catch(Exception e ){return;}
+				break;
 			case 1://Discours NPC
 				out = perso.get_compte().getGameThread().get_out();
 				if(args.equalsIgnoreCase("DV"))
@@ -119,8 +119,8 @@ public class Action {
 					try
 					{
 						qID = Integer.parseInt(args);
-					}catch(NumberFormatException e){};
-					
+					}catch(NumberFormatException e){}
+
 					NPC_question  quest = World.getNPCQuestion(qID);
 					if(quest == null)
 					{
@@ -144,8 +144,8 @@ public class Action {
 					//Si en ligne (normalement oui)
 					if(perso.isOnline())
 						SocketManager.GAME_SEND_STATS_PACKET(perso);
-				}catch(Exception e){GameServer.addToLog(e.getMessage());};
-			break;
+				}catch(Exception e){GameServer.addToLog(e.getMessage());}
+				break;
 			case 5://objet
 				try
 				{
@@ -181,8 +181,8 @@ public class Action {
 							}
 						}
 					}
-				}catch(Exception e){GameServer.addToLog(e.getMessage());};
-			break;
+				}catch(Exception e){GameServer.addToLog(e.getMessage());}
+				break;
 			case 6://Apprendre un métier
 				try
 				{
@@ -255,8 +255,8 @@ public class Action {
 							SocketManager.GAME_SEND_Im_PACKET(perso, "12");
 						}
 					}
-				}catch(Exception e){GameServer.addToLog(e.getMessage());};
-			break;
+				}catch(Exception e){GameServer.addToLog(e.getMessage());}
+				break;
 			case 7://retour au point de sauvegarde
 				perso.warpToSavePos();
 			break;
@@ -273,16 +273,16 @@ public class Action {
 					};
 					if(messID>0)
 						SocketManager.GAME_SEND_Im_PACKET(perso, "0"+messID+";"+number);
-				}catch(Exception e ){return;};
-			break;
+				}catch(Exception e ){return;}
+				break;
 			case 9://Apprendre un sort
 				try
 				{
 					int sID = Integer.parseInt(args);
 					if(World.getSort(sID) == null)return;
 					perso.learnSpell(sID,1, true,true);
-				}catch(Exception e){GameServer.addToLog(e.getMessage());};
-			break;
+				}catch(Exception e){GameServer.addToLog(e.getMessage());}
+				break;
 			case 10://Pain/potion/viande/poisson
 				try
 				{
@@ -302,8 +302,8 @@ public class Action {
 						perso.set_PDV(perso.get_PDV()+val);
 						SocketManager.GAME_SEND_STATS_PACKET(perso);
 					}
-				}catch(Exception e){GameServer.addToLog(e.getMessage());};
-			break;
+				}catch(Exception e){GameServer.addToLog(e.getMessage());}
+				break;
 			case 11://Definir l'alignement
 				try
 				{
@@ -312,8 +312,8 @@ public class Action {
 					//Si le perso n'est pas neutre, et qu'on doit pas remplacer, on passe
 					if(perso.get_align() != Constants.ALIGNEMENT_NEUTRE && !replace)return;
 					perso.modifAlignement(newAlign);
-				}catch(Exception e){GameServer.addToLog(e.getMessage());};
-			break;
+				}catch(Exception e){GameServer.addToLog(e.getMessage());}
+				break;
 			/* TODO: autres actions */
 			case 12://Spawn d'un groupe de monstre
 				try
@@ -333,8 +333,8 @@ public class Action {
 					{
 						perso.removeItem(itemID, 1, true, true);
 					}
-				}catch(Exception e){GameServer.addToLog(e.getMessage());};
-			break;
+				}catch(Exception e){GameServer.addToLog(e.getMessage());}
+				break;
 		    case 13: //Reset Carac
 		        try
 		        {
@@ -347,8 +347,8 @@ public class Action {
 		          perso.addCapital((perso.get_lvl() - 1) * 5 - perso.get_capital());
 
 		          SocketManager.GAME_SEND_STATS_PACKET(perso);
-		        }catch(Exception e){GameServer.addToLog(e.getMessage());};
-		    break;
+		        }catch(Exception e){GameServer.addToLog(e.getMessage());}
+				break;
 		    case 14://Ouvrir l'interface d'oublie de sort
 		    	perso.setisForgetingSpell(true);
 				SocketManager.GAME_SEND_FORGETSPELL_INTERFACE('+', perso);
@@ -393,8 +393,8 @@ public class Action {
 					}
 					}
 					}
-				}catch(Exception e){GameServer.addToLog(e.getMessage());};
-			break;
+				}catch(Exception e){GameServer.addToLog(e.getMessage());}
+				break;
 			case 16://Ajout d'honneur HonorValue
 				try
 				{
@@ -404,8 +404,8 @@ public class Action {
 						int ActualHonor = perso.get_honor();
 						perso.set_honor(ActualHonor+AddHonor);
 					}
-				}catch(Exception e){GameServer.addToLog(e.getMessage());};
-			break;
+				}catch(Exception e){GameServer.addToLog(e.getMessage());}
+				break;
 			case 17://Xp métier JobID,XpValue
 				try
 				{
@@ -415,8 +415,8 @@ public class Action {
 					{
 						perso.getMetierByID(JobID).addXp(perso, XpValue);
 					}
-				}catch(Exception e){GameServer.addToLog(e.getMessage());};
-			break;
+				}catch(Exception e){GameServer.addToLog(e.getMessage());}
+				break;
 			case 18://Téléportation chez sois
 				if(House.AlreadyHaveHouse(perso))//Si il a une maison
 				{
@@ -440,8 +440,8 @@ public class Action {
 					if(pts < 1) return;
 					perso.addSpellPoint(pts);
 					SocketManager.GAME_SEND_STATS_PACKET(perso);
-				}catch(Exception e){GameServer.addToLog(e.getMessage());};
-			break;
+				}catch(Exception e){GameServer.addToLog(e.getMessage());}
+				break;
 			case 21://+Energie
 				try
 				{
@@ -453,8 +453,8 @@ public class Action {
 					
 					perso.set_energy(EnergyTotal);
 					SocketManager.GAME_SEND_STATS_PACKET(perso);
-				}catch(Exception e){GameServer.addToLog(e.getMessage());};
-			break;
+				}catch(Exception e){GameServer.addToLog(e.getMessage());}
+				break;
 			case 22://+Xp
 				try
 				{
@@ -464,8 +464,8 @@ public class Action {
 					long TotalXp = perso.get_curExp()+XpAdd;
 					perso.set_curExp(TotalXp);
 					SocketManager.GAME_SEND_STATS_PACKET(perso);
-				}catch(Exception e){GameServer.addToLog(e.getMessage());};
-			break;
+				}catch(Exception e){GameServer.addToLog(e.getMessage());}
+				break;
 			case 23://UnlearnJob
 				try
 				{
@@ -476,8 +476,8 @@ public class Action {
 					perso.unlearnJob(m.getID());
 					SocketManager.GAME_SEND_STATS_PACKET(perso);
 					SQLManager.SAVE_PERSONNAGE(perso, false);
-				}catch(Exception e){GameServer.addToLog(e.getMessage());};
-			break;
+				}catch(Exception e){GameServer.addToLog(e.getMessage());}
+				break;
 			case 24://SimpleMorph
 				try
 				{
@@ -486,8 +486,8 @@ public class Action {
 					perso.set_gfxID(morphID);
 					SocketManager.GAME_SEND_ERASE_ON_MAP_TO_MAP(perso.get_curCarte(), perso.get_GUID());
 					SocketManager.GAME_SEND_ADD_PLAYER_TO_MAP(perso.get_curCarte(), perso);
-				}catch(Exception e){GameServer.addToLog(e.getMessage());};
-			break;
+				}catch(Exception e){GameServer.addToLog(e.getMessage());}
+				break;
 			case 25://SimpleUnMorph
 				int UnMorphID = perso.get_classe()*10 + perso.get_sexe();
 				perso.set_gfxID(UnMorphID);
@@ -519,14 +519,14 @@ public class Action {
 					if(ValidMobGroup.length() == 0) return;
 					MobGroup group  = new MobGroup(perso.get_curCarte()._nextObjectID,perso.get_curCell().getID(), ValidMobGroup.toString());
 					perso.get_curCarte().startFigthVersusMonstres(perso, group);
-		        }catch(Exception e){GameServer.addToLog(e.getMessage());};
-			break;
+		        }catch(Exception e){GameServer.addToLog(e.getMessage());}
+				break;
 			case 28://Rune métier
 				int Job = 0;
 				try
 				{
 					Job = Integer.parseInt(args);
-				}catch(Exception e){GameServer.addToLog(e.getMessage());};
+				}catch(Exception e){GameServer.addToLog(e.getMessage());}
 				if(perso.is_onCraftBookCrafter())
 				{
 					perso.set_onCraftBookCrafter(false);
@@ -695,8 +695,8 @@ public class Action {
 					if(perso.get_fight() != null) return;
 					perso.changeOrientation(1);
 					SocketManager.GAME_SEND_GA_PACKET_TO_MAP(perso.get_curCarte(), "0", 228, perso.get_GUID()+";"+cellid+","+Animations.PrepareToGA(animation), "");
-				}catch(Exception e){GameServer.addToLog(e.getMessage());};
-			break;
+				}catch(Exception e){GameServer.addToLog(e.getMessage());}
+				break;
 			case 229://Animation d'incarnam à astrub
 				short map = Constants.getClassStatueMap(perso.get_classe());
 				int cell = Constants.getClassStatueCell(perso.get_classe());

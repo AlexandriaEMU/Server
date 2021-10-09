@@ -104,8 +104,8 @@ public class GameThread implements Runnable
 	    			_compte.setGameThread(null);
 	    		}
 	    		if(!_s.isClosed())_s.close();
-	    	}catch(IOException e1){e1.printStackTrace();};
-    	}catch(Exception e)
+	    	}catch(IOException e1){e1.printStackTrace();}
+        }catch(Exception e)
     	{
     		e.printStackTrace();
     		GameServer.addToLog(e.getMessage());
@@ -209,8 +209,8 @@ public class GameThread implements Runnable
 					posJob = Integer.parseInt(infos[0]);
 					Options = Integer.parseInt(infos[1]);
 					slots = Integer.parseInt(infos[2]);
-				}catch(Exception e){ return; };
-				StatsMetier job = _perso.getMetiers().get(posJob);
+				}catch(Exception e){ return; }
+                StatsMetier job = _perso.getMetiers().get(posJob);
 				if(job == null) return;
 				job.setOptBinValue(Options);
 				job.set_slotsPublic(slots);
@@ -431,8 +431,8 @@ public class GameThread implements Runnable
 		try
 		{
 			id = Short.parseShort(packet.substring(2));
-		}catch(Exception e){};
-		if( id == -1)return;
+		}catch(Exception e){}
+        if( id == -1)return;
 		_perso.useZaap(id);
 	}
 	
@@ -534,8 +534,8 @@ public class GameThread implements Runnable
 		try
 		{
 			TiD = Integer.parseInt(PercoID);
-		}catch(Exception e){};
-		if(TiD == -1) return;
+		}catch(Exception e){}
+        if(TiD == -1) return;
 		Percepteur perco = World.getPerco(TiD);
 		if(perco == null) return;
 		switch(packet.charAt(0))
@@ -1051,8 +1051,8 @@ public class GameThread implements Runnable
 			SocketManager.GAME_SEND_gS_PACKET(_perso, gm);
 			SocketManager.GAME_SEND_gC_PACKET(_perso,"K");
 			SocketManager.GAME_SEND_gV_PACKET(_perso);
-		}catch(Exception e){return;};
-	}
+		}catch(Exception e){return;}
+    }
 
 	private void parseChanelPacket(String packet)
 	{
@@ -1208,8 +1208,8 @@ public class GameThread implements Runnable
 			if(xp >90)xp = 90;
 			_perso.setMountGiveXp(xp);
 			SocketManager.GAME_SEND_Rx_PACKET(_perso);
-		}catch(Exception e){};
-	}
+		}catch(Exception e){}
+    }
 
 	private void Mount_name(String name)
 	{
@@ -1235,8 +1235,8 @@ public class GameThread implements Runnable
 		{
 			DDid = Integer.parseInt(packet.substring(2).split("\\|")[0]);
 			//on ignore le temps?
-		}catch(Exception e){};
-		if(DDid == -1)return;
+		}catch(Exception e){}
+        if(DDid == -1)return;
 		Dragodinde DD = World.getDragoByID(DDid);
 		if(DD == null)return;
 		SocketManager.GAME_SEND_MOUNT_DESCRIPTION_PACKET(_perso,DD);
@@ -1417,9 +1417,9 @@ public class GameThread implements Runnable
 				try
 				{
 					pGuid = Integer.parseInt(packet.substring(3));
-				}catch(NumberFormatException e){return;};
-				
-				if(pGuid == -1) return;
+				}catch(NumberFormatException e){return;}
+
+                if(pGuid == -1) return;
 				
 				Personnage P = World.getPersonnage(pGuid);
 				
@@ -1452,9 +1452,9 @@ public class GameThread implements Runnable
 				try
 				{
 					pGuid2 = Integer.parseInt(packet.substring(3));
-				}catch(NumberFormatException e){return;};
-				
-				if(pGuid2 == -1) return;
+				}catch(NumberFormatException e){return;}
+
+                if(pGuid2 == -1) return;
 				
 				Personnage P2 = World.getPersonnage(pGuid2);
 				
@@ -1537,8 +1537,8 @@ public class GameThread implements Runnable
 			try
 			{
 				guid = Integer.parseInt(packet.substring(2));
-			}catch(NumberFormatException e){return;};
-			if(guid == -1)return;
+			}catch(NumberFormatException e){return;}
+            if(guid == -1)return;
 			Personnage t = World.getPersonnage(guid);
 			g.leave(t);
 			SocketManager.GAME_SEND_PV_PACKET(t.get_compte().getGameThread().get_out(),""+_perso.get_GUID());
@@ -1641,8 +1641,8 @@ public class GameThread implements Runnable
 		{
 			guid = Integer.parseInt(packet.substring(2).split("\\|")[0]);
 			qua = Integer.parseInt(packet.split("\\|")[1]);
-		}catch(Exception e){};
-		if(guid == -1 || qua <= 0 || !_perso.hasItemGuid(guid) || _perso.get_fight() != null || _perso.is_away())return;
+		}catch(Exception e){}
+        if(guid == -1 || qua <= 0 || !_perso.hasItemGuid(guid) || _perso.get_fight() != null || _perso.is_away())return;
 		Objet obj = World.getObjet(guid);
 		
 		_perso.set_curCell(_perso.get_curCell());
@@ -1696,13 +1696,13 @@ public class GameThread implements Runnable
 			try
 			{
 				targetGuid = Integer.parseInt(infos[1]);
-			}catch(Exception e){targetGuid = -1;};
-			try
+			}catch(Exception e){targetGuid = -1;}
+            try
 			{
 				cellID = Short.parseShort(infos[2]);
-			}catch(Exception e){cellID = -1;};
-		}catch(Exception e){return;};
-		//Si le joueur n'a pas l'objet
+			}catch(Exception e){cellID = -1;}
+        }catch(Exception e){return;}
+        //Si le joueur n'a pas l'objet
 		if(World.getPersonnage(targetGuid) != null)
 		{
 			Target = World.getPersonnage(targetGuid);
@@ -1965,8 +1965,8 @@ public class GameThread implements Runnable
 			try
 			{
 				qua = Integer.parseInt(infos[1]);
-			}catch(Exception e){};
-			Objet obj = World.getObjet(guid);
+			}catch(Exception e){}
+            Objet obj = World.getObjet(guid);
 			if(obj == null || !_perso.hasItemGuid(guid) || qua <= 0 || _perso.get_fight() != null || _perso.is_away())
 			{
 				SocketManager.GAME_SEND_DELETE_OBJECT_FAILED_PACKET(_out);
@@ -2064,8 +2064,8 @@ public class GameThread implements Runnable
 				SocketManager.GAME_SEND_QUESTION_PACKET(_out,quest.parseToDQPacket(_perso));
 				_perso.set_isTalkingWith(npcID);
 			}
-		}catch(NumberFormatException e){};
-	}
+		}catch(NumberFormatException e){}
+    }
 
 	private void parseExchangePacket(String packet)
 	{	
@@ -2330,8 +2330,8 @@ public class GameThread implements Runnable
 			try
 			{
 				guid = Integer.parseInt(packet);
-			}catch(Exception e){};
-			switch(c)
+			}catch(Exception e){}
+            switch(c)
 			{
 				case 'C'://Parcho => Etable (Stocker)
 					if(guid == -1 || !_perso.hasItemGuid(guid))return;
@@ -2500,8 +2500,8 @@ public class GameThread implements Runnable
 						
 						_perso.addinStore(obj.getGuid(), price, qua);
 						
-					}catch(NumberFormatException e){};
-				}else
+					}catch(NumberFormatException e){}
+                }else
 				{
 					String[] infos = packet.substring(4).split("\\|");
 					try
@@ -2517,8 +2517,8 @@ public class GameThread implements Runnable
 						if(qua < obj.getQuantity()) qua = obj.getQuantity();
 						
 						_perso.removeFromStore(obj.getGuid(), qua);
-					}catch(NumberFormatException e){};
-				}
+					}catch(NumberFormatException e){}
+                }
 			break;
 			}
 			return;
@@ -2556,9 +2556,9 @@ public class GameThread implements Runnable
 					{
 						guid = Integer.parseInt(infos[0]);
 						qua  = Integer.parseInt(infos[1]);
-					}catch(NumberFormatException e){};
-					
-					if(guid <= 0 || qua <= 0) return;
+					}catch(NumberFormatException e){}
+
+                    if(guid <= 0 || qua <= 0) return;
 					
 					Objet obj = World.getObjet(guid);
 					if(obj == null)return;
@@ -2692,8 +2692,8 @@ public class GameThread implements Runnable
 						if(obj.getQuantity()<qua)
 							qua = obj.getQuantity();
 							_perso.getCurJobAction().modifIngredient(_perso,guid,qua);
-					}catch(NumberFormatException e){};
-				}else
+					}catch(NumberFormatException e){}
+                }else
 				{
 					String[] infos = packet.substring(4).split("\\|");
 					try
@@ -2704,8 +2704,8 @@ public class GameThread implements Runnable
 						Objet obj = World.getObjet(guid);
 						if(obj == null)return;
 						_perso.getCurJobAction().modifIngredient(_perso,guid,-qua);
-					}catch(NumberFormatException e){};
-				}
+					}catch(NumberFormatException e){}
+                }
 				
 			}else
 			if(packet.charAt(2) == 'R')
@@ -2714,8 +2714,8 @@ public class GameThread implements Runnable
 				{
 					int c = Integer.parseInt(packet.substring(3));
 					_perso.getCurJobAction().repeat(c,_perso);
-				}catch(Exception e){};
-			}
+				}catch(Exception e){}
+            }
 			return;
 		}
 		//Banque
@@ -2729,8 +2729,8 @@ public class GameThread implements Runnable
 					try
 					{
 							kamas = Integer.parseInt(packet.substring(3));
-					}catch(Exception e){};
-					if(kamas == 0)return;
+					}catch(Exception e){}
+                    if(kamas == 0)return;
 					
 					if(kamas > 0)//Si On ajoute des kamas a la banque
 					{
@@ -2758,8 +2758,8 @@ public class GameThread implements Runnable
 					{
 						guid = Integer.parseInt(packet.substring(4).split("\\|")[0]);
 						qua = Integer.parseInt(packet.substring(4).split("\\|")[1]);
-					}catch(Exception e){};
-					if(guid == 0 || qua <= 0)return;
+					}catch(Exception e){}
+                    if(guid == 0 || qua <= 0)return;
 					
 					switch(packet.charAt(3))
 					{
@@ -2789,7 +2789,7 @@ public class GameThread implements Runnable
                     	try
                     	{
                     		kamas = Integer.parseInt(packet.substring(3));
-                        }catch(Exception e){};
+                        }catch(Exception e){}
                         if(kamas == 0)return;
                                
                         if(kamas > 0)//Si On ajoute des kamas au coffre
@@ -2823,8 +2823,8 @@ public class GameThread implements Runnable
                 		{
                 			guid = Integer.parseInt(packet.substring(4).split("\\|")[0]);
                 			qua = Integer.parseInt(packet.substring(4).split("\\|")[1]);
-                		}catch(Exception e){};
-                		if(guid == 0 || qua <= 0)return;
+                		}catch(Exception e){}
+                        if(guid == 0 || qua <= 0)return;
                                
                 		switch(packet.charAt(3))
                 		{
@@ -2864,8 +2864,8 @@ public class GameThread implements Runnable
 						if(qua <= 0)return;
 						
 						_perso.get_curExchange().addItem(guid,qua,_perso.get_GUID());
-					}catch(NumberFormatException e){};
-				}else
+					}catch(NumberFormatException e){}
+                }else
 				{
 					String[] infos = packet.substring(4).split("\\|");
 					try
@@ -2881,8 +2881,8 @@ public class GameThread implements Runnable
 						if(qua > _perso.get_curExchange().getQuaItem(guid, _perso.get_GUID()))return;
 						
 						_perso.get_curExchange().removeItem(guid,qua,_perso.get_GUID());
-					}catch(NumberFormatException e){};
-				}
+					}catch(NumberFormatException e){}
+                }
 			break;
 			case 'G'://Kamas
 				try
@@ -2891,8 +2891,8 @@ public class GameThread implements Runnable
 					if(_perso.get_kamas() < numb)
 						numb = _perso.get_kamas();
 					_perso.get_curExchange().setKamas(_perso.get_GUID(), numb);
-				}catch(NumberFormatException e){};
-			break;
+				}catch(NumberFormatException e){}
+                break;
 		}
 	}
 
@@ -3046,8 +3046,8 @@ public class GameThread implements Runnable
 			e.printStackTrace();
 			SocketManager.GAME_SEND_BUY_ERROR_PACKET(_out);
 			return;
-		};
-	}
+		}
+    }
 
 	private void Exchange_finish_buy()
 	{
@@ -3157,8 +3157,8 @@ public class GameThread implements Runnable
 					SocketManager.GAME_SEND_ECK_PACKET(_out, 0, npcID+"");
 					SocketManager.GAME_SEND_ITEM_VENDOR_LIST_PACKET(_out,npc);
 					_perso.set_isTradingWith(npcID);
-				}catch(NumberFormatException e){};
-			break;
+				}catch(NumberFormatException e){}
+                break;
 			case '1'://Si joueur
 				switch(packet.charAt(3))
 				{
@@ -3297,8 +3297,8 @@ public class GameThread implements Runnable
 				{
             		pID = Integer.valueOf(packet.split("\\|")[1]);
             		//cellID = Integer.valueOf(packet.split("\\|")[2]);
-				}catch(NumberFormatException e){return;};
-				if(_perso.get_isTradingWith() > 0)return;
+				}catch(NumberFormatException e){return;}
+                if(_perso.get_isTradingWith() > 0)return;
 				Personnage seller = World.getPersonnage(pID);
 				if(seller == null) return;
 				_perso.set_isTradingWith(pID);
@@ -3324,8 +3324,8 @@ public class GameThread implements Runnable
 					_perso.set_isOnPercepteurID(perco.getGuid());
 					_perso._DialogTimer = _perso.DialogTimer();
 					_perso._DialogTimer.start();
-				}catch(NumberFormatException e){};
-			break;
+				}catch(NumberFormatException e){}
+                break;
 		}
 	}
 
@@ -3349,8 +3349,8 @@ public class GameThread implements Runnable
 		try
 		{
 			emote = Integer.parseInt(packet.substring(2));
-		}catch(Exception e){};
-		if(emote == -1)return;
+		}catch(Exception e){}
+        if(emote == -1)return;
 		if(_perso == null)return;
 		if(_perso.get_fight() != null)return;//Pas d'�mote en combat
 		
@@ -3378,8 +3378,8 @@ public class GameThread implements Runnable
 			int dir = Integer.parseInt(packet.substring(2));
 			_perso.set_orientation(dir);
 			SocketManager.GAME_SEND_eD_PACKET_TO_MAP(_perso.get_curCarte(),_perso.get_GUID(),dir);
-		}catch(NumberFormatException e){return;};
-	}
+		}catch(NumberFormatException e){return;}
+    }
 
 	private void parseSpellPacket(String packet)
 	{
@@ -3411,8 +3411,8 @@ public class GameThread implements Runnable
 			}
 				
 			SocketManager.GAME_SEND_BN(_out);
-		}catch(Exception e){};
-	}
+		}catch(Exception e){}
+    }
 
 	private void boostSort(String packet)
 	{
@@ -3431,8 +3431,8 @@ public class GameThread implements Runnable
 				SocketManager.GAME_SEND_SPELL_UPGRADE_FAILED(_out);
 				return;
 			}
-		}catch(NumberFormatException e){SocketManager.GAME_SEND_SPELL_UPGRADE_FAILED(_out);return;};
-	}
+		}catch(NumberFormatException e){SocketManager.GAME_SEND_SPELL_UPGRADE_FAILED(_out);return;}
+    }
 
 	private void forgetSpell(String packet)
 	{
@@ -3462,8 +3462,8 @@ public class GameThread implements Runnable
 					try
 					{
 						key = Integer.parseInt(packet.substring(2).replace(((int)0x0)+"", ""));
-					}catch(Exception e){};
-					if(key == -1)return;
+					}catch(Exception e){}
+                    if(key == -1)return;
 					SocketManager.GAME_SEND_FIGHT_DETAILS(_out,_perso.get_curCarte().get_fights().get(key));
 				break;
 				
@@ -3489,8 +3489,8 @@ public class GameThread implements Runnable
 				break;
 				
 			}
-		}catch(Exception e){e.printStackTrace();};
-	}
+		}catch(Exception e){e.printStackTrace();}
+    }
 
 	private void parseBasicsPacket(String packet)
 	{
@@ -3605,10 +3605,12 @@ public class GameThread implements Runnable
 						uptime %= (1000*60);
 						int sec = (int) (uptime/(1000));
 						
-						String mess =	"===========\n"+ Main.makeHeader()
-							+			"Uptime: "+jour+"j "+hour+"h "+min+"m "+sec+"s\n"
-							+			"Joueurs en lignes: "+ Main.gameServer.getPlayerNumber()+"\n"
-							+			"Record de connexion: "+ Main.gameServer.getMaxPlayer()+"\n"
+						String mess =	"===========\n"
+							+			"AlexandriaEMU - http://rltech.click\n"
+							+			"===========\n"
+							+			"Tiempo en linea: "+jour+"D "+hour+"H "+min+"M "+sec+"S\n"
+							+			"Jugadores en linea: "+ Main.gameServer.getPlayerNumber()+"\n"
+							+			"Maximos conectados: "+ Main.gameServer.getMaxPlayer()+"\n"
 							+			"===========";
 						SocketManager.GAME_SEND_MESSAGE(_perso, mess, Main.CONFIG_MOTD_COLOR);
 						return;
@@ -3824,8 +3826,8 @@ public class GameThread implements Runnable
 			try
 			{
 				targetID = Integer.parseInt(packet.substring(2));
-			}catch(Exception e){};
-		}
+			}catch(Exception e){}
+        }
 		if(_perso.get_fight() == null)return;
 		if(targetID > 0)//Expulsion d'un joueurs autre que soi-meme
 		{
@@ -3849,8 +3851,8 @@ public class GameThread implements Runnable
 		try
 		{
 			cellID = Integer.parseInt(packet.substring(2));
-		}catch(Exception e){};
-		if(cellID == -1)return;
+		}catch(Exception e){}
+        if(cellID == -1)return;
 		_perso.get_fight().showCaseToTeam(_perso.get_GUID(),cellID);
 	}
 
@@ -3870,8 +3872,8 @@ public class GameThread implements Runnable
 		{
 			int cell = Integer.parseInt(packet.substring(2));
 			_perso.get_fight().changePlace( _perso, cell);
-		}catch(NumberFormatException e){return;};
-	}
+		}catch(NumberFormatException e){return;}
+    }
 
 	private void Game_on_GK_packet(String packet)
 	{	
@@ -3880,8 +3882,8 @@ public class GameThread implements Runnable
 		try
 		{
 			GameActionId = Integer.parseInt(infos[0]);
-		}catch(Exception e){return;};
-		if(GameActionId == -1)return;
+		}catch(Exception e){return;}
+        if(GameActionId == -1)return;
 		GameAction GA = _actions.get(GameActionId);
 		if(GA == null)return;
 		boolean isOk = packet.charAt(2) == 'K';
@@ -3937,8 +3939,8 @@ public class GameThread implements Runnable
 					try
 					{
 						newCellID = Integer.parseInt(infos[1]);
-					}catch(Exception e){return;};
-					if(newCellID == -1)return;
+					}catch(Exception e){return;}
+                    if(newCellID == -1)return;
 					String path = GA._args;
 					_perso.get_curCell().removePlayer(_perso.get_GUID());
 					_perso.set_curCell(_perso.get_curCarte().getCase(newCellID));
@@ -3990,9 +3992,9 @@ public class GameThread implements Runnable
 		try
 		{
 			actionID = Integer.parseInt(packet.substring(2,5));
-		}catch(NumberFormatException e){return;};
-		
-		int nextGameActionID = 0;
+		}catch(NumberFormatException e){return;}
+
+        int nextGameActionID = 0;
 		if(_actions.size() > 0)
 		{
 			//On prend le plus haut GameActionID + 1
@@ -4119,8 +4121,8 @@ public class GameThread implements Runnable
 			}
 			SocketManager.GAME_SEND_GA_PACKET_TO_MAP(_perso.get_curCarte(),"", 909, _perso.get_GUID()+"", id+"");
 			_perso.get_curCarte().startFigthVersusPercepteur(_perso, target);
-		}catch(Exception e){};
-	}
+		}catch(Exception e){}
+    }
 	
 	private void game_aggro(String packet)
 	{
@@ -4152,8 +4154,8 @@ public class GameThread implements Runnable
 			_perso.toggleWings('+');
 			SocketManager.GAME_SEND_GA_PACKET_TO_MAP(_perso.get_curCarte(),"", 906, _perso.get_GUID()+"", id+"");
 			_perso.get_curCarte().newFight(_perso, target, Constants.FIGHT_TYPE_AGRESSION);
-		}catch(Exception e){};
-	}
+		}catch(Exception e){}
+    }
 
 	private void game_action(GameAction GA)
 	{
@@ -4184,11 +4186,11 @@ public class GameThread implements Runnable
 			try
 			{
 				cellID = Integer.parseInt(packet.substring(5));
-			}catch(Exception e){return;};
-			
-			_perso.get_fight().tryCaC(_perso,cellID);
-		}catch(Exception e){};
-	}
+			}catch(Exception e){return;}
+
+            _perso.get_fight().tryCaC(_perso,cellID);
+		}catch(Exception e){}
+    }
 
 	private void game_tryCastSpell(String packet)
 	{
@@ -4203,8 +4205,8 @@ public class GameThread implements Runnable
 				if(SS == null)return;
 				_perso.get_fight().tryCastSpell(_perso.get_fight().getFighterByPerso(_perso),SS,caseID);
 			}
-		}catch(NumberFormatException e){return;};
-	}
+		}catch(NumberFormatException e){return;}
+    }
 
 	private void game_join_fight(String packet)
 	{
@@ -4215,8 +4217,8 @@ public class GameThread implements Runnable
 			{
 				Fight F = _perso.get_curCarte().getFight(Integer.parseInt(infos[0]));
 				F.joinAsSpect(_perso);
-			}catch(Exception e){return;};
-		}else
+			}catch(Exception e){return;}
+        }else
 		{
 			try
 			{
@@ -4241,15 +4243,15 @@ public class GameThread implements Runnable
 					return;
 				}
 				FightStarter.get_fight().joinFight(_perso,guid);
-			}catch(Exception e){return;};
-		}
+			}catch(Exception e){return;}
+        }
 	}
 
 	private void game_accept_duel(String packet)
 	{
 		int guid = -1;
-		try{guid = Integer.parseInt(packet.substring(5));}catch(NumberFormatException e){return;};
-		if(_perso.get_duelID() != guid || _perso.get_duelID() == -1)return;
+		try{guid = Integer.parseInt(packet.substring(5));}catch(NumberFormatException e){return;}
+        if(_perso.get_duelID() != guid || _perso.get_duelID() == -1)return;
 		SocketManager.GAME_SEND_MAP_START_DUEL_TO_MAP(_perso.get_curCarte(),_perso.get_duelID(),_perso.get_GUID());
 		Fight fight = _perso.get_curCarte().newFight(World.getPersonnage(_perso.get_duelID()),_perso,Constants.FIGHT_TYPE_CHALLENGE);
 		_perso.set_fight(fight);
@@ -4267,8 +4269,8 @@ public class GameThread implements Runnable
 			World.getPersonnage(_perso.get_duelID()).set_duelID(-1);
 			_perso.set_away(false);
 			_perso.set_duelID(-1);	
-		}catch(NumberFormatException e){return;};
-	}
+		}catch(NumberFormatException e){return;}
+    }
 
 	private void game_ask_duel(String packet)
 	{
@@ -4369,8 +4371,8 @@ public class GameThread implements Runnable
     		_in.close();
     		_out.close();
     		_t.interrupt();
-		}catch(IOException e1){e1.printStackTrace();};
-	}
+		}catch(IOException e1){e1.printStackTrace();}
+    }
 
 	private void parseAccountPacket(String packet)
 	{
@@ -4459,8 +4461,8 @@ public class GameThread implements Runnable
 				{
 					stat = Integer.parseInt(packet.substring(2).split("/u000A")[0]);
 					_perso.boostStat(stat);
-				}catch(NumberFormatException e){return;};
-			break;
+				}catch(NumberFormatException e){return;}
+                break;
 			case 'D':
 				String[] split = packet.substring(2).split("\\|");
 				int GUID = Integer.parseInt(split[0]);
@@ -4492,9 +4494,9 @@ public class GameThread implements Runnable
 				{
 					giftId = Integer.parseInt(args[0]);
 					playerId = Integer.parseInt(args[1]);
-				}catch(NumberFormatException e){return;};
-				
-				Personnage player = World.getPersonnage(playerId);
+				}catch(NumberFormatException e){return;}
+
+                Personnage player = World.getPersonnage(playerId);
 				if(player == null) return;
 				Compte account = player.get_compte();
 				if(account == null) return;

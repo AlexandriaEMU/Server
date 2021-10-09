@@ -31,8 +31,8 @@ public class PierreAme extends Objet{
 				
 				_monsters.add(new Couple<>(monstre, level));
 				
-			}catch(Exception e){continue;};
-		}
+			}catch(Exception e){continue;}
+        }
 	}
 	
 	public String parseStatsString()
@@ -51,9 +51,9 @@ public class PierreAme extends Objet{
 			{
 				e.printStackTrace();
 				continue;
-			};
-			
-			isFirst = false;
+			}
+
+            isFirst = false;
 		}
 		return stats.toString();
 	}

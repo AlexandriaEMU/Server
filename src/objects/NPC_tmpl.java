@@ -217,8 +217,8 @@ public class NPC_tmpl {
 				ObjTemplate temp = World.getObjTemplate(tempID);
 				if(temp == null)continue;
 				_ventes.add(temp);
-			}catch(NumberFormatException e){continue;};
-		}
+			}catch(NumberFormatException e){continue;}
+        }
 	}
 
 	public int get_id() {

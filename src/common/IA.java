@@ -20,13 +20,12 @@ public class IA {
 		private Fight _fight;
 		private Fighter _fighter;
 		private static boolean stop = false;
-		private Thread _t;
-		
-		public IAThread(Fighter fighter, Fight fight)
+
+        public IAThread(Fighter fighter, Fight fight)
 		{
 			_fighter = fighter;
 			_fight = fight;
-			_t = new Thread(this);
+            Thread _t = new Thread(this);
 			_t.setDaemon(true);
 			_t.start();
 		}
@@ -40,22 +39,22 @@ public class IA {
                 	apply_type5(_fighter,_fight);
     				try {
     					Thread.sleep(2000);
-    				} catch (InterruptedException e) {};
-    				_fight.endTurn();
+    				} catch (InterruptedException e) {}
+					_fight.endTurn();
                 }
                 else if(_fighter.isPerco())
 				{
 					apply_typePerco(_fighter,_fight);
 					try {
 						Thread.sleep(2000);
-					} catch (InterruptedException e) {};
+					} catch (InterruptedException e) {}
 					_fight.endTurn();
 				}
 				else
 				{
 					try {
 						Thread.sleep(2000);
-					} catch (InterruptedException e) {};
+					} catch (InterruptedException e) {}
 					_fight.endTurn();
 				}
 			}else 
@@ -93,8 +92,8 @@ public class IA {
 				}
 				try {
 					Thread.sleep(2000); // C'est si lent dofus =O
-				} catch (InterruptedException e) {};
-				
+				} catch (InterruptedException e) {}
+
 				if(!_fighter.isDead())//Mort d'une invocation pendant son tour de jeu : empeche de passer le tour du joueur suivant
 				{
 					_fight.endTurn();
@@ -496,7 +495,7 @@ public class IA {
 			}
 			if(curCaseID != F.get_fightCell().getID())
 				pathstr.append(CryptManager.cellID_To_Code(curCaseID));
-			}catch(Exception e){e.printStackTrace();};
+			}catch(Exception e){e.printStackTrace();}
 			//Création d'une GameAction
 			GameAction GA = new GameAction(0,1, "");
 			GA._args = pathstr.toString();
@@ -763,7 +762,7 @@ public class IA {
 			}
 			if(curCaseID != F.get_fightCell().getID())
 				pathstr.append(CryptManager.cellID_To_Code(curCaseID));
-			}catch(Exception e){e.printStackTrace();};
+			}catch(Exception e){e.printStackTrace();}
 			//Création d'une GameAction
 			GameAction GA = new GameAction(0,1, "");
 			GA._args = pathstr.toString();
@@ -987,7 +986,7 @@ public class IA {
 			}
 			if(curCaseID != fighter.get_fightCell().getID())
 				pathstr.append(CryptManager.cellID_To_Code(curCaseID));
-			}catch(Exception e){e.printStackTrace();};
+			}catch(Exception e){e.printStackTrace();}
 			//Création d'une GameAction
 			GameAction GA = new GameAction(0,1, "");
 			GA._args = pathstr.toString();
@@ -1249,7 +1248,7 @@ public class IA {
 								if(c.getFirstFighter().getTeam2() != fighter.getTeam2())
 									curTarget++;
 							}
-						}catch(Exception e){};
+						}catch(Exception e){}
 						num++;
 					}
 					if(curTarget > nbTarget)

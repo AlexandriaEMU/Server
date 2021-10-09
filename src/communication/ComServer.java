@@ -8,17 +8,15 @@ import common.Main;
 import common.World;
  
 public class ComServer implements Runnable {
- 
-	private Socket _s;
-	private BufferedReader _in;
+
+    private BufferedReader _in;
 	private PrintWriter _out;
-	private Thread _t;
- 
-        
-        public ComServer() {
+
+
+    public ComServer() {
         	try {
-    			_s = new Socket(Main.REALM_IP, Main.COM_PORT);
-    			_t = new Thread(this);
+                Socket _s = new Socket(Main.REALM_IP, Main.COM_PORT);
+                Thread _t = new Thread(this);
     			_t.setDaemon(true);
     			_t.start();
     			_in = new BufferedReader(new InputStreamReader(_s.getInputStream()));

@@ -19,7 +19,8 @@ import java.lang.StringBuilder
 import java.util.ArrayList
 
 object Main {
-    /** RealmServer  */
+
+    /* REALM Server */
 	@JvmField
 	var REALM_IP: String? = null
     @JvmField
@@ -31,7 +32,7 @@ object Main {
     @JvmField
 	var REALM_DB_PASS: String? = null
 
-    /** GameServer  */
+    /* Game Server */
 	@JvmField
 	var gameServer: GameServer? = null
     @JvmField
@@ -196,10 +197,10 @@ object Main {
         World.createWorld()
         val endTime = System.currentTimeMillis()
         val differenceTime = (endTime - startTime) / 1000
-        println("Monde OK! en : $differenceTime s")
+        println("TODO CARGADO EN: $differenceTime s")
         isRunning = true
         println("\n")
-        print("Creation du GameServer sur le port " + CONFIG_GAME_PORT)
+        print("Creando el servidor de juego con el puerto " + CONFIG_GAME_PORT)
         var Ip: String? = ""
         try {
             Ip = InetAddress.getLocalHost().hostAddress
@@ -213,12 +214,12 @@ object Main {
         }
         Ip = IP
         gameServer = GameServer(Ip)
-        println(" : GameServer OK!")
-        if (CONFIG_USE_IP) println("Ip du serveur " + IP + " crypt " + GAMESERVER_IP)
-        print("Creation du ComServer sur le port " + COM_PORT)
+        println(": OK")
+        if (CONFIG_USE_IP) println("IP del server " + IP + " encriptada " + GAMESERVER_IP)
+        print("Creacion del COM PORT en el puerto " + COM_PORT)
         comServer = ComServer()
-        println(" : ComServer OK!")
-        println("\n\nEn attente de connexions")
+        println(": OK")
+        println("\nAtento a nuevas conexiones")
     }
 
     private fun loadConfiguration() {
@@ -349,8 +350,8 @@ object Main {
             }
         } catch (e: Exception) {
             println(e.message)
-            println("Fichier de configuration non existant ou illisible")
-            println("Fermeture du serveur")
+            println("Fichero de configuracion inexistente")
+            println("Cerrando el servidor")
             System.exit(1)
         }
         if (CONFIG_DEBUG) Constants.DEBUG_MAP_LIMIT = 20000
@@ -375,11 +376,11 @@ object Main {
                 Log_Shop = BufferedWriter(FileWriter("Shop_logs/$date.txt", true))
                 Log_MJ = BufferedWriter(FileWriter("Gms_logs/" + date + "_GM.txt", true))
                 Log_Errors = PrintStream(File("Error_logs/" + date + "_error.txt"))
-                Log_Errors!!.append("Lancement du serveur..\n")
+                Log_Errors!!.append("Abriendo el servidor\n")
                 Log_Errors!!.flush()
                 System.setErr(Log_Errors)
                 canLog = true
-                val str = "Lancement du serveur...\n"
+                val str = "Abriendo el servidor\n"
                 Log_GameSock!!.write(str)
                 Log_Game!!.write(str)
                 Log_MJ!!.write(str)
@@ -390,7 +391,7 @@ object Main {
                 Log_Shop!!.flush()
             }
         } catch (e: IOException) {
-            println("La creation des logs a echouee !")
+            println("No se pudieron crear los logs")
             println(e.message)
             System.exit(1)
         }
@@ -398,7 +399,7 @@ object Main {
 
     @JvmStatic
 	fun closeServers() {
-        println("Arret du serveur demande ...")
+        println("Cerrando el servidor")
         if (isRunning) {
             isRunning = false
             try {
@@ -409,7 +410,7 @@ object Main {
             World.saveAll(null)
             SQLManager.closeCons()
         }
-        println("Arret du serveur: OK")
+        println("Cerrando servidor: CERRADO")
         isRunning = false
     }
 
@@ -437,21 +438,6 @@ object Main {
             Log_Shop!!.flush()
         } catch (e: IOException) {
         }
-    }
-
-    @JvmStatic
-	fun makeHeader(): String {
-        val mess = StringBuilder()
-        mess.append("Ancestra-R Game v" + Constants.SERVER_VERSION)
-        mess.append(
-            """
-    
-    Par DeathDown & DeeZ pour Dofus ${Constants.CLIENT_VERSION}
-    """.trimIndent()
-        )
-        mess.append("\nThanks Diabu.")
-        mess.append("\nhttp://sourceforge.net/projects/ancestrar/\n\n")
-        return mess.toString()
     }
 
     @JvmStatic

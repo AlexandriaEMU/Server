@@ -52,9 +52,8 @@ public class Personnage {
 	private int _orientation = 1;
 	private int _accID;
 	private boolean _canAggro = true;
-	private String _emotes = "7667711";
-	
-	//Variables d'ali
+
+    //Variables d'ali
 	private byte _align = 0;
 	private int _deshonor = 0;
 	private int _honor = 0;
@@ -537,7 +536,7 @@ public class Personnage {
 			try
 			{
 				_zaaps.add(Short.parseShort(str));
-			}catch(Exception e){};
+			}catch(Exception e){}
 		}
 		if(_curCarte == null || _curCell == null)
 		{
@@ -565,8 +564,8 @@ public class Personnage {
 			try
 			{
 				guid = Integer.parseInt(infos[0]);
-			}catch(Exception e ){continue;};
-			
+			}catch(Exception e ){continue;}
+
 			Objet obj = World.getObjet(guid);
 			if(obj == null)continue;
 			_items.put(obj.getGuid(), obj);
@@ -582,8 +581,8 @@ public class Personnage {
 				{
 					guid = Integer.parseInt(infos[0]);
 					price = Integer.parseInt(infos[1]);
-				}catch(Exception e ){continue;};
-				
+				}catch(Exception e ){continue;}
+
 				Objet obj = World.getObjet(guid);
 				if(obj == null)continue;
 				
@@ -866,7 +865,8 @@ public class Personnage {
 		if(_guildMember != null)SocketManager.GAME_SEND_gS_PACKET(this,_guildMember);
 		SocketManager.GAME_SEND_ZONE_ALLIGN_STATUT(out);
 		SocketManager.GAME_SEND_SPELL_LIST(this);
-		SocketManager.GAME_SEND_EMOTE_LIST(this,_emotes,"0");
+        String _emotes = "7667711";
+        SocketManager.GAME_SEND_EMOTE_LIST(this, _emotes,"0");
 		SocketManager.GAME_SEND_RESTRICTIONS(out, "6bk");
 		SocketManager.GAME_SEND_Ow_PACKET(this);
 		SocketManager.GAME_SEND_SEE_FRIEND_CONNEXION(out,_showFriendConnection);
@@ -1141,7 +1141,7 @@ public class Personnage {
 		{
 			String[] infos = _savePos.split(",");
 			teleport(Short.parseShort(infos[0]), Integer.parseInt(infos[1]));
-		}catch(Exception e){};
+		}catch(Exception e){}
 	}
 	
 	public void removeByTemplateID(int tID, int count)
@@ -1565,7 +1565,7 @@ public class Personnage {
 				SocketManager.GAME_SEND_EMOTICONE_TO_MAP(map,_GUID,id);
 			else
 				SocketManager.GAME_SEND_EMOTICONE_TO_FIGHT(_fight,7,_GUID,id);
-		}catch(NumberFormatException e){return;};
+		}catch(NumberFormatException e){return;}
 	}
 	
 	public boolean isMuted()
@@ -1714,7 +1714,7 @@ public class Personnage {
 		{
 			cellID = Integer.parseInt(GA._args.split(";")[0]);
 			action = Integer.parseInt(GA._args.split(";")[1]);
-		}catch(Exception e){};
+		}catch(Exception e){}
 		if(cellID == -1 || action == -1)return;
 		//Si case invalide
 		if(!_curCarte.getCase(cellID).canDoAction(action))return;
@@ -1727,7 +1727,7 @@ public class Personnage {
 		try
 		{
 			cellID = Integer.parseInt(GA._args.split(";")[0]);
-		}catch(Exception e){};
+		}catch(Exception e){}
 		if(cellID == -1)return;
 		_curCarte.getCase(cellID).finishAction(this,GA);
 	}
@@ -2073,7 +2073,7 @@ public class Personnage {
 				char place = e.split(";")[2].charAt(0);
 				learnSpell(id,lvl,false,false);
 				_sortsPlaces.put(id, place);
-			}catch(NumberFormatException e1){continue;};
+			}catch(NumberFormatException e1){continue;}
 		}
 	}
 	
@@ -3605,8 +3605,8 @@ public class Personnage {
 		try
 		{
 			map = _savePos.split(",")[0];
-		}catch(Exception e){};
-		
+		}catch(Exception e){}
+
 		StringBuilder str = new StringBuilder();
 		str.append(map);
 		int SubAreaID = _curCarte.getSubArea().get_area().get_superArea().get_id();

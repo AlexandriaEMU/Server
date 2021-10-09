@@ -382,8 +382,8 @@ public class Metier {
 			try
 			{
 				Thread.sleep(750);
-			}catch(Exception e){};
-			//Si Forgemagie
+			}catch(Exception e){}
+            //Si Forgemagie
 			if(_skID == 1
 			|| _skID == 113
 			|| _skID == 115
@@ -1266,8 +1266,8 @@ public class Metier {
 							SE.setArgs(newArgs);//on modifie les propriétés du SpellEffect
 							SE.setEffectID(stat);//On change l'élement d'attaque
 							
-						}catch(Exception e){e.printStackTrace();};
-					}
+						}catch(Exception e){e.printStackTrace();}
+                    }
 				}
 				else if(isStatsChanging > 0 && isElementChanging == 0)//Si on modifier les stats (rune)
 				{
@@ -1446,8 +1446,8 @@ public class Metier {
 				{
 					int tool = Integer.parseInt(str);
 					_tools.add(tool);
-				}catch(Exception e){continue;};
-			}
+				}catch(Exception e){continue;}
+            }
 		}
 		
 		if(!crafts.equals(""))
@@ -1460,8 +1460,8 @@ public class Metier {
 					ArrayList<Integer> list = new ArrayList<>();
 					for(String str2 : str.split(";")[1].split(","))list.add(Integer.parseInt(str2));
 					_crafts.put(skID, list);
-				}catch(Exception e){continue;};
-			}
+				}catch(Exception e){continue;}
+            }
 		}
 	}
 	

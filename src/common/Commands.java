@@ -131,12 +131,14 @@ public class Commands {
 			int min = (int) (uptime/(1000*60));
 			uptime %= (1000*60);
 			int sec = (int) (uptime/(1000));
-			
-			String mess =	"===========\n"+ Main.makeHeader()
-				+			"Uptime: "+jour+"j "+hour+"h "+min+"m "+sec+"s\n"
-				+			"Joueurs en lignes: "+ Main.gameServer.getPlayerNumber()+"\n"
-				+			"Record de connexion: "+ Main.gameServer.getMaxPlayer()+"\n"
-				+			"===========";
+
+			String mess =	"===========\n"
+					+			"AlexandriaEMU - http://rltech.click\n"
+					+			"===========\n"
+					+			"Tiempo en linea: "+jour+"D "+hour+"H "+min+"M "+sec+"S\n"
+					+			"Jugadores en linea: "+ Main.gameServer.getPlayerNumber()+"\n"
+					+			"Maximos conectados: "+ Main.gameServer.getMaxPlayer()+"\n"
+					+			"===========";
 			SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out, mess);
 			return;
 		}else
@@ -263,12 +265,12 @@ public class Commands {
 			try
 			{
 				team0 = p[0];
-			}catch(Exception e){};
-			try
+			}catch(Exception e){}
+            try
 			{
 				team1 = p[1];
-			}catch(Exception e){};
-			mess = new StringBuilder("Team 0:\n");
+			}catch(Exception e){}
+            mess = new StringBuilder("Team 0:\n");
 			for(int a = 0;a <= team0.length()-2; a+=2)
 			{
 				String code = team0.substring(a,a+2);
@@ -323,9 +325,9 @@ public class Commands {
 			try
 			{
 				name = infos[1];
-			}catch(Exception e){};
-			
-			perso = World.getPersoByName(name);
+			}catch(Exception e){}
+
+            perso = World.getPersoByName(name);
 			
 			if(perso == null)
 			{
@@ -460,8 +462,8 @@ public class Commands {
 			{
 				mapID = Short.parseShort(infos[1]);
 				cellID = Integer.parseInt(infos[2]);
-			}catch(Exception e){};
-			if(mapID == -1 || cellID == -1 || World.getCarte(mapID) == null)
+			}catch(Exception e){}
+            if(mapID == -1 || cellID == -1 || World.getCarte(mapID) == null)
 			{
 				String str = "MapID ou cellID invalide";
 				SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out,str);
@@ -500,8 +502,8 @@ public class Commands {
 				mapY = Integer.parseInt(infos[2]);
 				cellID = Integer.parseInt(infos[3]);
 				contID = Integer.parseInt(infos[4]);
-			}catch(Exception e){};
-			Carte map = World.getCarteByPosAndCont(mapX,mapY,contID);
+			}catch(Exception e){}
+            Carte map = World.getCarteByPosAndCont(mapX,mapY,contID);
 			if(map == null)
 			{
 				String str = "Position ou continent invalide";
@@ -586,14 +588,14 @@ public class Commands {
 			try
 			{
 				name = infos[1];
-			}catch(Exception e){};
-			int time = 0;
+			}catch(Exception e){}
+            int time = 0;
 			try
 			{
 				time = Integer.parseInt(infos[2]);
-			}catch(Exception e){};
-			
-			perso = World.getPersoByName(name);
+			}catch(Exception e){}
+
+            perso = World.getPersoByName(name);
 			if(perso == null || time < 0)
 			{
 				String mess = "Le personnage n'existe pas ou la duree est invalide.";
@@ -628,9 +630,9 @@ public class Commands {
 			try
 			{
 				name = infos[1];
-			}catch(Exception e){};
-			
-			perso = World.getPersoByName(name);
+			}catch(Exception e){}
+
+            perso = World.getPersoByName(name);
 			if(perso == null)
 			{
 				String mess = "Le personnage n'existe pas.";
@@ -655,8 +657,8 @@ public class Commands {
 			try
 			{
 				name = infos[1];
-			}catch(Exception e){};
-			perso = World.getPersoByName(name);
+			}catch(Exception e){}
+            perso = World.getPersoByName(name);
 			if(perso == null)
 			{
 				String mess = "Le personnage n'existe pas.";
@@ -681,8 +683,8 @@ public class Commands {
 			try
 			{
 				pts = Integer.parseInt(infos[1]);
-			}catch(Exception e){};
-			if(pts == -1)
+			}catch(Exception e){}
+            if(pts == -1)
 			{
 				String str = "Valeur invalide";
 				SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out,str);
@@ -710,8 +712,8 @@ public class Commands {
 			try
 			{
 				spell = Integer.parseInt(infos[1]);
-			}catch(Exception e){};
-			if(spell == -1)
+			}catch(Exception e){}
+            if(spell == -1)
 			{
 				String str = "Valeur invalide";
 				SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out,str);
@@ -740,8 +742,8 @@ public class Commands {
 			try
 			{
 				align = Byte.parseByte(infos[1]);
-			}catch(Exception e){};
-			if(align < Constants.ALIGNEMENT_NEUTRE || align >Constants.ALIGNEMENT_MERCENAIRE)
+			}catch(Exception e){}
+            if(align < Constants.ALIGNEMENT_NEUTRE || align >Constants.ALIGNEMENT_MERCENAIRE)
 			{
 				String str = "Valeur invalide";
 				SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out,str);
@@ -775,8 +777,8 @@ public class Commands {
 			try
 			{
 				id = Integer.parseInt(infos[1]);
-			}catch(Exception e){};
-			String reps = infos[2];
+			}catch(Exception e){}
+            String reps = infos[2];
 			NPC_question Q = World.getNPCQuestion(id);
 			String str = "";
 			if(id == 0 || Q == null)
@@ -798,8 +800,8 @@ public class Commands {
 			try
 			{
 				id = Integer.parseInt(infos[1]);
-			}catch(Exception e){};
-			NPC_question Q = World.getNPCQuestion(id);
+			}catch(Exception e){}
+            NPC_question Q = World.getNPCQuestion(id);
 			String str = "";
 			if(id == 0 || Q == null)
 			{
@@ -817,8 +819,8 @@ public class Commands {
 			try
 			{
 				honor = Integer.parseInt(infos[1]);
-			}catch(Exception e){};
-			Personnage target = _perso;
+			}catch(Exception e){}
+            Personnage target = _perso;
 			if(infos.length > 2)//Si un nom de perso est spécifié
 			{
 				target = World.getPersoByName(infos[2]);
@@ -849,8 +851,8 @@ public class Commands {
 			{
 				job = Integer.parseInt(infos[1]);
 				xp = Integer.parseInt(infos[2]);
-			}catch(Exception e){};
-			if(job == -1 || xp < 0)
+			}catch(Exception e){}
+            if(job == -1 || xp < 0)
 			{
 				String str = "Valeurs invalides";
 				SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out,str);
@@ -886,8 +888,8 @@ public class Commands {
 			try
 			{
 				job = Integer.parseInt(infos[1]);
-			}catch(Exception e){};
-			if(job == -1 || World.getMetier(job) == null)
+			}catch(Exception e){}
+            if(job == -1 || World.getMetier(job) == null)
 			{
 				String str = "Valeur invalide";
 				SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out,str);
@@ -916,8 +918,8 @@ public class Commands {
 			try
 			{
 				pts = Integer.parseInt(infos[1]);
-			}catch(Exception e){};
-			if(pts == -1)
+			}catch(Exception e){}
+            if(pts == -1)
 			{
 				String str = "Valeur invalide";
 				SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out,str);
@@ -945,8 +947,8 @@ public class Commands {
 			try
 			{
 				size = Integer.parseInt(infos[1]);
-			}catch(Exception e){};
-			if(size == -1)
+			}catch(Exception e){}
+            if(size == -1)
 			{
 				String str = "Taille invalide";
 				SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out,str);
@@ -975,8 +977,8 @@ public class Commands {
 			try
 			{
 				morphID = Integer.parseInt(infos[1]);
-			}catch(Exception e){};
-			if(morphID == -1)
+			}catch(Exception e){}
+            if(morphID == -1)
 			{
 				String str = "MorphID invalide";
 				SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out,str);
@@ -1004,8 +1006,8 @@ public class Commands {
 			try
 			{
 				id = Integer.parseInt(infos[1]);
-			}catch(Exception e){};
-			NPC npc = _perso.get_curCarte().getNPC(id);
+			}catch(Exception e){}
+            NPC npc = _perso.get_curCarte().getNPC(id);
 			if(id == 0 || npc == null)
 			{
 				String str = "Npc GUID invalide";
@@ -1038,8 +1040,8 @@ public class Commands {
 			try
 			{
 				tID = Integer.parseInt(infos[1]);
-			}catch(Exception e){};
-			ItemSet IS = World.getItemSet(tID);
+			}catch(Exception e){}
+            ItemSet IS = World.getItemSet(tID);
 			if(tID == 0 || IS == null)
 			{
 				String mess = "La panoplie "+tID+" n'existe pas ";
@@ -1095,8 +1097,8 @@ public class Commands {
 			{
 				SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out, "Valeur incorecte");
 				return;
-			};
-		}else
+			}
+        }else
 		if(command.equalsIgnoreCase("PDVPER"))
 		{
 			int count = 0;
@@ -1123,8 +1125,8 @@ public class Commands {
 			{
 				SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out, "Valeur incorecte");
 				return;
-			};
-		}else
+			}
+        }else
 		if(command.equalsIgnoreCase("KAMAS"))
 		{
 			int count = 0;
@@ -1135,8 +1137,8 @@ public class Commands {
 			{
 				SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out, "Valeur incorecte");
 				return;
-			};
-			if(count == 0)return;
+			}
+            if(count == 0)return;
 			
 			Personnage perso = _perso;
 			if(infos.length == 3)//Si le nom du perso est spécifié
@@ -1170,8 +1172,8 @@ public class Commands {
 			try
 			{
 				tID = Integer.parseInt(infos[1]);
-			}catch(Exception e){};
-			if(tID == 0)
+			}catch(Exception e){}
+            if(tID == 0)
 			{
 				String mess = "Le template "+tID+" n'existe pas ";
 				SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out,mess);
@@ -1183,8 +1185,8 @@ public class Commands {
 				try
 				{
 					qua = Integer.parseInt(infos[2]);
-				}catch(Exception e){};
-			}
+				}catch(Exception e){}
+            }
 			boolean useMax = false;
 			if(infos.length == 4 && !isOffiCmd)//Si un jet est spécifié
 			{
@@ -1212,7 +1214,7 @@ public class Commands {
 			try
 			{
 				Mob = infos[1];
-			}catch(Exception e){};
+			}catch(Exception e){}
             if(Mob == null) return;
 			_perso.get_curCarte().spawnGroupOnCommand(_perso.get_curCell().getID(), Mob);
 		}else
@@ -1224,9 +1226,9 @@ public class Commands {
 			{
 				target = World.getPersoByName(infos[1]);
 				TitleID = Byte.parseByte(infos[2]);
-			}catch(Exception e){};
-			
-			if(target == null)
+			}catch(Exception e){}
+
+            if(target == null)
 			{
 				String str = "Le personnage n'a pas ete trouve";
 				SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out,str);
@@ -1269,8 +1271,8 @@ public class Commands {
 			try
 			{
 				cell = Integer.parseInt(infos[2]);
-			}catch(Exception e){};
-			if(cell < 0 || _perso.get_curCarte().getCase(cell) == null)
+			}catch(Exception e){}
+            if(cell < 0 || _perso.get_curCarte().getCase(cell) == null)
 			{
 				cell = _perso.get_curCell().getID();
 			}
@@ -1281,13 +1283,13 @@ public class Commands {
 			try
 			{
 				team0 = p[0];
-			}catch(Exception e){};
-			try
+			}catch(Exception e){}
+            try
 			{
 				team1 = p[1];
-			}catch(Exception e){};
-			
-			for(int a = 0;a<=team0.length()-2;a+=2)
+			}catch(Exception e){}
+
+            for(int a = 0;a<=team0.length()-2;a+=2)
 			{
 				String c = p[0].substring(a,a+2);
 				if(cell == CryptManager.cellCode_To_ID(c))continue;
@@ -1350,8 +1352,8 @@ public class Commands {
 			{
 				team = Integer.parseInt(infos[1]);
 				cell = Integer.parseInt(infos[2]);
-			}catch(Exception e){};
-			if( team < 0 || team>1)
+			}catch(Exception e){}
+            if( team < 0 || team>1)
 			{
 				String str = "Team ou cellID incorects";
 				SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out,str);
@@ -1368,13 +1370,13 @@ public class Commands {
 			try
 			{
 				team0 = p[0];
-			}catch(Exception e){};
-			try
+			}catch(Exception e){}
+            try
 			{
 				team1 = p[1];
-			}catch(Exception e){};
-			
-			//Si case déjà utilisée
+			}catch(Exception e){}
+
+            //Si case déjà utilisée
 			System.out.println("0 => "+team0+"\n1 =>"+team1+"\nCell: "+CryptManager.cellID_To_Code(cell));
 			for(int a = 0; a <= team0.length()-2;a+=2)if(cell == CryptManager.cellCode_To_ID(team0.substring(a,a+2)))already = true;
 			for(int a = 0; a <= team1.length()-2;a+=2)if(cell == CryptManager.cellCode_To_ID(team1.substring(a,a+2)))already = true;
@@ -1400,8 +1402,8 @@ public class Commands {
 			try
 			{
 				id = Byte.parseByte(infos[1]);
-			}catch(Exception e){};
-			if(id == -1)
+			}catch(Exception e){}
+            if(id == -1)
 			{
 				String str = "Valeur invalide";
 				SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out,str);
@@ -1423,8 +1425,8 @@ public class Commands {
 			{
 				repID = Integer.parseInt(infos[1]);
 				id = Integer.parseInt(infos[2]);
-			}catch(Exception e){};
-			NPC_reponse rep = World.getNPCreponse(repID);
+			}catch(Exception e){}
+            NPC_reponse rep = World.getNPCreponse(repID);
 			if(id == -30 || rep == null)
 			{
 				String str = "Au moins une des valeur est invalide";
@@ -1447,8 +1449,8 @@ public class Commands {
 			{
 				q = Integer.parseInt(infos[2]);
 				id = Integer.parseInt(infos[1]);
-			}catch(Exception e){};
-			if(id == -30)
+			}catch(Exception e){}
+            if(id == -30)
 			{
 				String str = "NpcID invalide";
 				SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out,str);
@@ -1474,8 +1476,8 @@ public class Commands {
 				type = Integer.parseInt(infos[1]);
 				id = Integer.parseInt(infos[2]);
 				
-			}catch(Exception e){};
-			if(id == -30)
+			}catch(Exception e){}
+            if(id == -30)
 			{
 				String str = "Au moins une des valeur est invalide";
 				SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out,str);
@@ -1506,8 +1508,8 @@ public class Commands {
 			try
 			{
 				id = Integer.parseInt(infos[1]);
-			}catch(Exception e){};
-			if(id == 0 || World.getNPCTemplate(id) == null)
+			}catch(Exception e){}
+            if(id == 0 || World.getNPCTemplate(id) == null)
 			{
 				String str = "NpcID invalide";
 				SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out,str);
@@ -1533,8 +1535,8 @@ public class Commands {
 			try
 			{
 				id = Integer.parseInt(infos[1]);
-			}catch(Exception e){};
-			NPC npc = _perso.get_curCarte().getNPC(id);
+			}catch(Exception e){}
+            NPC npc = _perso.get_curCarte().getNPC(id);
 			if(id == 0 || npc == null)
 			{
 				String str = "Npc GUID invalide";
@@ -1558,8 +1560,8 @@ public class Commands {
 			try
 			{
 				cellID = Integer.parseInt(infos[1]);
-			}catch(Exception e){};
-			if(cellID == -1 || _perso.get_curCarte().getCase(cellID) == null)
+			}catch(Exception e){}
+            if(cellID == -1 || _perso.get_curCarte().getCase(cellID) == null)
 			{
 				String str = "CellID invalide";
 				SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out,str);
@@ -1582,8 +1584,8 @@ public class Commands {
 				actionID = Integer.parseInt(infos[1]);
 				args = infos[2];
 				cond = infos[3];
-			}catch(Exception e){};
-			if(args.equals("") || actionID <= -3)
+			}catch(Exception e){}
+            if(args.equals("") || actionID <= -3)
 			{
 				String str = "Valeur invalide";
 				SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out,str);
@@ -1606,8 +1608,8 @@ public class Commands {
 			{
 				npcGUID = Integer.parseInt(infos[1]);
 				itmID = Integer.parseInt(infos[2]);
-			}catch(Exception e){};
-			NPC_tmpl npc =  _perso.get_curCarte().getNPC(npcGUID).get_template();
+			}catch(Exception e){}
+            NPC_tmpl npc =  _perso.get_curCarte().getNPC(npcGUID).get_template();
 			if(npcGUID == 0 || itmID == -1 || npc == null)
 			{
 				String str = "NpcGUID ou itmID invalide";
@@ -1630,8 +1632,8 @@ public class Commands {
 			{
 				npcGUID = Integer.parseInt(infos[1]);
 				itmID = Integer.parseInt(infos[2]);
-			}catch(Exception e){};
-			NPC_tmpl npc =  _perso.get_curCarte().getNPC(npcGUID).get_template();
+			}catch(Exception e){}
+            NPC_tmpl npc =  _perso.get_curCarte().getNPC(npcGUID).get_template();
 			ObjTemplate item =  World.getObjTemplate(itmID);
 			if(npcGUID == 0 || itmID == -1 || npc == null || item == null)
 			{
@@ -1658,8 +1660,8 @@ public class Commands {
 				price = Integer.parseInt(infos[3]);
 				if(price > 20000000)price = 20000000;
 				if(price <0)price = 0;
-			}catch(Exception e){};
-			if(size == -1 || owner == -2 || price == -1 || _perso.get_curCarte().getMountPark() != null)
+			}catch(Exception e){}
+            if(size == -1 || owner == -2 || price == -1 || _perso.get_curCarte().getMountPark() != null)
 			{
 				String str = "Infos invalides ou map deja config.";
 				SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out,str);
@@ -1678,9 +1680,9 @@ public class Commands {
 			{
 				OffOn = Integer.parseInt(infos[1]);
 				time = Integer.parseInt(infos[2]);
-			}catch(Exception e){};
-			
-			if(OffOn == 1 && _TimerStart)// demande de démarer le reboot
+			}catch(Exception e){}
+
+            if(OffOn == 1 && _TimerStart)// demande de démarer le reboot
 			{
 				SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out, "Un shutdown est deja programmer.");
 			}else if(OffOn == 1 && !_TimerStart)
@@ -1724,8 +1726,8 @@ public class Commands {
 			try
 			{
 				gmLvl = Integer.parseInt(infos[1]);
-			}catch(Exception e){};
-			if(gmLvl == -100)
+			}catch(Exception e){}
+            if(gmLvl == -100)
 			{
 				String str = "Valeur incorrecte";
 				SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out,str);
@@ -1753,9 +1755,9 @@ public class Commands {
 			try
 			{
 				LockValue = Byte.parseByte(infos[1]);
-			}catch(Exception e){};
-			
-			if(LockValue > 2) LockValue = 2;
+			}catch(Exception e){}
+
+            if(LockValue > 2) LockValue = 2;
 			if(LockValue < 0) LockValue = 0;
 			
 			char c = 0;
@@ -1783,9 +1785,9 @@ public class Commands {
 			{
 				GmAccess = Byte.parseByte(infos[1]);
 				KickPlayer = Byte.parseByte(infos[2]);
-			}catch(Exception e){};
-			
-			Main.comServer.lockGMlevel(GmAccess);
+			}catch(Exception e){}
+
+            Main.comServer.lockGMlevel(GmAccess);
 			SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out, "Serveur bloque au GmLevel : "+GmAccess);
 			if(KickPlayer > 0)
 			{
@@ -1803,8 +1805,8 @@ public class Commands {
 			try
 			{
 				P = World.getPersoByName(infos[1]);
-			}catch(Exception e){};
-			if(P == null || !P.isOnline())
+			}catch(Exception e){}
+            if(P == null || !P.isOnline())
 			{
 				String str = "Le personnage n'a pas ete trouve.";
 				SocketManager.GAME_SEND_CONSOLE_MESSAGE_PACKET(_out,str);
@@ -1825,8 +1827,8 @@ public class Commands {
 			try
 			{
 				numb = Integer.parseInt(infos[1]);
-			}catch(Exception e){};
-			fullHdv(numb);
+			}catch(Exception e){}
+            fullHdv(numb);
 		}else
 		if(command.equalsIgnoreCase("RES"))
 		{
@@ -1834,8 +1836,8 @@ public class Commands {
 			try
 			{
 				objID = Integer.parseInt(infos[1]);
-			}catch(Exception e){};
-			PetsEntry p = World.get_PetsEntry(objID);
+			}catch(Exception e){}
+            PetsEntry p = World.get_PetsEntry(objID);
 			if(p == null) return;
 			p.resurrection();
 			SocketManager.GAME_SEND_UPDATE_OBJECT_DISPLAY_PACKET(_perso, World.getObjet(objID));
@@ -1845,8 +1847,8 @@ public class Commands {
 			try
 			{
 				str = infos[1];
-			}catch(Exception e){};
-			SocketManager.send(_perso, str);
+			}catch(Exception e){}
+            SocketManager.send(_perso, str);
 		}else
 		{
 			this.commandGmThree(command, infos, msg);

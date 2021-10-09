@@ -1,0 +1,5 @@
+v0.00.0
+- Traducciones varias
+- Java 17 - BellSoft
+- Actualizacion libreria MULTI - MYSQL
+- Optimizaciones varias

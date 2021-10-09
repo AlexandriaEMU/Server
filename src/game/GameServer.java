@@ -21,9 +21,8 @@ public class GameServer implements Runnable{
 	private Thread _t;
 	private ArrayList<GameThread> _clients = new ArrayList<>();
 	private ArrayList<Compte> _waitings = new ArrayList<>();
-	
-	private Timer _actionTimer;
-	private int _saveTimer = 0, _loadActionTimer = 0, _reloadMobTimer = 0;
+
+    private int _saveTimer = 0, _loadActionTimer = 0, _reloadMobTimer = 0;
 	
 	private long _startTime;
 	private int _maxPlayer = 0;
@@ -31,8 +30,8 @@ public class GameServer implements Runnable{
 	public GameServer(String Ip)
 	{
 		try {
-			
-			_actionTimer = new Timer();
+
+            Timer _actionTimer = new Timer();
 			_actionTimer.schedule(new TimerTask()
 			{
 				public void run()
@@ -154,7 +153,7 @@ public class GameServer implements Runnable{
 			try
 			{
 				GT.kick();
-			}catch(Exception e){};	
+			}catch(Exception e){}
 		}
 	}
 	

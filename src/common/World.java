@@ -3,13 +3,7 @@ package common;
 import game.GameServer;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.ConcurrentModificationException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.Map.Entry;
 
 import objects.*;
@@ -122,8 +116,8 @@ public class World {
 					ObjTemplate t = World.getObjTemplate(Integer.parseInt(str.trim()));
 					if(t == null)continue;
 					_itemTemplates.add(t);
-				}catch(Exception e){};
-			}
+				}catch(Exception e){}
+            }
 			
 			//on ajoute un bonus vide pour 1 item
 			_bonuses.add(new Stats());
@@ -141,8 +135,8 @@ public class World {
 						int value = Integer.parseInt(infos[1]);
 						//on ajoute a la stat
 						S.addOneStat(stat, value);
-					}catch(Exception e){};
-				}
+					}catch(Exception e){}
+                }
 				//on ajoute la stat a la liste des bonus
 				_bonuses.add(S);
 			}
@@ -627,16 +621,14 @@ public class World {
 		
 	}
 
-	public static class ExpLevel
-	{
+	public static class ExpLevel {
 		public long perso;
 		public int metier;
 		public int dinde;
 		public int pvp;
 		public long guilde;
 		
-		public ExpLevel(long c, int m, int d, int p)
-		{
+		public ExpLevel(long c, int m, int d, int p) {
 			perso = c;
 			metier = m;
 			dinde = d;
@@ -646,125 +638,124 @@ public class World {
 		
 	}
 	
-	public static void createWorld()
-	{
+	public static void createWorld() {
 		System.out.println("====>Cargando estaticos<====");
 		System.out.print("Cargando los niveles y las experiencias: ");
 		SQLManager.LOAD_EXP();
-		System.out.println(ExpLevels.size()+" niveaux ont ete charges");
-		System.out.print("Chargement des sorts: ");
+		System.out.println(ExpLevels.size()+" niveles cargados.");
+		System.out.print("Cargando hechizos: ");
 		SQLManager.LOAD_SORTS();
-		System.out.println(Sorts.size()+" sorts ont ete charges");
-		System.out.print("Chargement des templates de monstre: ");
+		System.out.println(Sorts.size()+" hechizos cargados.");
+		System.out.print("Cargando diseños de monstruos: ");
 		SQLManager.LOAD_MOB_TEMPLATE();
-		System.out.println(MobTemplates.size()+" templates de monstre ont ete chargees");
-		System.out.print("Chargement des templates d'objet: ");
+		System.out.println(MobTemplates.size()+" diseños cargados.");
+		System.out.print("Cargando diseños de objetos: ");
 		SQLManager.LOAD_OBJ_TEMPLATE();
-		System.out.println(ObjTemplates.size()+" templates d'objet ont ete chargees");
-		System.out.print("Chargement des templates de NPC: ");
+		System.out.println(ObjTemplates.size()+" diseños cargados.");
+		System.out.print("Cargando los diseños de los NPC: ");
 		SQLManager.LOAD_NPC_TEMPLATE();
-		System.out.println(NPCTemplates.size()+" templates de NPC ont ete chargees");
-		System.out.print("Chargement des questions de NPC: ");
+		System.out.println(NPCTemplates.size()+" diseños cargados.");
+		System.out.print("Cargando las preguntas de los NPC: ");
 		SQLManager.LOAD_NPC_QUESTIONS();
-		System.out.println(NPCQuestions.size()+" questions de NPC ont ete charges");
-		System.out.print("Chargement des reponses de NPC: ");
+		System.out.println(NPCQuestions.size()+" preguntas cargadas.");
+		System.out.print("Cargando las respuestas de los NPC: ");
 		SQLManager.LOAD_NPC_ANSWERS();
-		System.out.println(NPCReponses.size()+" reponses de NPC ont ete chargees");
-		System.out.print("Chargement des zones: ");
+		System.out.println(NPCReponses.size()+" respuestas cargadas.");
+		System.out.print("Cargando las zonas: ");
 		SQLManager.LOAD_AREA();
-		System.out.println(Areas.size()+" zones ont ete chargees");
-		System.out.print("Chargement des sous-zone: ");
+		System.out.println(Areas.size()+" zonas cargadas.");
+		System.out.print("Cargando las sub zonas: ");
 		SQLManager.LOAD_SUBAREA();
-		System.out.println(SubAreas.size()+" sous-zones ont ete chargees");
-		System.out.print("Chargement des template d'objet interactifs: ");
+		System.out.println(SubAreas.size()+" sub zonas cargadas.");
+		System.out.print("Cargando los diseños de los objetos interactivos: ");
 		SQLManager.LOAD_IOTEMPLATE();
-		System.out.println(IOTemplate.size()+" template d'IO ont ete charges");
-		System.out.print("Chargement des recettes: ");
+		System.out.println(IOTemplate.size()+" diseños cargados.");
+		System.out.print("Cargando las recetas: ");
 		SQLManager.LOAD_CRAFTS();
-		System.out.println(Crafts.size()+" recettes ont ete chargses");
-		System.out.print("Chargement des metiers: ");
+		System.out.println(Crafts.size()+" recetas cargadas.");
+		System.out.print("Cargando los oficios: ");
 		SQLManager.LOAD_JOBS();
-		System.out.println(Jobs.size()+" metiers ont ete charges");
-		System.out.print("Chargement des panolies: ");
+		System.out.println(Jobs.size()+" oficios cargados.");
+		System.out.print("Cargando set completos: ");
 		SQLManager.LOAD_ITEMSETS();
-		System.out.println(ItemSets.size()+" panoplies ont ete chargees");
-		System.out.print("Chargement des maps: ");
+		System.out.println(ItemSets.size()+" set cargados.");
+		System.out.print("Cargando mapas: ");
 		SQLManager.LOAD_MAPS();
-		System.out.println(Cartes.size()+" maps ont ete chargees");
-		System.out.print("Chargement des Triggers: ");
+		System.out.println(Cartes.size()+" mapas cargados.");
+		System.out.print("Cargando las celdas: ");
 		int nbr = SQLManager.LOAD_TRIGGERS();
-		System.out.println(nbr+" triggers ont ete charges");
-		System.out.print("Chargement des actions de fin de combat: ");
+		System.out.println(nbr+" celdas cargadas.");
+		System.out.print("Cargando las acciones fin de combate: ");
 		nbr = SQLManager.LOAD_ENDFIGHT_ACTIONS();
-		System.out.println(nbr+" actions ont ete charges");
-		System.out.print("Chargement des npcs: ");
+		System.out.println(nbr+" acciones cargadas.");
+		System.out.print("Cargando los NPC: ");
 		nbr = SQLManager.LOAD_NPCS();
-		System.out.println(nbr+" npcs ont ete charges");
-		System.out.print("Chargement des actions des objets: ");
+		System.out.println(nbr+" NPC cargados.");
+		System.out.print("Cargando las acciones de los objetos: ");
 		nbr = SQLManager.LOAD_ITEM_ACTIONS();
-		System.out.println(nbr+" actions ont ete chargees");
-		System.out.print("Chargement des Drops: ");
+		System.out.println(nbr+" acciones cargadas.");
+		System.out.print("Cargando los drops: ");
 		nbr = SQLManager.LOAD_DROPS();
-		System.out.println(nbr+" drops ont ete charges");
-		System.out.print("Chargement des Animations: ");
+		System.out.println(nbr+" drops cargados.");
+		System.out.print("Cargando las animaciones: ");
 		SQLManager.LOAD_ANIMATIONS();
-		System.out.println(Animations.size() + " animations ont ete charges");
-		System.out.print("Chargement des zaaps: ");
+		System.out.println(Animations.size() + " animaciones cargadas.");
+		System.out.print("Cargando los zaaps: ");
 		nbr = SQLManager.LOAD_ZAAPS();
-		System.out.println(nbr+" zaaps charges");
-		System.out.print("Chargement des zaapis: ");
+		System.out.println(nbr+" zaaps cargados.");
+		System.out.print("Cargando los zappis: ");
 		nbr = SQLManager.LOAD_ZAAPIS();
-		System.out.println(nbr+" zaapis charges");
-		System.out.print("Chargement des hdvs: ");
+		System.out.println(nbr+" zaapis cargados.");
+		System.out.print("Cargando los mercadillos: ");
 		nbr = SQLManager.LOAD_HDVS();
-		System.out.println(nbr+" hdvs charges");
-		System.out.print("Chargement des pets: ");
+		System.out.println(nbr+" mercadillos cargados.");
+		System.out.print("Cargando las mascotas: ");
 		nbr = SQLManager.LOAD_PETS();
-		System.out.println(nbr+" pets charges");
-		System.out.print("Chargement des challenges: ");
+		System.out.println(nbr+" mascotas cargadas.");
+		System.out.print("Cargando los retos: ");
 		nbr = SQLManager.LOAD_CHALLENGES();
-		System.out.println(nbr+" challenges charges");
-		System.out.println("Chargement des cadeaux: ");
+		System.out.println(nbr+" retos cargados");
+		System.out.println("Cargando los regalos: ");
 		nbr = SQLManager.LOAD_GIFTS();
-		System.out.println(nbr+" cadeaux charges");
+		System.out.println(nbr+" regalos cargados");
 		
-		System.out.println("====>Donnees dynamique<====");
-		System.out.print("Chargement des items: ");
+		System.out.println("\n====>Cargando dinamicos<====");
+		System.out.print("Cargando los objetos: ");
 		SQLManager.LOAD_ITEMS();
-		System.out.println("Ok !");
-		System.out.print("Chargement des personnages: ");
+		System.out.println("Cargados.");
+		System.out.print("Cargando los personajes: ");
 		SQLManager.LOAD_PERSOS();
-		System.out.println(Persos.size()+" personnages charges");
-	    System.out.print("Chargement des guildes: ");
+		System.out.println(Persos.size()+" personajes cargados.");
+	    System.out.print("Cargando los gremios: ");
 		SQLManager.LOAD_GUILDS();
-		System.out.println(Guildes.size()+" guildes chargees");
-		System.out.print("Chargement des dragodindes: ");
+		System.out.println(Guildes.size()+" gremios cargados.");
+		System.out.print("Cargando los dragopavos: ");
 		SQLManager.LOAD_MOUNTS();
-		System.out.println(Dragodindes.size()+" dragodindes chargees");
-		System.out.print("Chargement des membres de guildes: ");
+		System.out.println(Dragodindes.size()+" dragopavos cargados.");
+		System.out.print("Cargando los miembros de gremios: ");
 		SQLManager.LOAD_GUILD_MEMBERS();
-		System.out.println("Ok !");
-		System.out.print("Chargement des donnees d'enclos: ");
+		System.out.println("Cargados.");
+		System.out.print("Cargando los cercados: ");
 		nbr = SQLManager.LOAD_MOUNTPARKS();
-		System.out.println(nbr+" enclos charges");
-		System.out.print("Chargement des percepteurs: ");
+		System.out.println(nbr+" cercados cargados.");
+		System.out.print("Cargando los recaudadores: ");
 		nbr = SQLManager.LOAD_PERCEPTEURS();
-		System.out.println(nbr+" percepteurs charges");
-		System.out.print("Chargement des maisons: ");
+		System.out.println(nbr+" recaudadores cargados.");
+		System.out.print("Cargando las casas: ");
 		nbr = SQLManager.LOAD_HOUSES();
-		System.out.println(nbr+" maisons chargees");
-		System.out.print("Chargement des coffres: ");
+		System.out.println(nbr+" casas cargadas.");
+		System.out.print("Cargando los cofres: ");
 		nbr = SQLManager.LOAD_TRUNK();
-		System.out.println(nbr+" coffres charges");
-		System.out.print("Chargement des donnees de comptes: ");
+		System.out.println(nbr+" cofres cargados.");
+		System.out.print("Cargando las cuentas: ");
 		SQLManager.LOAD_ACCOUNTS_DATA();
-		System.out.println(nbr+" comptes charges");
-		System.out.print("Chargement des ventes hdvs: ");
+		System.out.println(nbr+" cuentas cargadas.");
+		System.out.print("Cargando los objetos de los mercadillos: ");
 		nbr = SQLManager.LOAD_HDVS_ITEMS();
-		System.out.println(nbr+" ventes hdvs chargees");
-		System.out.print("Chargement des pets: ");
+		System.out.println(nbr+" objetos cargados.");
+		System.out.print("Cargando las mascotas: ");
 		nbr = SQLManager.LOAD_PETS_ENTRY();
-		System.out.println(nbr+" pets charges");
+		System.out.println(nbr+" mascotas cargadas.");
 		
 		nextObjetID = SQLManager.getNextObjetID();
 	}
@@ -1054,14 +1045,14 @@ public class World {
 
 		try
 		{
-			GameServer.addToLog("Lancement de la sauvegarde du Monde...");
+			GameServer.addToLog("Lanzando el guardado del server...");
 			Main.isSaving = true;
 			SQLManager.commitTransacts();
 			SQLManager.TIMER(false);//Arrête le timer d'enregistrement SQL
 			
 			Thread.sleep(5000);
 			
-			GameServer.addToLog("Sauvegarde des personnages...");
+			GameServer.addToLog("Guardando los personajes.");
 			for(Personnage perso : Persos.values())
 			{
 				if(!perso.isOnline())continue;
@@ -1071,7 +1062,7 @@ public class World {
 			
 			Thread.sleep(2000);
 			
-			GameServer.addToLog("Sauvegarde des banques...");
+			GameServer.addToLog("Guardando los bancos...");
 			for(Bank bk : Banks.values())
 			{
 				Thread.sleep(100);//0.1 sec. pour 1 banque
@@ -1080,7 +1071,7 @@ public class World {
 			
 			Thread.sleep(2000);
 			
-			GameServer.addToLog("Sauvegarde des guildes...");
+			GameServer.addToLog("Guardando los gremios...");
 			for(Guild guilde : Guildes.values())
 			{
 				Thread.sleep(100);//0.1 sec. pour 1 guilde
@@ -1089,7 +1080,7 @@ public class World {
 			
 			Thread.sleep(2000);
 			
-			GameServer.addToLog("Sauvegarde des percepteurs...");
+			GameServer.addToLog("Guardando los recaudadores...");
 			for(Percepteur perco : Percepteurs.values())
 			{
 				if(perco.get_inFight()>0)continue;
@@ -1099,7 +1090,7 @@ public class World {
 			
 			Thread.sleep(2000);
 			
-			GameServer.addToLog("Sauvegarde des maisons...");
+			GameServer.addToLog("Guardando las casas...");
 			for(House house : Houses.values())
 			{
 				if(house.get_owner_id() > 0)
@@ -1111,7 +1102,7 @@ public class World {
 			
 			Thread.sleep(2000);
 			
-			GameServer.addToLog("Sauvegarde des coffres...");
+			GameServer.addToLog("Guardando los cofres...");
 			for(Trunk t : Trunks.values())
 			{
 				if(t.get_owner_id() > 0)
@@ -1123,7 +1114,7 @@ public class World {
 			
 			Thread.sleep(2000);
 			
-			GameServer.addToLog("Sauvegarde des enclos...");
+			GameServer.addToLog("Guardando los cercados...");
 			for(Carte.MountPark mp : MountPark.values())
 			{
 				if(mp.get_owner() > 0 || mp.get_owner() == -1)
@@ -1135,7 +1126,7 @@ public class World {
 			
 			Thread.sleep(2000);
 			
-			GameServer.addToLog("Sauvegarde des pets...");
+			GameServer.addToLog("Guardando las mascotas...");
 			for(PetsEntry pets : PetsEntry.values())
 			{
 				Thread.sleep(100);//0.1 sec. pour 1 familier
@@ -1144,7 +1135,7 @@ public class World {
 			
 			Thread.sleep(2000);
 			
-			GameServer.addToLog("Sauvegarde des Hdvs...");
+			GameServer.addToLog("Guardando los mercadillos...");
 			ArrayList<HdvEntry> toSave = new ArrayList<>();
 			for(Map<Integer, HdvEntry> curEntry : HdvsTemplates.values())
 			{
@@ -1154,7 +1145,7 @@ public class World {
 			
 			Thread.sleep(5000);
 			
-			GameServer.addToLog("Sauvegarde effectuee !");
+			GameServer.addToLog("GUARDADO COMPLETADO!");
 			
 			Main.comServer.sendChangeState('O');
 			
@@ -1241,17 +1232,15 @@ public class World {
 			}
 			if(craft.size() != ingredients.size())continue;
 			boolean ok = true;
-			for(Couple<Integer,Integer> c : craft)
-			{
+			for(Couple<Integer,Integer> c : craft) {
 				//si ingredient non présent ou mauvaise quantité
-				if(ingredients.get(c.first) != c.second)ok = false;
+				if(!Objects.equals(ingredients.get(c.first), c.second))ok = false;
 			}
 			if(ok)return tID;
 		}
 		return -1;
 	}
-	public static Compte getCompteByPseudo(String p)
-	{
+	public static Compte getCompteByPseudo(String p) {
 		for(Compte C : Comptes.values())if(C.get_pseudo().equals(p))return C;
 		return null;
 	}

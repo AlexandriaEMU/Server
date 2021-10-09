@@ -89,7 +89,7 @@ public class SQLManager {
 			e.printStackTrace();
 		}
 	}
-	public static final boolean setUpConnexion()
+	public static boolean setUpConnexion()
 	{
 		try
 		{
@@ -242,7 +242,7 @@ public class SQLManager {
 							int tID = Integer.parseInt(str.split("\\*")[0]);
 							int qua =  Integer.parseInt(str.split("\\*")[1]);
 							m.add(new Couple<>(tID, qua));
-					}catch(Exception e){e.printStackTrace();cont = false;};
+					}catch(Exception e){e.printStackTrace();cont = false;}
 				}
 				//s'il y a eu une erreur de parsing, on ignore cette recette
 				if(!cont)continue;
@@ -253,7 +253,7 @@ public class SQLManager {
 					m
 				);
 			}
-			closeResultSet(RS);;
+			closeResultSet(RS);
 		}catch(SQLException e)
 		{
 			GameServer.addToLog("SQL ERROR: "+e.getMessage());
@@ -1123,7 +1123,7 @@ public class SQLManager {
 			System.out.println("Requete: "+baseQuery);
 			System.out.println("Le personnage n'a pas ete sauvegarde");
 			System.exit(1);
-		};
+		}
 		if(saveAll)
 		{
 			baseQuery = "UPDATE `items` SET qua = ?, pos= ?, stats = ?"+
@@ -1148,8 +1148,8 @@ public class SQLManager {
 					p.setInt(4, Integer.parseInt(idStr));
 					
 					p.execute();
-				}catch(Exception e){continue;};
-				
+				}catch(Exception e){continue;}
+
 			}
 			
 			if(_perso.get_compte() == null) return;
@@ -1167,8 +1167,8 @@ public class SQLManager {
 					p.setInt(4, Integer.parseInt(idStr));
 					
 					p.execute();
-				}catch(Exception e){continue;};
-				
+				}catch(Exception e){continue;}
+
 			}
 			SQLManager.UPDATE_BANK(_perso.get_compte().getBank());
 			SQLManager.UPDATE_FL_AND_EL(_perso.get_compte().get_GUID(), _perso.get_compte().GetFriends().parseFriends(), _perso.get_compte().GetEnemys().parseEnemys());
@@ -1253,8 +1253,8 @@ public class SQLManager {
 			try
 			{
 				PACOST = Integer.parseInt(stat[2].trim());
-			}catch(NumberFormatException e){};
-			
+			}catch(NumberFormatException e){}
+
 			int POm = Integer.parseInt(stat[3].trim());
 			int POM = Integer.parseInt(stat[4].trim());
 			int TCC = Integer.parseInt(stat[5].trim());

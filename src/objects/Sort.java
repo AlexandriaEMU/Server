@@ -19,9 +19,8 @@ public class Sort {
 	private String spriteInfos;
 	private Map<Integer,SortStats> sortStats = new TreeMap<>();
 	private ArrayList<Integer> effectTargets = new ArrayList<>();
-	private ArrayList<Integer> CCeffectTargets = new ArrayList<>();
-	
-	public static class SortStats
+
+    public static class SortStats
 	{
 		private int spellID;
 		private int level;
@@ -80,7 +79,7 @@ public class Sort {
 					int id = Integer.parseInt(a.split(";",2)[0]);
 					String args = a.split(";",2)[1];
 					effets.add(new SpellEffect(id, args,spellID,level));
-				}catch(Exception f){f.printStackTrace();System.out.println(a);System.exit(1);};
+				}catch(Exception f){f.printStackTrace();System.out.println(a);System.exit(1);}
 			}
 			return effets;
 		}
@@ -293,18 +292,19 @@ public class Sort {
 			{
 				effectTargets.add(0);
 				continue;
-			};
+			}
 		}
 		for(String num : ccET.split(";"))
 		{
-			try
+            ArrayList<Integer> CCeffectTargets = new ArrayList<>();
+            try
 			{
 				CCeffectTargets.add(Integer.parseInt(num));
 			}catch(Exception e)
 			{
 				CCeffectTargets.add(0);
 				continue;
-			};
+			}
 		}
 	}
 	
