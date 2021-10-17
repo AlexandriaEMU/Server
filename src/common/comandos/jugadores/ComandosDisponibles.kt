@@ -6,13 +6,15 @@ import objects.Personaje
 
 object ComandosDisponibles {
     fun comandosdisponibles(personaje: Personaje){
-        SocketManager.GAME_SEND_MESSAGE(
-            personaje, """
-     Comandos disponibles: 
-     .start
-     .infos
-     .save
-     """.trimIndent(), Main.CONFIG_MOTD_COLOR
-        )
+        Main.CONFIG_MOTD_COLOR?.let {
+            SocketManager.GAME_SEND_MESSAGE(
+                personaje, """
+         Comandos disponibles: 
+         .start
+         .infos
+         .save
+         """.trimIndent(), it
+            )
+        }
     }
 }

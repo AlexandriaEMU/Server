@@ -3,11 +3,10 @@ package objects.acciones
 import common.SocketManager
 import common.World
 import objects.Personaje
-import java.io.PrintWriter
 
 object uno {
-    fun uno(imprimir: PrintWriter, personaje: Personaje, argumento: String){
-        imprimir = personaje._compte.gameThread._out
+    fun uno(personaje: Personaje, argumento: String) {
+        val imprimir = personaje._compte.gameThread._out
         if (argumento.equals("DV", ignoreCase = true)) {
             SocketManager.GAME_SEND_END_DIALOG_PACKET(imprimir)
             personaje._isTalkingWith = 0

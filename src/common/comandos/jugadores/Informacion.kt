@@ -24,6 +24,6 @@ object Informacion {
             Maximos conectados: ${Main.gameServer!!.maxPlayer}
             ====================================
             """.trimIndent()
-        SocketManager.GAME_SEND_MESSAGE(personaje, mensaje, Main.CONFIG_MOTD_COLOR)
+        Main.CONFIG_MOTD_COLOR?.let { SocketManager.GAME_SEND_MESSAGE(personaje, mensaje, it) }
     }
 }

@@ -1,33 +1,25 @@
 package objects;
 
-import java.io.PrintWriter;
-
-import objects.Metier.StatsMetier;
-import objects.Monstre.MobGroup;
-import objects.NPC_tmpl.NPC_question;
-import objects.Objet.ObjTemplate;
-import objects.Personaje.traque;
-
-import common.Main;
-import common.ConditionParser;
-import common.Constants;
-import common.Formulas;
-import common.SQLManager;
-import common.SocketManager;
-import common.World;
-
+import common.*;
 import game.GameServer;
 import game.GameThread;
+import objects.Metier.StatsMetier;
+import objects.Monstre.MobGroup;
+import objects.Objet.ObjTemplate;
+import objects.Personaje.traque;
 import objects.acciones.cero;
 import objects.acciones.menosdos;
 import objects.acciones.menosuno;
+import objects.acciones.uno;
+
+import java.io.PrintWriter;
 
 public class Action {
 
-	private int ID;
-	private String argumento;
-	private String condicion;
-	
+	private final int ID;
+	private final String argumento;
+	private final String condicion;
+
 	public Action(int id, String args, String cond) {
 		this.ID = id;
 		this.argumento = args;
@@ -36,7 +28,7 @@ public class Action {
 
 
 	public void apply(Personaje perso, Personaje target, int itemID, int cellid) {
-		if(perso == null)return;
+		if (perso == null) return;
 		if(!condicion.equalsIgnoreCase("") && !condicion.equalsIgnoreCase("-1")&& !ConditionParser.validConditions(perso, condicion)) {
 			SocketManager.GAME_SEND_Im_PACKET(perso, "119");
 			return;
@@ -62,28 +54,7 @@ public class Action {
 
 			//Continuar el dialogo con un NPC
 			case 1:
-				out = perso.get_compte().getGameThread().get_out();
-				if(argumento.equalsIgnoreCase("DV"))
-				{
-					SocketManager.GAME_SEND_END_DIALOG_PACKET(out);
-					perso.set_isTalkingWith(0);
-				}else
-				{
-					int qID = -1;
-					try
-					{
-						qID = Integer.parseInt(argumento);
-					}catch(NumberFormatException e){}
-
-					NPC_question  quest = World.getNPCQuestion(qID);
-					if(quest == null)
-					{
-						SocketManager.GAME_SEND_END_DIALOG_PACKET(out);
-						perso.set_isTalkingWith(0);
-						return;
-					}
-					SocketManager.GAME_SEND_QUESTION_PACKET(out, quest.parseToDQPacket(perso));
-				}
+				uno.INSTANCE.uno(perso, argumento);
 			break;
 			
 			case 4://Kamas

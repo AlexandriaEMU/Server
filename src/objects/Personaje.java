@@ -1,46 +1,37 @@
 package objects;
 
+import common.*;
+import common.World.Exchange;
+import common.World.ItemSet;
 import game.GameServer;
 import game.GameThread.GameAction;
+import objects.Fight.Fighter;
+import objects.Guild.GuildMember;
+import objects.Mapa.Case;
+import objects.Mapa.InteractiveObject;
+import objects.Mapa.MountPark;
+import objects.Metier.JobAction;
+import objects.Metier.StatsMetier;
+import objects.Sort.SortStats;
 
+import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.Map.Entry;
 
-import javax.swing.Timer;
-
-import objects.Mapa.*;
-import objects.Fight.*;
-import objects.Guild.GuildMember;
-import objects.Metier.*;
-import objects.Sort.SortStats;
-
-import common.Main;
-import common.Constants;
-import common.Formulas;
-import common.SQLManager;
-import common.SocketManager;
-import common.World;
-import common.World.Exchange;
-import common.World.ItemSet;
-
 public class Personaje {
-	
-	private int _GUID;
-	private String _name;
-	private int _sexe;
-	private int _classe;
-	private int _color1;
-	private int _color2;
-	private int _color3;
+
+	private final int _GUID;
+	private final String _name;
+	private final int _sexe;
+	private final int _classe;
+	private final int _color1;
+	private final int _color2;
+	private final int _color3;
 	private long _kamas;
 	private int _spellPts;
 	private int _capital;
@@ -72,11 +63,11 @@ public class Personaje {
 	private Case _curCell;
 	private boolean _sitted;
 	private boolean _ready = false;
-	private boolean _isOnline  = false;
+	private boolean _isOnline = false;
 	private Group _group;
 	private int _duelID = -1;
-	private Map<Integer,SpellEffect> _buffs = new TreeMap<>();
-	private Map<Integer,Objet> _items = new TreeMap<>();
+	private final Map<Integer, SpellEffect> _buffs = new TreeMap<>();
+	private final Map<Integer, Objet> _items = new TreeMap<>();
 	private Timer _sitTimer;
 	private String _savePos;
 	private int _emoteActive = 0;
@@ -95,7 +86,7 @@ public class Personaje {
 	private int _inviting = 0;
 	//Job
 	private JobAction _curJobAction;
-	private Map<Integer,StatsMetier> _metiers = new TreeMap<>();
+	private final Map<Integer, StatsMetier> _metiers = new TreeMap<>();
 	private String _isJobActivate = "";
 	private boolean _onCraftBook = false;
 	private boolean _onCraftBookCrafter = false;
@@ -111,7 +102,7 @@ public class Personaje {
 	private boolean _isInBank;
 	//Zaap
 	private boolean _isZaaping = false;
-	private ArrayList<Short> _zaaps = new ArrayList<>();
+	private final ArrayList<Short> _zaaps = new ArrayList<>();
 	//Disponibilit�
 	public boolean _isAbsent = false;
 	public boolean _isInvisible = false;
@@ -145,7 +136,7 @@ public class Personaje {
 	private House _curHouse;
 	//Marchand
 	public boolean _seeSeller = false;
-	private Map<Integer , Integer> _storeItems = new TreeMap<>();//<ObjID, Prix>
+	private final Map<Integer, Integer> _storeItems = new TreeMap<>();//<ObjID, Prix>
 	
 	public static class traque 
 	{
@@ -178,297 +169,191 @@ public class Personaje {
 			_time = time;
 		}
 	}
-	
-	public static class Group
-	{
-		private ArrayList<Personaje> _persos = new ArrayList<>();
-		private Personaje _chief;
-		
-		public Group(Personaje p1, Personaje p2)
-		{
-			_chief = p1;
-			_persos.add(p1);
-			_persos.add(p2);
-		}
-		
-		public boolean isChief(int guid)
-		{
-			return _chief.get_GUID() == guid;
-		}
-		
-		public void addPerso(Personaje p)
-		{
-			_persos.add(p);
-		}
-		
-		public int getPersosNumber()
-		{
-			return _persos.size();
-		}
-		
-		public int getGroupLevel()
-		{
-			int lvls = 0;
-			for(Personaje p : _persos)
-			{
-				lvls += p.get_lvl();
-			}
-			return lvls;
-		}
-		
-		public ArrayList<Personaje> getPersos()
-		{
-			return _persos;
-		}
 
-		public Personaje getChief()
-		{
-			return _chief;
-		}
-
-		public void leave(Personaje p)
-		{
-			if(!_persos.contains(p))return;
-			p.setGroup(null);
-			_persos.remove(p);
-			if(_persos.size() == 1)
-			{
-				_persos.get(0).setGroup(null);
-				if(_persos.get(0).get_compte() == null || _persos.get(0).get_compte().getGameThread() == null)return;
-				SocketManager.GAME_SEND_PV_PACKET(_persos.get(0).get_compte().getGameThread().get_out(),"");
+	public static Personaje CREATE_PERSONNAGE(String name, int sexe, int classe, int color1, int color2, int color3, Compte compte) {
+		StringBuilder z = new StringBuilder();
+		if (Main.CONFIG_ZAAP) {
+			for (Entry<Integer, Integer> i : Constants.ZAAPS.entrySet()) {
+				if (z.length() != 0) z.append(",");
+				z.append(i.getKey());
 			}
-			else
-				SocketManager.GAME_SEND_PM_DEL_PACKET_TO_GROUP(this,p.get_GUID());
 		}
+		Personaje perso = new Personaje(
+				SQLManager.getNextPersonnageGuid(),
+				name,
+				sexe,
+				classe,
+				color1,
+				color2,
+				color3,
+				Main.CONFIG_START_KAMAS,
+				((Main.CONFIG_START_LEVEL - 1) * 1),
+				((Main.CONFIG_START_LEVEL - 1) * 5),
+				10000,
+				Main.CONFIG_START_LEVEL,
+				World.getPersoXpMin(Main.CONFIG_START_LEVEL),
+				100,
+				Integer.parseInt(classe + "" + sexe),
+				(byte) 0,
+				compte.get_GUID(),
+				new TreeMap<>(),
+				(byte) 1,
+				(byte) 0,
+				(byte) 0,
+				"*#%!pi$:?",
+				Constants.getStartMap(classe),
+				Constants.getStartCell(classe),
+				"",
+				"",
+				100,
+				"",
+				"10298,314",
+				"",
+				0,
+				-1,
+				0,
+				0,
+				0,
+				z.toString(),
+				(byte) 0,
+				0
+		);
+		perso._sorts = Constants.getStartSorts(classe);
+		for (int a = 1; a <= perso.get_lvl(); a++) {
+			Constants.onLevelUpSpells(perso, a);
+		}
+		perso._sortsPlaces = Constants.getStartSortsPlaces(classe);
+		SocketManager.GAME_SEND_WELCOME(perso);
+		if (!SQLManager.ADD_PERSO_IN_BDD(perso))
+			return null;
+
+		World.addPersonnage(perso);
+
+		return perso;
 	}
-	
-	public static class Stats
-	{
-		private Map<Integer,Integer> Effects = new TreeMap<>();
-		
-		public Stats(boolean addBases, Personaje perso)
-		{
-			Effects = new TreeMap<>();
-			if(!addBases)return;
-			Effects.put(Constants.STATS_ADD_PA,  perso.get_lvl()<100?6:7);
-			Effects.put(Constants.STATS_ADD_PM, 3);
-			Effects.put(Constants.STATS_ADD_PROS, perso.get_classe()==Constants.CLASS_ENUTROF?120:100);
-			Effects.put(Constants.STATS_ADD_PODS, 1000);
-			Effects.put(Constants.STATS_CREATURE, 1);
-			Effects.put(Constants.STATS_ADD_INIT, 1);
-		}
-		public Stats(Map<Integer, Integer> stats, boolean addBases, Personaje perso)
-		{
-			Effects = stats;
-			if(!addBases)return;
-			Effects.put(Constants.STATS_ADD_PA, perso.get_lvl()<100?6:7);
-			Effects.put(Constants.STATS_ADD_PM, 3);
-			Effects.put(Constants.STATS_ADD_PROS, perso.get_classe()==Constants.CLASS_ENUTROF?120:100);
-			Effects.put(Constants.STATS_ADD_PODS, 1000);
-			Effects.put(Constants.STATS_CREATURE, 1);
-			Effects.put(Constants.STATS_ADD_INIT, 1);
-		}
-		
-		public Stats(Map<Integer, Integer> stats)
-		{
-			Effects = stats;
-		}
-		
-		public Stats()
-		{
-			Effects = new TreeMap<>();
-		}
-		
-		public int addOneStat(int id, int val)
-		{
-			if(Effects.get(id) == null || Effects.get(id) == 0)
-				Effects.put(id,val);
-			else
-			{
-				int newVal = (Effects.get(id)+val);
-				Effects.put(id, newVal);
-			}
-			return Effects.get(id);
-		}
-		
-		public boolean isSameStats(Stats other)
-		{
-			for(Entry<Integer,Integer> entry : Effects.entrySet())
-			{
-				//Si la stat n'existe pas dans l'autre map
-				if(other.getMap().get(entry.getKey()) == null)return false;
-				//Si la stat existe mais n'a pas la m�me valeur
-				if(other.getMap().get(entry.getKey()) != entry.getValue())return false;	
-			}
-			for(Entry<Integer,Integer> entry : other.getMap().entrySet())
-			{
-				//Si la stat n'existe pas dans l'autre map
-				if(Effects.get(entry.getKey()) == null)return false;
-				//Si la stat existe mais n'a pas la m�me valeur
-				if(Effects.get(entry.getKey()) != entry.getValue())return false;	
-			}
-			return true;
-		}
-		
-		public int getEffect(int id)
-		{
-			int val;
-			if(Effects.get(id) == null)
-				 val=0;
-			else
-				val = Effects.get(id);
-			
-			switch(id)//Bonus/Malus TODO
-			{
-				case Constants.STATS_ADD_AFLEE:
-					if(Effects.get(Constants.STATS_REM_AFLEE)!= null)
-						val -= (int)(getEffect(Constants.STATS_REM_AFLEE));
-					if(Effects.get(Constants.STATS_ADD_SAGE) != null)
-						val += (int)(getEffect(Constants.STATS_ADD_SAGE)/4);
-				break;
-				case Constants.STATS_ADD_MFLEE:
-					if(Effects.get(Constants.STATS_REM_MFLEE)!= null)
-						val -= (int)(getEffect(Constants.STATS_REM_MFLEE));
-					if(Effects.get(Constants.STATS_ADD_SAGE) != null)
-						val += (int)(getEffect(Constants.STATS_ADD_SAGE)/4);
-				break;
-				case Constants.STATS_ADD_INIT:
-					if(Effects.get(Constants.STATS_REM_INIT)!= null)
-						val -= Effects.get(Constants.STATS_REM_INIT);
-				break;
-				case Constants.STATS_ADD_AGIL:
-					if(Effects.get(Constants.STATS_REM_AGIL)!= null)
-						val -= Effects.get(Constants.STATS_REM_AGIL);
-				break;
-				case Constants.STATS_ADD_FORC:
-					if(Effects.get(Constants.STATS_REM_FORC)!= null)
-						val -= Effects.get(Constants.STATS_REM_FORC);
-				break;
-				case Constants.STATS_ADD_CHAN:
-					if(Effects.get(Constants.STATS_REM_CHAN)!= null)
-						val -= Effects.get(Constants.STATS_REM_CHAN);
-				break;
-				case Constants.STATS_ADD_INTE:
-					if(Effects.get(Constants.STATS_REM_INTE)!= null)
-					val -= Effects.get(Constants.STATS_REM_INTE);
-				break;
-				case Constants.STATS_ADD_PA:
-					if(Effects.get(Constants.STATS_ADD_PA2)!= null)
-						val += Effects.get(Constants.STATS_ADD_PA2);
-					if(Effects.get(Constants.STATS_REM_PA)!= null)
-						val -= Effects.get(Constants.STATS_REM_PA);
-					if(Effects.get(Constants.STATS_REM_PA2)!= null)//Non esquivable
-						val -= Effects.get(Constants.STATS_REM_PA2);
-				break;
-				case Constants.STATS_ADD_PM:
-					if(Effects.get(Constants.STATS_ADD_PM2)!= null)
-						val += Effects.get(Constants.STATS_ADD_PM2);
-					if(Effects.get(Constants.STATS_REM_PM)!= null)
-						val -= Effects.get(Constants.STATS_REM_PM);
-					if(Effects.get(Constants.STATS_REM_PM2)!= null)//Non esquivable
-						val -= Effects.get(Constants.STATS_REM_PM2);
-				break;
-				case Constants.STATS_ADD_PO:
-					if(Effects.get(Constants.STATS_REM_PO)!= null)
-						val -= Effects.get(Constants.STATS_REM_PO);
-				break;
-				case Constants.STATS_ADD_VITA:
-					if(Effects.get(Constants.STATS_REM_VITA)!= null)
-						val -= Effects.get(Constants.STATS_REM_VITA);
-				break;
-				case Constants.STATS_ADD_DOMA:
-					if(Effects.get(Constants.STATS_REM_DOMA)!= null)
-						val -= Effects.get(Constants.STATS_REM_DOMA);
-				break;
-				case Constants.STATS_ADD_PODS:
-					if(Effects.get(Constants.STATS_REM_PODS)!= null)
-						val -= Effects.get(Constants.STATS_REM_PODS);
-				break;
-				case Constants.STATS_ADD_PROS:
-					if(Effects.get(Constants.STATS_REM_PROS)!= null)
-						val -= Effects.get(Constants.STATS_REM_PROS);
-				break;
-				case Constants.STATS_ADD_R_TER:
-					if(Effects.get(Constants.STATS_REM_R_TER)!= null)
-						val -= Effects.get(Constants.STATS_REM_R_TER);
-				break;
-				case Constants.STATS_ADD_R_EAU:
-					if(Effects.get(Constants.STATS_REM_R_EAU)!= null)
-						val -= Effects.get(Constants.STATS_REM_R_EAU);
-				break;
-				case Constants.STATS_ADD_R_AIR:
-					if(Effects.get(Constants.STATS_REM_R_AIR)!= null)
-						val -= Effects.get(Constants.STATS_REM_R_AIR);
-				break;
-				case Constants.STATS_ADD_R_FEU:
-					if(Effects.get(Constants.STATS_REM_R_FEU)!= null)
-						val -= Effects.get(Constants.STATS_REM_R_FEU);
-				break;
-				case Constants.STATS_ADD_R_NEU:
-					if(Effects.get(Constants.STATS_REM_R_NEU)!= null)
-						val -= Effects.get(Constants.STATS_REM_R_NEU);
-				break;
-				case Constants.STATS_ADD_RP_TER:
-					if(Effects.get(Constants.STATS_REM_RP_TER)!= null)
-						val -= Effects.get(Constants.STATS_REM_RP_TER);
-				break;
-				case Constants.STATS_ADD_RP_EAU:
-					if(Effects.get(Constants.STATS_REM_RP_EAU)!= null)
-						val -= Effects.get(Constants.STATS_REM_RP_EAU);
-				break;
-				case Constants.STATS_ADD_RP_AIR:
-					if(Effects.get(Constants.STATS_REM_RP_AIR)!= null)
-						val -= Effects.get(Constants.STATS_REM_RP_AIR);
-				break;
-				case Constants.STATS_ADD_RP_FEU:
-					if(Effects.get(Constants.STATS_REM_RP_FEU)!= null)
-						val -= Effects.get(Constants.STATS_REM_RP_FEU);
-				break;
-				case Constants.STATS_ADD_RP_NEU:
-					if(Effects.get(Constants.STATS_REM_RP_NEU)!= null)
-						val -= Effects.get(Constants.STATS_REM_RP_NEU);
-				break;
-				case Constants.STATS_ADD_MAITRISE:
-					if(Effects.get(Constants.STATS_ADD_MAITRISE)!= null)
-						val = Effects.get(Constants.STATS_ADD_MAITRISE);
-				break;
-			}
-			return val;
+
+	public void OnJoinGame() {
+		if (get_compte().getGameThread() == null) return;
+		PrintWriter out = get_compte().getGameThread().get_out();
+		get_compte().setCurPerso(this);
+		_isOnline = true;
+
+		if (_mount != null) SocketManager.GAME_SEND_Re_PACKET(this, "+", _mount);
+		SocketManager.GAME_SEND_Rx_PACKET(this);
+
+		SocketManager.GAME_SEND_ASK(out, this);
+		//Envoie des bonus pano si besoin
+		for (int a = 1; a < World.getItemSetNumber(); a++) {
+			int num = getNumbEquipedItemOfPanoplie(a);
+			if (num == 0) continue;
+			SocketManager.GAME_SEND_OS_PACKET(this, a);
 		}
 
-		public static Stats cumulStat(Stats s1,Stats s2)
+		//envoie des donn�es de m�tier
+		if (_metiers.size() > 0) {
+			ArrayList<StatsMetier> list = new ArrayList<>();
+			list.addAll(_metiers.values());
+			//packet JS
+			SocketManager.GAME_SEND_JS_PACKET(this, list);
+			//packet JX
+			SocketManager.GAME_SEND_JX_PACKET(this, list);
+			//Packet JO (Job Option)
+			SocketManager.INSTANCE.GAME_SEND_JO_PACKET(this, list);
+			Objet obj = getObjetByPos(Constants.ITEM_POS_ARME);
+			if (obj != null) {
+				for (StatsMetier sm : list)
+					if (sm.getTemplate().isValidTool(obj.getTemplate().getID()))
+						SocketManager.GAME_SEND_OT_PACKET(get_compte().getGameThread().get_out(), sm.getTemplate().getId());
+			}
+		}
+		//Fin m�tier
+		SocketManager.GAME_SEND_ALIGNEMENT(out, _align);
+		SocketManager.GAME_SEND_ADD_CANAL(out, _canaux + "^" + (get_compte().get_gmLvl() > 0 ? "@�" : ""));
+		if (_guildMember != null) SocketManager.GAME_SEND_gS_PACKET(this, _guildMember);
+		SocketManager.GAME_SEND_ZONE_ALLIGN_STATUT(out);
+		SocketManager.GAME_SEND_SPELL_LIST(this);
+		String _emotes = "7667711";
+		SocketManager.GAME_SEND_EMOTE_LIST(this, _emotes, "0");
+		SocketManager.GAME_SEND_RESTRICTIONS(out, "6bk");
+		SocketManager.GAME_SEND_Ow_PACKET(this);
+		SocketManager.GAME_SEND_SEE_FRIEND_CONNEXION(out, _showFriendConnection);
+		this.get_compte().SendOnline();
+
+		//Messages de bienvenue
+		SocketManager.GAME_SEND_Im_PACKET(this, "189");
+		if (!get_compte().getLastConnectionDate().equals("") && !get_compte().get_lastIP().equals(""))
+			SocketManager.GAME_SEND_Im_PACKET(this, "0152;" + get_compte().getLastConnectionDate() + "~" + get_compte().get_lastIP());
+		SocketManager.GAME_SEND_Im_PACKET(this, "0153;" + get_compte().get_curIP());
+		//Fin messages
+		//Actualisation de l'ip
+		get_compte().setLastIP(get_compte().get_curIP());
+
+		//Mise a jour du lastConnectionDate
+		Date actDate = new Date();
+		DateFormat dateFormat = new SimpleDateFormat("dd");
+		String jour = dateFormat.format(actDate);
+		dateFormat = new SimpleDateFormat("MM");
+		String mois = dateFormat.format(actDate);
+		dateFormat = new SimpleDateFormat("yyyy");
+		String annee = dateFormat.format(actDate);
+		dateFormat = new SimpleDateFormat("HH");
+		String heure = dateFormat.format(actDate);
+		dateFormat = new SimpleDateFormat("mm");
+		String min = dateFormat.format(actDate);
+		get_compte().setLastConnectionDate(annee + "~" + mois + "~" + jour + "~" + heure + "~" + min);
+		if (_guildMember != null)
+			_guildMember.setLastCo(annee + "~" + mois + "~" + jour + "~" + heure + "~" + min);
+
+		//Actualisation dans la DB
+		SQLManager.UPDATE_LASTCONNECTION_INFO(get_compte());
+
+		if (!Main.CONFIG_MOTD.equals(""))//Si le motd est notifi�
 		{
-			TreeMap<Integer,Integer> effets = new TreeMap<>();
-			for(int a = 0; a <= Constants.MAX_EFFECTS_ID; a++)
-			{
-				if((s1.Effects.get(a) == null  || s1.Effects.get(a) == 0) && (s2.Effects.get(a) == null || s2.Effects.get(a) == 0))
+			String color = Main.CONFIG_MOTD_COLOR;
+			if (color.equals("")) color = "000000";//Noir
+
+			SocketManager.GAME_SEND_MESSAGE(this, Main.CONFIG_MOTD, color);
+		}
+		//on d�marre le Timer pour la Regen de Pdv
+		_sitTimer.start();
+		//on le demarre cot� client
+		SocketManager.GAME_SEND_ILS_PACKET(this, 2000);
+		//Update des familiers
+		for (Entry<Integer, Objet> entry : _items.entrySet()) {
+			if (entry.getValue().getTemplate().getType() == Constants.ITEM_TYPE_FAMILIER) {
+				PetsEntry p = World.get_PetsEntry(entry.getValue().getGuid());
+				Pets pets = World.get_Pets(entry.getValue().getTemplate().getID());
+				if (p == null || pets == null) {
+					if (p != null && p.get_PDV() > 0) SocketManager.GAME_SEND_Im_PACKET(this, "025");
 					continue;
-				int som = 0;
-				if(s1.Effects.get(a) != null)
-					som += s1.Effects.get(a);
-				
-				if(s2.Effects.get(a) != null)
-					som += s2.Effects.get(a);
-				
-				effets.put(a, som);
+				}
+				if (pets.get_Type() == 0 || pets.get_Type() == 1) continue;
+				p.update_pets(this, Integer.parseInt(pets.get_Gap().split(",")[1]));
 			}
-			return new Stats(effets,false,null);
 		}
-		
-		public Map<Integer, Integer> getMap()
-		{
-			return Effects;
+		if (_energy > 0 && _energy < 2000) {
+			SocketManager.MESSAGE_BOX(this.get_compte().getGameThread().get_out(), "111|" + _energy);
 		}
-		public String parseToItemSetStats()
+		if (get_compte().get_subscriber() == 0 && Main.USE_SUBSCRIBE)//Non abonn�
 		{
-			StringBuilder str = new StringBuilder();
-			if(Effects.isEmpty())return "";
-			for(Entry<Integer,Integer> entry : Effects.entrySet())
+			if (_curCarte.getSubArea().get_subscribe())//Se connecte dans une zone abo
 			{
-				if(str.length() >0)str.append(",");
-				str.append(Integer.toHexString(entry.getKey())).append("#").append(Integer.toHexString(entry.getValue())).append("#0#0");
+				//On le place a sa statue
+				_curCarte = World.getCarte(Constants.getClassStatueMap(get_classe()));
+				_curCell = World.getCarte(Constants.getClassStatueMap(get_classe())).getCase(Constants.getClassStatueCell(get_classe()));
 			}
-			return str.toString();
+
+			Objet obj = getObjetByPos(Constants.ITEM_POS_FAMILIER);
+			if (obj != null)//Familier
+			{
+				obj.setPosition(Constants.ITEM_POS_NO_EQUIPED);
+				SocketManager.GAME_SEND_OBJET_MOVE_PACKET(this, obj);
+			}
+
+			if (isOnMount())//Pas de monture non plus
+			{
+				toogleOnMount();
+			}
 		}
 	}
 	
@@ -617,78 +502,30 @@ public class Personaje {
 					Metier m = World.getMetier(jobID);
 					StatsMetier SM = _metiers.get(learnJob(m));
 					SM.addXp(this, xp);
-				}catch(Exception e){e.getStackTrace();}
+				} catch (Exception e) {
+					e.getStackTrace();
+				}
 			}
 		}
-		
+
 		this._title = title;
-		if(_energy == 0) set_isDead();
+		if (_energy == 0) set_isDead();
 	}
-	
-	public static Personaje CREATE_PERSONNAGE(String name, int sexe, int classe, int color1, int color2, int color3, Compte compte)
-	{
-		StringBuilder z = new StringBuilder();
-		if(Main.CONFIG_ZAAP)
-		{
-			for(Entry<Integer, Integer> i : Constants.ZAAPS.entrySet())
-			{
-				if(z.length() != 0) z.append(",");
-				z.append(i.getKey());
-			}
+
+	public String parseSpellToDB() {
+		StringBuilder sorts = new StringBuilder();
+		if (_sorts.isEmpty()) return "";
+		for (int key : _sorts.keySet()) {
+			//3;1;a,4;3;b
+			SortStats SS = _sorts.get(key);
+			sorts.append(SS.getSpellID()).append(";").append(SS.getLevel()).append(";");
+			if (_sortsPlaces.get(key) != null)
+				sorts.append(_sortsPlaces.get(key));
+			else
+				sorts.append("_");
+			sorts.append(",");
 		}
-		Personaje perso = new Personaje(
-				SQLManager.getNextPersonnageGuid(),
-				name,
-				sexe,
-				classe,
-				color1,
-				color2,
-				color3,
-				Main.CONFIG_START_KAMAS,
-				((Main.CONFIG_START_LEVEL-1)*1),
-				((Main.CONFIG_START_LEVEL-1)*5),
-				10000,
-				Main.CONFIG_START_LEVEL,
-				World.getPersoXpMin(Main.CONFIG_START_LEVEL),
-				100,
-				Integer.parseInt(classe+""+sexe),
-				(byte)0,
-				compte.get_GUID(),
-                new TreeMap<>(),
-				(byte)1,
-				(byte)0,
-				(byte)0,
-				"*#%!pi$:?",
-				(short)Constants.getStartMap(classe),
-				Constants.getStartCell(classe),
-				"",
-				"",
-				100,
-				"",
-				"10298,314",
-				"",
-				0,
-				-1,
-				0,
-				0,
-				0,
-				z.toString(),
-				(byte)0,
-				0
-				);
-		perso._sorts = Constants.getStartSorts(classe);
-		for(int a = 1; a <= perso.get_lvl();a++)
-		{
-			Constants.onLevelUpSpells(perso, a);
-		}
-		perso._sortsPlaces = Constants.getStartSortsPlaces(classe);
-		SocketManager.GAME_SEND_WELCOME(perso);
-		if(!SQLManager.ADD_PERSO_IN_BDD(perso))
-			return null;
-		
-		World.addPersonnage(perso);
-	
-		return perso;
+		return sorts.substring(0, sorts.length() - 1);
 	}
 	/**Clone/Double**/
 	public Personaje(int _guid, String _name, int _sexe, int _classe, int _color1, int _color2, int _color3, int _lvl, int _size, int _gfxid, Map<Integer,Integer> stats, String stuff, int pdvPer, byte seeAlign, int mount, int alvl, byte alignement)
@@ -815,153 +652,22 @@ public class Personaje {
 		perso.append(";");//LevelMax
 		return perso.toString();
 	}
-	
-	public void remove()
-	{
+
+	public void remove() {
 		SQLManager.DELETE_PERSO_IN_BDD(this);
 	}
-	
-	public void OnJoinGame()
-	{
-		if(get_compte().getGameThread() == null)return;
-		PrintWriter out = get_compte().getGameThread().get_out();
-		get_compte().setCurPerso(this);
-		_isOnline = true;
-		
-		if(_mount != null)SocketManager.GAME_SEND_Re_PACKET(this,"+",_mount);
-		SocketManager.GAME_SEND_Rx_PACKET(this);
-		
-		SocketManager.GAME_SEND_ASK(out, this);
-		//Envoie des bonus pano si besoin
-		for(int a = 1;a<World.getItemSetNumber();a++)
-		{
-			int num = getNumbEquipedItemOfPanoplie(a);
-			if(num == 0)continue;
-			SocketManager.GAME_SEND_OS_PACKET(this, a);
-		}
-		
-		//envoie des donn�es de m�tier
-		if(_metiers.size() > 0)
-		{
-			ArrayList<StatsMetier> list = new ArrayList<>();
-			list.addAll(_metiers.values());
-			//packet JS
-			SocketManager.GAME_SEND_JS_PACKET(this, list);
-			//packet JX
-			SocketManager.GAME_SEND_JX_PACKET(this, list);
-			//Packet JO (Job Option)
-			SocketManager.GAME_SEND_JO_PACKET(this, list);
-			Objet obj = getObjetByPos(Constants.ITEM_POS_ARME);
-			if(obj != null)
-			{
-				for(StatsMetier sm : list)
-					if(sm.getTemplate().isValidTool(obj.getTemplate().getID()))
-						SocketManager.GAME_SEND_OT_PACKET(get_compte().getGameThread().get_out(),sm.getTemplate().getId());
-			}
-		}
-		//Fin m�tier
-		SocketManager.GAME_SEND_ALIGNEMENT(out, _align);
-		SocketManager.GAME_SEND_ADD_CANAL(out,_canaux+"^"+(get_compte().get_gmLvl()>0?"@�":""));
-		if(_guildMember != null)SocketManager.GAME_SEND_gS_PACKET(this,_guildMember);
-		SocketManager.GAME_SEND_ZONE_ALLIGN_STATUT(out);
-		SocketManager.GAME_SEND_SPELL_LIST(this);
-        String _emotes = "7667711";
-        SocketManager.GAME_SEND_EMOTE_LIST(this, _emotes,"0");
-		SocketManager.GAME_SEND_RESTRICTIONS(out, "6bk");
-		SocketManager.GAME_SEND_Ow_PACKET(this);
-		SocketManager.GAME_SEND_SEE_FRIEND_CONNEXION(out,_showFriendConnection);
-		this.get_compte().SendOnline();
-		
-		//Messages de bienvenue
-		SocketManager.GAME_SEND_Im_PACKET(this, "189");
-		if(!get_compte().getLastConnectionDate().equals("") && !get_compte().get_lastIP().equals(""))
-			SocketManager.GAME_SEND_Im_PACKET(this, "0152;"+get_compte().getLastConnectionDate()+"~"+get_compte().get_lastIP());
-		SocketManager.GAME_SEND_Im_PACKET(this, "0153;"+get_compte().get_curIP());
-		//Fin messages
-		//Actualisation de l'ip
-		get_compte().setLastIP(get_compte().get_curIP());
-		
-		//Mise a jour du lastConnectionDate
-		Date actDate = new Date();
-		DateFormat dateFormat = new SimpleDateFormat("dd");
-		String jour = dateFormat.format(actDate);
-		dateFormat = new SimpleDateFormat("MM");
-		String mois = dateFormat.format(actDate);	
-		dateFormat = new SimpleDateFormat("yyyy");
-		String annee = dateFormat.format(actDate);
-		dateFormat = new SimpleDateFormat("HH");
-		String heure = dateFormat.format(actDate);
-		dateFormat = new SimpleDateFormat("mm");
-		String min = dateFormat.format(actDate);
-		get_compte().setLastConnectionDate(annee+"~"+mois+"~"+jour+"~"+heure+"~"+min);
-		if(_guildMember != null)
-			_guildMember.setLastCo(annee+"~"+mois+"~"+jour+"~"+heure+"~"+min);
-		
-		//Actualisation dans la DB
-		SQLManager.UPDATE_LASTCONNECTION_INFO(get_compte());
-		
-		if(!Main.CONFIG_MOTD.equals(""))//Si le motd est notifi�
-		{
-			String color = Main.CONFIG_MOTD_COLOR;
-			if(color.equals(""))color = "000000";//Noir
-			
-			SocketManager.GAME_SEND_MESSAGE(this, Main.CONFIG_MOTD, color);
-		}
-		//on d�marre le Timer pour la Regen de Pdv
-		_sitTimer.start();
-		//on le demarre cot� client
-		SocketManager.GAME_SEND_ILS_PACKET(this, 2000);
-		//Update des familiers
-		for(Entry<Integer, Objet> entry : _items.entrySet())
-		{
-			if(entry.getValue().getTemplate().getType() == Constants.ITEM_TYPE_FAMILIER)
-			{
-				PetsEntry p = World.get_PetsEntry(entry.getValue().getGuid());
-				Pets pets = World.get_Pets(entry.getValue().getTemplate().getID());
-				if(p == null || pets == null)
-				{
-					if(p != null && p.get_PDV() > 0) SocketManager.GAME_SEND_Im_PACKET(this, "025");
-					continue;
-				}
-				if(pets.get_Type() == 0 || pets.get_Type() == 1) continue;
-				p.update_pets(this, Integer.parseInt(pets.get_Gap().split(",")[1]));
-			}
-		}
-		if(_energy > 0 && _energy < 2000)
-		{
-			SocketManager.MESSAGE_BOX(this.get_compte().getGameThread().get_out(), "111|" + _energy);      
-		}
-		if(get_compte().get_subscriber() == 0 && Main.USE_SUBSCRIBE)//Non abonn�
-		{
-			if(_curCarte.getSubArea().get_subscribe())//Se connecte dans une zone abo
-			{
-				//On le place a sa statue
-				_curCarte = World.getCarte(Constants.getClassStatueMap(get_classe()));
-				_curCell = World.getCarte(Constants.getClassStatueMap(get_classe())).getCase(Constants.getClassStatueCell(get_classe()));
-			}
-			
-			Objet obj = getObjetByPos(Constants.ITEM_POS_FAMILIER);
-			if(obj != null)//Familier
-			{
-				obj.setPosition(Constants.ITEM_POS_NO_EQUIPED);
-				SocketManager.GAME_SEND_OBJET_MOVE_PACKET(this,obj);
-			}
-			
-			if(isOnMount())//Pas de monture non plus
-			{
-				toogleOnMount();
-			}
-		}
+
+	public boolean hasSpell(int spellID) {
+		return (getSortStatBySortIfHas(spellID) != null);
 	}
-	
-	public void regenLife()
-	{
+
+	public void regenLife() {
 		//Joueur pas en jeu
-		if(_curCarte == null)return;
+		if (_curCarte == null) return;
 		//Pas de regen en combat
-		if(_fight != null)return;
+		if (_fight != null) return;
 		//D�j� Full PDV
-		if(_PDV == _PDVMAX)return;
+		if (_PDV == _PDVMAX) return;
 		_PDV++;
 	}
 	
@@ -2037,37 +1743,29 @@ public class Personaje {
 			SocketManager.GAME_SEND_eD_PACKET_TO_MAP(get_curCarte(), this.get_GUID(), toOrientation);
 		}
 	}
-	/** Spell **/
-	public boolean is_showSpells()
-	{
+
+	/**
+	 * Spell
+	 **/
+	public boolean is_showSpells() {
 		return _seeSpell;
 	}
-	
-	public String parseSpellToDB()
-	{
-		StringBuilder sorts = new StringBuilder();
-		if(_sorts.isEmpty())return "";
-		for(int key : _sorts.keySet())
-		{
-			//3;1;a,4;3;b
-			SortStats SS = _sorts.get(key);
-			sorts.append(SS.getSpellID()).append(";").append(SS.getLevel()).append(";");
-			if(_sortsPlaces.get(key)!=null)
-				sorts.append(_sortsPlaces.get(key));
-			else
-				sorts.append("_");
-			sorts.append(",");
+
+	public String parseStoreItemsList() {
+		StringBuilder list = new StringBuilder();
+		if (_storeItems.isEmpty()) return "";
+		for (Entry<Integer, Integer> obj : _storeItems.entrySet()) {
+			Objet O = World.getObjet(obj.getKey());
+			if (O == null) continue;
+			list.append(O.getGuid()).append(";").append(O.getQuantity()).append(";").append(O.getTemplate().getID()).append(";").append(O.parseStatsString()).append(";").append(obj.getValue()).append("|");
 		}
-		return sorts.substring(0, sorts.length()-1).toString();
+		return (list.length() > 0 ? list.substring(0, list.length() - 1) : list.toString());
 	}
-	
-	private void parseSpells(String str)
-	{
+
+	private void parseSpells(String str) {
 		String[] spells = str.split(",");
-		for(String e : spells)
-		{
-			try
-			{
+		for (String e : spells) {
+			try {
 				int id = Integer.parseInt(e.split(";")[0]);
 				int lvl = Integer.parseInt(e.split(";")[1]);
 				char place = e.split(";")[2].charAt(0);
@@ -2199,10 +1897,9 @@ public class Personaje {
 	{
 		return _sorts.get(spellID);
 	}
-	
-	public boolean hasSpell(int spellID)
-	{
-		return (getSortStatBySortIfHas(spellID) == null ? false : true);
+
+	public boolean hasItemGuid(int guid) {
+		return _items.get(guid) != null && _items.get(guid).getQuantity() > 0;
 	}
 	/** Spell **/
 	/** Marchand **/
@@ -2234,34 +1931,47 @@ public class Personaje {
     	str.append(getGMStuffString()).append(";");//acessories
     	str.append((_guildMember != null ? _guildMember.getGuild().get_name() : "")).append(";");//guildName
     	str.append((_guildMember != null ? _guildMember.getGuild().get_emblem() : "")).append(";");//emblem
-    	str.append("0;");//offlineType
+		str.append("0;");//offlineType
 
-        return str.toString();
-    }
-	
-	public Map<Integer, Integer> getStoreItems()
-	{
+		return str.toString();
+	}
+
+	public Map<Integer, Integer> getStoreItems() {
 		return _storeItems;
 	}
-	
-    public String parseStoreItemsList() 
-    {
-    	StringBuilder list = new StringBuilder();
-        if(_storeItems.isEmpty())return "";
-        for(Entry<Integer,Integer> obj : _storeItems.entrySet()) 
-        {
-        	Objet O = World.getObjet(obj.getKey());
-        	if(O == null) continue;
-        	list.append(O.getGuid()).append(";").append(O.getQuantity()).append(";").append(O.getTemplate().getID()).append(";").append(O.parseStatsString()).append(";").append(obj.getValue()).append("|");
-        }
-        return (list.length()>0?list.toString().substring(0, list.length()-1):list.toString());
-    }
-    
-    public String parseStoreItemstoBD()
-    {
-    	StringBuilder str = new StringBuilder();
-		for(Entry<Integer, Integer> _storeObjets : _storeItems.entrySet())
+
+	/**
+	 * MountPark
+	 **/
+	public void openMountPark() {
+		if (getDeshonor() >= 5) {
+			SocketManager.GAME_SEND_Im_PACKET(this, "183");
+			return;
+		}
+
+		_inMountPark = _curCarte.getMountPark();
+		_away = true;
+		String str = _inMountPark.parseData(get_GUID(), (_inMountPark.get_owner() == -1));
+
+		if (_inMountPark.get_owner() == -1 || _inMountPark.get_owner() == this.get_GUID())//Public ou le proprio
 		{
+			SocketManager.INSTANCE.GAME_SEND_ECK_PACKET(this, 16, str);
+		} else if (get_guild() != null &&
+				World.getPersonnage(_inMountPark.get_owner()) != null && World.getPersonnage(_inMountPark.get_owner()).get_guild() != null &&
+				World.getPersonnage(_inMountPark.get_owner()).get_guild() == get_guild() &&
+				getGuildMember().canDo(Constants.G_USEENCLOS))//Meme guilde + droits
+		{
+			SocketManager.INSTANCE.GAME_SEND_ECK_PACKET(this, 16, str);
+		} else {
+			SocketManager.GAME_SEND_Im_PACKET(this, "1101");
+			_inMountPark = null;
+			_away = false;
+		}
+	}
+
+	public String parseStoreItemstoBD() {
+		StringBuilder str = new StringBuilder();
+		for (Entry<Integer, Integer> _storeObjets : _storeItems.entrySet()) {
 			str.append(_storeObjets.getKey()).append(",").append(_storeObjets.getValue()).append("|");
 		}
 		return str.toString();
@@ -2802,30 +2512,63 @@ public class Personaje {
 		return str.toString();
 	}
 	
-	public String getItemsIDSplitByChar(String splitter)
-	{
+	public String getItemsIDSplitByChar(String splitter) {
 		StringBuilder str = new StringBuilder();
-		if(_items.isEmpty())return "";
-		for(int entry : _items.keySet())
-		{
-			if(str.length() != 0) str.append(splitter);
+		if (_items.isEmpty()) return "";
+		for (int entry : _items.keySet()) {
+			if (str.length() != 0) str.append(splitter);
 			str.append(entry);
 		}
 		return str.toString();
 	}
-	
-	public boolean hasItemGuid(int guid)
-	{
-		return _items.get(guid) != null?_items.get(guid).getQuantity()>0:false;
+
+	public int learnJob(Metier m) {
+		for (Entry<Integer, StatsMetier> entry : _metiers.entrySet()) {
+			if (entry.getValue().getTemplate().getId() == m.getId())//Si le joueur a d�j� le m�tier
+				return -1;
+		}
+		int Msize = _metiers.size();
+		if (Msize == 6)//Si le joueur a d�j� 6 m�tiers
+			return -1;
+		int pos = 0;
+		if (Constants.isMageJob(m.getId())) {
+			if (_metiers.get(5) == null) pos = 5;
+			if (_metiers.get(4) == null) pos = 4;
+			if (_metiers.get(3) == null) pos = 3;
+		} else {
+			if (_metiers.get(2) == null) pos = 2;
+			if (_metiers.get(1) == null) pos = 1;
+			if (_metiers.get(0) == null) pos = 0;
+		}
+
+		StatsMetier sm = new StatsMetier(pos, m, 1, 0);
+		_metiers.put(pos, sm);//On apprend le m�tier lvl 1 avec 0 xp
+		if (_isOnline) {
+			//on cr�er la listes des statsMetier a envoyer (Seulement celle ci)
+			ArrayList<StatsMetier> list = new ArrayList<>();
+			list.add(sm);
+
+			SocketManager.GAME_SEND_Im_PACKET(this, "02;" + m.getId());
+			//packet JS
+			SocketManager.GAME_SEND_JS_PACKET(this, list);
+			//packet JX
+			SocketManager.GAME_SEND_JX_PACKET(this, list);
+			//Packet JO (Job Option)
+			SocketManager.INSTANCE.GAME_SEND_JO_PACKET(this, list);
+
+			Objet obj = getObjetByPos(Constants.ITEM_POS_ARME);
+			if (obj != null)
+				if (sm.getTemplate().isValidTool(obj.getTemplate().getID()))
+					SocketManager.GAME_SEND_OT_PACKET(get_compte().getGameThread().get_out(), m.getId());
+		}
+		return pos;
 	}
-	
-	public void removeItem(int guid)
-	{
+
+	public void removeItem(int guid) {
 		_items.remove(guid);
 	}
-	
-	public void removeItem(int guid, int nombre,boolean send,boolean deleteFromWorld)
-	{
+
+	public void removeItem(int guid, int nombre, boolean send, boolean deleteFromWorld) {
 		Objet obj = _items.get(guid);
 		
 		if(nombre > obj.getQuantity())
@@ -3107,7 +2850,7 @@ public class Personaje {
 
 				// On envoie les packets
 				SocketManager.GAME_SEND_OBJECT_QUANTITY_PACKET(this, PersoObj);
-				String str = "O+" + BankObj.getGuid()+"|"+BankObj.getQuantity()+"|"+BankObj.getTemplate().getID()+"|"+BankObj.parseStatsString();
+				String str = "O+" + BankObj.getGuid() + "|" + BankObj.getQuantity() + "|" + BankObj.getTemplate().getID() + "|" + BankObj.parseStatsString();
 				SocketManager.GAME_SEND_EsK_PACKET(this, str);
 
 			}
@@ -3115,35 +2858,59 @@ public class Personaje {
 		SocketManager.GAME_SEND_Ow_PACKET(this);
 		SQLManager.UPDATE_BANK(get_compte().getBank());
 	}
-	/** Bank **/
-	/** MountPark **/
-	public void openMountPark()
-	{
-		if(getDeshonor() >= 5) 
-		{
-			SocketManager.GAME_SEND_Im_PACKET(this, "183");
-			return;
-		}
-		
-		_inMountPark = _curCarte.getMountPark();
-		_away = true;
-		String str = _inMountPark.parseData(get_GUID(), (_inMountPark.get_owner()==-1?true:false));
-		
-		if(_inMountPark.get_owner() == -1 || _inMountPark.get_owner() == this.get_GUID())//Public ou le proprio
-		{
-			SocketManager.GAME_SEND_ECK_PACKET(this, 16, str);
-		}else if(get_guild() != null && 
-				World.getPersonnage(_inMountPark.get_owner()) != null && World.getPersonnage(_inMountPark.get_owner()).get_guild() != null && 
-				World.getPersonnage(_inMountPark.get_owner()).get_guild() == get_guild() && 
-				getGuildMember().canDo(Constants.G_USEENCLOS))//Meme guilde + droits
-		{
-			SocketManager.GAME_SEND_ECK_PACKET(this, 16, str);
-		}else
-		{
-			SocketManager.GAME_SEND_Im_PACKET(this, "1101");
-			_inMountPark = null;
-			_away = false;
-		}
+
+	/**
+	 * Bank
+	 **/
+
+	public Timer DialogTimer() {
+		_timeDialog = 0;
+		ActionListener action = new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				_timeDialog++;
+				if (_timeDialog > 120 && get_isOnPercepteurID() != 0) {
+					//Expulsion du percepteur
+					if (get_isTradingWith() == 0 &&
+							get_curExchange() == null &&
+							getCurJobAction() == null &&
+							getInMountPark() == null &&
+							!isInBank() &&
+							get_isOnPercepteurID() == 0 &&
+							getInTrunk() == null)
+						return;
+					if (get_isOnPercepteurID() != 0) {
+						Percepteur perco = World.getPerco(get_isOnPercepteurID());
+						if (perco == null) return;
+						for (Personaje z : World.getGuild(perco.get_guildID()).getMembers()) {
+							if (z.isOnline()) {
+								SocketManager.GAME_SEND_gITM_PACKET(z, Percepteur.parsetoGuild(z.get_guild().get_id()));
+								String str = "";
+								str += "G" + perco.get_N1() + "," + perco.get_N2();
+								str += "|.|" + World.getCarte(perco.get_mapID()).getX() + "|" + World.getCarte(perco.get_mapID()).getY() + "|";
+								str += get_name() + "|";
+								str += perco.get_LogXp() + ";";
+								str += perco.get_LogItems();
+								SocketManager.GAME_SEND_gT_PACKET(z, str);
+							}
+						}
+						get_curCarte().RemoveNPC(perco.getGuid());
+						SocketManager.GAME_SEND_ERASE_ON_MAP_TO_MAP(get_curCarte(), perco.getGuid());
+						perco.DelPerco(perco.getGuid());
+						SQLManager.DELETE_PERCO(perco.getGuid());
+						set_isOnPercepteurID(0);
+					}
+
+					SQLManager.SAVE_PERSONNAGE(get_compte().get_curPerso(), true);
+					SocketManager.GAME_SEND_EV_PACKET(get_compte().getGameThread().get_out());
+					set_isTradingWith(0);
+					set_away(false);
+					setInBank(false);
+					setInTrunk(null);
+					_DialogTimer.stop();
+				}
+			}
+		};
+		return new Timer (1000, action);
 	}
 	
 	public void leftMountPark()
@@ -3152,62 +2919,66 @@ public class Personaje {
 		_inMountPark = null;
 	}
 
-	public MountPark getInMountPark()
-	{
+	public MountPark getInMountPark() {
 		return _inMountPark;
 	}
 	/** MountPark **/
-	/** Job **/
-	public Map<Integer,StatsMetier> getMetiers()
-	{
+	/**
+	 * Job
+	 **/
+	public Map<Integer, StatsMetier> getMetiers() {
 		return _metiers;
 	}
-	
-	public int learnJob(Metier m)
-	{
-		for(Entry<Integer,StatsMetier> entry : _metiers.entrySet())
-		{
-			if(entry.getValue().getTemplate().getId() == m.getId())//Si le joueur a d�j� le m�tier
-				return -1;
+
+	public static class Group {
+		private final ArrayList<Personaje> _persos = new ArrayList<>();
+		private final Personaje _chief;
+
+		public Group(Personaje p1, Personaje p2) {
+			_chief = p1;
+			_persos.add(p1);
+			_persos.add(p2);
 		}
-		int Msize = _metiers.size();
-		if(Msize == 6)//Si le joueur a d�j� 6 m�tiers
-			return -1;
-		int pos = 0;
-		if(Constants.isMageJob(m.getId()))
-		{
-			if(_metiers.get(5) == null) pos = 5;
-			if(_metiers.get(4) == null) pos = 4;
-			if(_metiers.get(3) == null) pos = 3;
-		}else
-		{
-			if(_metiers.get(2) == null) pos = 2;
-			if(_metiers.get(1) == null) pos = 1;
-			if(_metiers.get(0) == null) pos = 0;
+
+		public boolean isChief(int guid) {
+			return _chief.get_GUID() == guid;
 		}
-		
-		StatsMetier sm = new StatsMetier(pos,m,1,0);
-		_metiers.put(pos, sm);//On apprend le m�tier lvl 1 avec 0 xp
-		if(_isOnline)
-		{
-			//on cr�er la listes des statsMetier a envoyer (Seulement celle ci)
-			ArrayList<StatsMetier> list = new ArrayList<>();
-			list.add(sm);
-			
-			SocketManager.GAME_SEND_Im_PACKET(this, "02;"+m.getId());
-			//packet JS
-			SocketManager.GAME_SEND_JS_PACKET(this, list);
-			//packet JX
-			SocketManager.GAME_SEND_JX_PACKET(this, list);
-			//Packet JO (Job Option)
-			SocketManager.GAME_SEND_JO_PACKET(this,list);
-			
-			Objet obj = getObjetByPos(Constants.ITEM_POS_ARME);
-			if(obj != null)
-				if(sm.getTemplate().isValidTool(obj.getTemplate().getID()))
-					SocketManager.GAME_SEND_OT_PACKET(get_compte().getGameThread().get_out(),m.getId());
+
+		public void addPerso(Personaje p) {
+			_persos.add(p);
 		}
-		return pos;
+
+		public int getPersosNumber() {
+			return _persos.size();
+		}
+
+		public int getGroupLevel() {
+			int lvls = 0;
+			for (Personaje p : _persos) {
+				lvls += p.get_lvl();
+			}
+			return lvls;
+		}
+
+		public ArrayList<Personaje> getPersos() {
+			return _persos;
+		}
+
+		public Personaje getChief() {
+			return _chief;
+		}
+
+		public void leave(Personaje p) {
+			if (!_persos.contains(p)) return;
+			p.setGroup(null);
+			_persos.remove(p);
+			if (_persos.size() == 1) {
+				_persos.get(0).setGroup(null);
+				if (_persos.get(0).get_compte() == null || _persos.get(0).get_compte().getGameThread() == null) return;
+				SocketManager.GAME_SEND_PV_PACKET(_persos.get(0).get_compte().getGameThread().get_out(), "");
+			} else
+				SocketManager.GAME_SEND_PM_DEL_PACKET_TO_GROUP(this,p.get_GUID());
+		}
 	}
 	
 	public void unlearnJob(int m)
@@ -3874,81 +3645,237 @@ public class Personaje {
 		return str.toString();
 	}
 	
-	public int getNumbEquipedItemOfPanoplie(int panID)
-	{
+	public int getNumbEquipedItemOfPanoplie(int panID) {
 		int nb = 0;
-		for(Entry<Integer, Objet> i : _items.entrySet())
-		{
+		for (Entry<Integer, Objet> i : _items.entrySet()) {
 			//On ignore les objets non �quip�s
-			if(i.getValue().getPosition() == Constants.ITEM_POS_NO_EQUIPED)continue;
+			if (i.getValue().getPosition() == Constants.ITEM_POS_NO_EQUIPED) continue;
 			//On prend que les items de la pano demand�e, puis on augmente le nombre si besoin
-			if(i.getValue().getTemplate().getPanopID() == panID)nb++;
+			if (i.getValue().getTemplate().getPanopID() == panID) nb++;
 		}
 		return nb;
 	}
-	
-	public Timer DialogTimer()
-	{
-		_timeDialog = 0;
-	    ActionListener action = new ActionListener ()
-	      {
-	        public void actionPerformed (ActionEvent event)
-	        {
-	        	_timeDialog++;
-	        	if(_timeDialog > 120 && get_isOnPercepteurID() != 0)
-	        	{
-	        		//Expulsion du percepteur
-	        		if(get_isTradingWith() == 0 &&
-	        				   get_curExchange() == null &&
-	        				   getCurJobAction() == null &&
-	        				   getInMountPark() == null &&
-	        				   !isInBank() &&
-	        				   get_isOnPercepteurID() == 0 &&
-	        				   getInTrunk() == null)
-	        					return;
-	        		if(get_isOnPercepteurID() != 0)
-	        		{
-	        			Percepteur perco = World.getPerco(get_isOnPercepteurID());
-	        			if(perco == null) return;
-	        			for(Personaje z : World.getGuild(perco.get_guildID()).getMembers())
-	        			{
-	        				if(z.isOnline())
-	        				{
-	        					SocketManager.GAME_SEND_gITM_PACKET(z, Percepteur.parsetoGuild(z.get_guild().get_id()));
-	        					String str = "";
-	        					str += "G"+perco.get_N1()+","+perco.get_N2();
-	        					str += "|.|"+World.getCarte((short)perco.get_mapID()).getX()+"|"+World.getCarte((short)perco.get_mapID()).getY()+"|";
-	        					str += get_name()+"|";
-	        					str += perco.get_LogXp()+";";
-	        					str += perco.get_LogItems();
-	        					SocketManager.GAME_SEND_gT_PACKET(z, str);
-	        				}
-	        			}
-	        			get_curCarte().RemoveNPC(perco.getGuid());
-	        			SocketManager.GAME_SEND_ERASE_ON_MAP_TO_MAP(get_curCarte(), perco.getGuid());
-	        			perco.DelPerco(perco.getGuid());
-	        			SQLManager.DELETE_PERCO(perco.getGuid());
-	        			set_isOnPercepteurID(0);
-	        		}
-	        		
-	        		SQLManager.SAVE_PERSONNAGE(get_compte().get_curPerso(),true);
-	        		SocketManager.GAME_SEND_EV_PACKET(get_compte().getGameThread().get_out());
-	        		set_isTradingWith(0);
-	        		set_away(false);
-	        		setInBank(false);
-	        		setInTrunk(null);
-	        		_DialogTimer.stop();
-	        	}
-	        }
-	      };
-	    return new Timer (1000, action);
+
+	public static class Stats {
+		private Map<Integer, Integer> Effects = new TreeMap<>();
+
+		public Stats(boolean addBases, Personaje perso) {
+			Effects = new TreeMap<>();
+			if (!addBases) return;
+			Effects.put(Constants.STATS_ADD_PA, perso.get_lvl() < 100 ? 6 : 7);
+			Effects.put(Constants.STATS_ADD_PM, 3);
+			Effects.put(Constants.STATS_ADD_PROS, perso.get_classe() == Constants.CLASS_ENUTROF ? 120 : 100);
+			Effects.put(Constants.STATS_ADD_PODS, 1000);
+			Effects.put(Constants.STATS_CREATURE, 1);
+			Effects.put(Constants.STATS_ADD_INIT, 1);
+		}
+
+		public Stats(Map<Integer, Integer> stats, boolean addBases, Personaje perso) {
+			Effects = stats;
+			if (!addBases) return;
+			Effects.put(Constants.STATS_ADD_PA, perso.get_lvl() < 100 ? 6 : 7);
+			Effects.put(Constants.STATS_ADD_PM, 3);
+			Effects.put(Constants.STATS_ADD_PROS, perso.get_classe() == Constants.CLASS_ENUTROF ? 120 : 100);
+			Effects.put(Constants.STATS_ADD_PODS, 1000);
+			Effects.put(Constants.STATS_CREATURE, 1);
+			Effects.put(Constants.STATS_ADD_INIT, 1);
+		}
+
+		public Stats(Map<Integer, Integer> stats) {
+			Effects = stats;
+		}
+
+		public Stats() {
+			Effects = new TreeMap<>();
+		}
+
+		public int addOneStat(int id, int val) {
+			if (Effects.get(id) == null || Effects.get(id) == 0)
+				Effects.put(id, val);
+			else {
+				int newVal = (Effects.get(id) + val);
+				Effects.put(id, newVal);
+			}
+			return Effects.get(id);
+		}
+
+		public boolean isSameStats(Stats other) {
+			for (Entry<Integer, Integer> entry : Effects.entrySet()) {
+				//Si la stat n'existe pas dans l'autre map
+				if (other.getMap().get(entry.getKey()) == null) return false;
+				//Si la stat existe mais n'a pas la m�me valeur
+				if (other.getMap().get(entry.getKey()) != entry.getValue()) return false;
+			}
+			for (Entry<Integer, Integer> entry : other.getMap().entrySet()) {
+				//Si la stat n'existe pas dans l'autre map
+				if (Effects.get(entry.getKey()) == null) return false;
+				//Si la stat existe mais n'a pas la m�me valeur
+				if (Effects.get(entry.getKey()) != entry.getValue()) return false;
+			}
+			return true;
+		}
+
+		public int getEffect(int id) {
+			int val;
+			if (Effects.get(id) == null)
+				val = 0;
+			else
+				val = Effects.get(id);
+
+			switch (id)//Bonus/Malus TODO
+			{
+				case Constants.STATS_ADD_AFLEE:
+					if (Effects.get(Constants.STATS_REM_AFLEE) != null)
+						val -= getEffect(Constants.STATS_REM_AFLEE);
+					if (Effects.get(Constants.STATS_ADD_SAGE) != null)
+						val += getEffect(Constants.STATS_ADD_SAGE) / 4;
+					break;
+				case Constants.STATS_ADD_MFLEE:
+					if (Effects.get(Constants.STATS_REM_MFLEE) != null)
+						val -= getEffect(Constants.STATS_REM_MFLEE);
+					if (Effects.get(Constants.STATS_ADD_SAGE) != null)
+						val += getEffect(Constants.STATS_ADD_SAGE) / 4;
+					break;
+				case Constants.STATS_ADD_INIT:
+					if (Effects.get(Constants.STATS_REM_INIT) != null)
+						val -= Effects.get(Constants.STATS_REM_INIT);
+					break;
+				case Constants.STATS_ADD_AGIL:
+					if (Effects.get(Constants.STATS_REM_AGIL) != null)
+						val -= Effects.get(Constants.STATS_REM_AGIL);
+					break;
+				case Constants.STATS_ADD_FORC:
+					if (Effects.get(Constants.STATS_REM_FORC) != null)
+						val -= Effects.get(Constants.STATS_REM_FORC);
+					break;
+				case Constants.STATS_ADD_CHAN:
+					if (Effects.get(Constants.STATS_REM_CHAN) != null)
+						val -= Effects.get(Constants.STATS_REM_CHAN);
+					break;
+				case Constants.STATS_ADD_INTE:
+					if (Effects.get(Constants.STATS_REM_INTE) != null)
+						val -= Effects.get(Constants.STATS_REM_INTE);
+					break;
+				case Constants.STATS_ADD_PA:
+					if (Effects.get(Constants.STATS_ADD_PA2) != null)
+						val += Effects.get(Constants.STATS_ADD_PA2);
+					if (Effects.get(Constants.STATS_REM_PA) != null)
+						val -= Effects.get(Constants.STATS_REM_PA);
+					if (Effects.get(Constants.STATS_REM_PA2) != null)//Non esquivable
+						val -= Effects.get(Constants.STATS_REM_PA2);
+					break;
+				case Constants.STATS_ADD_PM:
+					if (Effects.get(Constants.STATS_ADD_PM2) != null)
+						val += Effects.get(Constants.STATS_ADD_PM2);
+					if (Effects.get(Constants.STATS_REM_PM) != null)
+						val -= Effects.get(Constants.STATS_REM_PM);
+					if (Effects.get(Constants.STATS_REM_PM2) != null)//Non esquivable
+						val -= Effects.get(Constants.STATS_REM_PM2);
+					break;
+				case Constants.STATS_ADD_PO:
+					if (Effects.get(Constants.STATS_REM_PO) != null)
+						val -= Effects.get(Constants.STATS_REM_PO);
+					break;
+				case Constants.STATS_ADD_VITA:
+					if (Effects.get(Constants.STATS_REM_VITA) != null)
+						val -= Effects.get(Constants.STATS_REM_VITA);
+					break;
+				case Constants.STATS_ADD_DOMA:
+					if (Effects.get(Constants.STATS_REM_DOMA) != null)
+						val -= Effects.get(Constants.STATS_REM_DOMA);
+					break;
+				case Constants.STATS_ADD_PODS:
+					if (Effects.get(Constants.STATS_REM_PODS) != null)
+						val -= Effects.get(Constants.STATS_REM_PODS);
+					break;
+				case Constants.STATS_ADD_PROS:
+					if (Effects.get(Constants.STATS_REM_PROS) != null)
+						val -= Effects.get(Constants.STATS_REM_PROS);
+					break;
+				case Constants.STATS_ADD_R_TER:
+					if (Effects.get(Constants.STATS_REM_R_TER) != null)
+						val -= Effects.get(Constants.STATS_REM_R_TER);
+					break;
+				case Constants.STATS_ADD_R_EAU:
+					if (Effects.get(Constants.STATS_REM_R_EAU) != null)
+						val -= Effects.get(Constants.STATS_REM_R_EAU);
+					break;
+				case Constants.STATS_ADD_R_AIR:
+					if (Effects.get(Constants.STATS_REM_R_AIR) != null)
+						val -= Effects.get(Constants.STATS_REM_R_AIR);
+					break;
+				case Constants.STATS_ADD_R_FEU:
+					if (Effects.get(Constants.STATS_REM_R_FEU) != null)
+						val -= Effects.get(Constants.STATS_REM_R_FEU);
+					break;
+				case Constants.STATS_ADD_R_NEU:
+					if (Effects.get(Constants.STATS_REM_R_NEU) != null)
+						val -= Effects.get(Constants.STATS_REM_R_NEU);
+					break;
+				case Constants.STATS_ADD_RP_TER:
+					if (Effects.get(Constants.STATS_REM_RP_TER) != null)
+						val -= Effects.get(Constants.STATS_REM_RP_TER);
+					break;
+				case Constants.STATS_ADD_RP_EAU:
+					if (Effects.get(Constants.STATS_REM_RP_EAU) != null)
+						val -= Effects.get(Constants.STATS_REM_RP_EAU);
+					break;
+				case Constants.STATS_ADD_RP_AIR:
+					if (Effects.get(Constants.STATS_REM_RP_AIR) != null)
+						val -= Effects.get(Constants.STATS_REM_RP_AIR);
+					break;
+				case Constants.STATS_ADD_RP_FEU:
+					if (Effects.get(Constants.STATS_REM_RP_FEU) != null)
+						val -= Effects.get(Constants.STATS_REM_RP_FEU);
+					break;
+				case Constants.STATS_ADD_RP_NEU:
+					if (Effects.get(Constants.STATS_REM_RP_NEU) != null)
+						val -= Effects.get(Constants.STATS_REM_RP_NEU);
+					break;
+				case Constants.STATS_ADD_MAITRISE:
+					if (Effects.get(Constants.STATS_ADD_MAITRISE) != null)
+						val = Effects.get(Constants.STATS_ADD_MAITRISE);
+					break;
+			}
+			return val;
+		}
+
+		public static Stats cumulStat(Stats s1, Stats s2) {
+			TreeMap<Integer, Integer> effets = new TreeMap<>();
+			for (int a = 0; a <= Constants.MAX_EFFECTS_ID; a++) {
+				if ((s1.Effects.get(a) == null || s1.Effects.get(a) == 0) && (s2.Effects.get(a) == null || s2.Effects.get(a) == 0))
+					continue;
+				int som = 0;
+				if (s1.Effects.get(a) != null)
+					som += s1.Effects.get(a);
+
+				if (s2.Effects.get(a) != null)
+					som += s2.Effects.get(a);
+
+				effets.put(a, som);
+			}
+			return new Stats(effets, false, null);
+		}
+
+		public Map<Integer, Integer> getMap() {
+			return Effects;
+		}
+
+		public String parseToItemSetStats() {
+			StringBuilder str = new StringBuilder();
+			if (Effects.isEmpty()) return "";
+			for (Entry<Integer, Integer> entry : Effects.entrySet()) {
+				if (str.length() > 0) str.append(",");
+				str.append(Integer.toHexString(entry.getKey())).append("#").append(Integer.toHexString(entry.getValue())).append("#0#0");
+			}
+			return str.toString();
+		}
 	}
-	
-	public boolean is_hasEndFight()
-	{
+
+	public boolean is_hasEndFight() {
 		return _hasEndFight;
 	}
-	
+
 	public void set_hasEndFight(boolean hasEndFight)
 	{
 		this._hasEndFight = hasEndFight;

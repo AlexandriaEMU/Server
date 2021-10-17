@@ -37,7 +37,7 @@ SAVE_TIME = 30
 DB_HOST = 127.0.0.1
 DB_USER = root
 DB_PASS =
-DB_NAME = alexandria_server
+DB_NAME = alexandria_game
 
 # Rates
 XP_PVP = 1

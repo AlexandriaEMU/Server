@@ -1,21 +1,10 @@
 package common
 
-import game.GameServer
 import communication.ComServer
-import java.io.BufferedWriter
-import java.io.PrintStream
-import kotlin.jvm.JvmStatic
-import java.io.UnsupportedEncodingException
+import game.GameServer
+import java.io.*
 import java.net.InetAddress
-import java.lang.InterruptedException
-import java.io.BufferedReader
-import java.io.FileReader
-import java.util.Calendar
-import java.io.File
-import java.io.FileWriter
-import java.io.IOException
-import java.lang.Exception
-import java.util.ArrayList
+import java.util.*
 
 object Main {
 
@@ -234,121 +223,72 @@ object Main {
             while (config.readLine().also { line = it } != null) {
                 if (line.split("=".toRegex()).toTypedArray().size == 1) continue
                 val param = line.split("=".toRegex()).toTypedArray()[0].trim { it <= ' ' }
-                var value = line.split("=".toRegex()).toTypedArray()[1].trim { it <= ' ' }
-                if (param.equals("MULTI_IP", ignoreCase = true)) {
-                    MULTI_IP = value
-                } else if (param.equals("MULTI_BDD_IP", ignoreCase = true)) {
-                    MULTI_BDD_IP = value
-                } else if (param.equals("REALM_DB_USER", ignoreCase = true)) {
-                    REALM_DB_USER = value
-                } else if (param.equals("REALM_DB_PASS", ignoreCase = true)) {
-                    if (value == null) value = ""
-                    REALM_DB_PASS = value
-                } else if (param.equals("REALM_DB_NAME", ignoreCase = true)) {
-                    REALM_DB_NAME = value
-                } else if (param.equals("DEBUG", ignoreCase = true)) {
-                    if (value.equals("true", ignoreCase = true)) {
-                        CONFIG_DEBUG = true
+                    .uppercase(Locale.getDefault())
+                val value = line.split("=".toRegex()).toTypedArray()[1].trim { it <= ' ' }
+                    .lowercase(Locale.getDefault())
+                when (param) {
+                    "MULTI_IP" -> MULTI_IP = value
+                    "MULTI_BDD_IP" -> MULTI_BDD_IP = value
+                    "REALM_DB_USER" -> REALM_DB_USER = value
+                    "REALM_DB_PASS" -> REALM_DB_PASS = value
+                    "REALM_DB_NAME" -> REALM_DB_NAME = value
+                    "DEBUG" -> if (value == "true") CONFIG_DEBUG = true
+                    "LOG" -> if (value == "true") log = true
+                    "USE_IP" -> if (value == "true") CONFIG_USE_IP = true
+                    "HOST_IP" -> IP = value
+                    "LOCALIP_LOOPBACK" -> if (value == "true") CONFIG_IP_LOOPBACK = true
+                    "AUTH_KEY" -> AUTH_KEY = value
+                    "GAME_PORT" -> CONFIG_GAME_PORT = value.toInt()
+                    "COM_PORT" -> COM_PORT = value.toInt()
+                    "MOTD" -> CONFIG_MOTD = line.split("=".toRegex(), 2).toTypedArray()[1]
+                    "MOTD_COLOR" -> CONFIG_MOTD_COLOR = value
+                    "PLAYER_LIMIT" -> CONFIG_PLAYER_LIMIT = value.toInt()
+                    "LOAD_ACTION_DELAY" -> CONFIG_LOAD_DELAY = value.toInt() * 60000
+                    "SAVE_TIME" -> CONFIG_MOVER_MONSTRUOS = value.toInt() * 30000
+                    "MOVER_MONSTRUOS" -> CONFIG_SAVE_TIME = value.toInt() * 60000
+                    "DB_HOST" -> DB_HOST = value
+                    "DB_USER" -> DB_USER = value
+                    "DB_PASS" -> DB_PASS = value
+                    "DB_NAME" -> DB_NAME = value
+                    "XP_PVP" -> RATE_PVP = value.toInt()
+                    "XP_METIER" -> RATE_METIER = value.toInt()
+                    "XP_PVM" -> RATE_PVM = value.toInt()
+                    "DROP" -> RATE_DROP = value.toInt()
+                    "KAMAS" -> RATE_KAMAS = value.toInt()
+                    "HONOR" -> RATE_HONOR = value.toInt()
+                    "ALLOW_MULTI_ACCOUNT" -> CONFIG_ALLOW_MULTI = value == "true"
+                    "MAX_PERSO_PAR_COMPTE" -> CONFIG_MAX_PERSOS = value.toInt()
+                    "USE_MOBS" -> CONFIG_USE_MOBS = value == "true"
+                    "USE_CUSTOM_START" -> if (value == "true") CONFIG_CUSTOM_STARTMAP = true
+                    "START_MAP" -> CONFIG_START_MAP = value.toShort()
+                    "START_CELL" -> CONFIG_START_CELL = value.toInt()
+                    "START_LEVEL" -> {
+                        CONFIG_START_LEVEL = value.toInt()
+                        if (CONFIG_START_LEVEL < 1) CONFIG_START_LEVEL = 1
+                        if (CONFIG_START_LEVEL > 200) CONFIG_START_LEVEL = 200
                     }
-                } else if (param.equals("LOG", ignoreCase = true)) {
-                    if (value.equals("true", ignoreCase = true)) {
-                        log = true
+                    "START_KAMAS" -> {
+                        CONFIG_START_KAMAS = value.toInt()
+                        if (CONFIG_START_KAMAS < 0) CONFIG_START_KAMAS = 0
+                        if (CONFIG_START_KAMAS > 1000000000) CONFIG_START_KAMAS = 1000000000
                     }
-                } else if (param.equals("USE_IP", ignoreCase = true)) {
-                    if (value.equals("true", ignoreCase = true)) {
-                        CONFIG_USE_IP = true
+                    "ZAAP" -> if (value == "true") CONFIG_ZAAP = true
+                    "LVL_PVP" -> CONFIG_LVL_PVP = value.toInt()
+                    "ALLOW_MULE_PVP" -> CONFIG_ALLOW_MULE_PVP = value == "true"
+                    "AURA_SYSTEM" -> CONFIG_AURA_SYSTEM = value == "true"
+                    "MAX_IDLE_TIME" -> CONFIG_MAX_IDLE_TIME = value.toInt() * 60000
+                    "NOT_IN_HDV" -> {
+                        for (curID in value.split(",".toRegex()).toTypedArray()) {
+                            NOTINHDV.add(curID.toInt())
+                        }
                     }
-                } else if (param.equals("HOST_IP", ignoreCase = true)) {
-                    IP = value
-                } else if (param.equals("LOCALIP_LOOPBACK", ignoreCase = true)) {
-                    if (value.equals("true", ignoreCase = true)) {
-                        CONFIG_IP_LOOPBACK = true
+                    "ARENA_MAP" -> {
+                        for (curID in value.split(",".toRegex()).toTypedArray()) {
+                            arenaMap.add(curID.toInt())
+                        }
                     }
-                } else if (param.equals("AUTH_KEY", ignoreCase = true)) {
-                    AUTH_KEY = value
-                } else if (param.equals("GAME_PORT", ignoreCase = true)) {
-                    CONFIG_GAME_PORT = value.toInt()
-                } else if (param.equals("COM_PORT", ignoreCase = true)) {
-                    COM_PORT = value.toInt()
-                } else if (param.equals("MOTD", ignoreCase = true)) {
-                    CONFIG_MOTD = line.split("=".toRegex(), 2).toTypedArray()[1]
-                } else if (param.equals("MOTD_COLOR", ignoreCase = true)) {
-                    CONFIG_MOTD_COLOR = value
-                } else if (param.equals("PLAYER_LIMIT", ignoreCase = true)) {
-                    CONFIG_PLAYER_LIMIT = value.toInt()
-                } else if (param.equals("LOAD_ACTION_DELAY", ignoreCase = true)) {
-                    CONFIG_LOAD_DELAY = value.toInt() * 60000
-                } else if (param.equals("SAVE_TIME", ignoreCase = true)) {
-                    CONFIG_MOVER_MONSTRUOS = value.toInt() * 30000
-                } else if (param.equals("MOVER_MONSTRUOS", ignoreCase = true)) {
-                    CONFIG_SAVE_TIME = value.toInt() * 60000
-                } else if (param.equals("DB_HOST", ignoreCase = true)) {
-                    DB_HOST = value
-                } else if (param.equals("DB_USER", ignoreCase = true)) {
-                    DB_USER = value
-                } else if (param.equals("DB_PASS", ignoreCase = true)) {
-                    if (value == null) value = ""
-                    DB_PASS = value
-                } else if (param.equals("DB_NAME", ignoreCase = true)) {
-                    DB_NAME = value
-                } else if (param.equals("XP_PVP", ignoreCase = true)) {
-                    RATE_PVP = value.toInt()
-                } else if (param.equals("XP_METIER", ignoreCase = true)) {
-                    RATE_METIER = value.toInt()
-                } else if (param.equals("XP_PVM", ignoreCase = true)) {
-                    RATE_PVM = value.toInt()
-                } else if (param.equals("DROP", ignoreCase = true)) {
-                    RATE_DROP = value.toInt()
-                } else if (param.equals("KAMAS", ignoreCase = true)) {
-                    RATE_KAMAS = value.toInt()
-                } else if (param.equals("HONOR", ignoreCase = true)) {
-                    RATE_HONOR = value.toInt()
-                } else if (param.equals("ALLOW_MULTI_ACCOUNT", ignoreCase = true)) {
-                    CONFIG_ALLOW_MULTI = value.equals("true", ignoreCase = true)
-                } else if (param.equals("MAX_PERSO_PAR_COMPTE", ignoreCase = true)) {
-                    CONFIG_MAX_PERSOS = value.toInt()
-                } else if (param.equals("USE_MOBS", ignoreCase = true)) {
-                    CONFIG_USE_MOBS = value.equals("true", ignoreCase = true)
-                } else if (param.equals("USE_CUSTOM_START", ignoreCase = true)) {
-                    if (value.equals("true", ignoreCase = true)) {
-                        CONFIG_CUSTOM_STARTMAP = true
-                    }
-                } else if (param.equals("START_MAP", ignoreCase = true)) {
-                    CONFIG_START_MAP = value.toShort()
-                } else if (param.equals("START_CELL", ignoreCase = true)) {
-                    CONFIG_START_CELL = value.toInt()
-                } else if (param.equals("START_LEVEL", ignoreCase = true)) {
-                    CONFIG_START_LEVEL = value.toInt()
-                    if (CONFIG_START_LEVEL < 1) CONFIG_START_LEVEL = 1
-                    if (CONFIG_START_LEVEL > 200) CONFIG_START_LEVEL = 200
-                } else if (param.equals("START_KAMAS", ignoreCase = true)) {
-                    CONFIG_START_KAMAS = value.toInt()
-                    if (CONFIG_START_KAMAS < 0) CONFIG_START_KAMAS = 0
-                    if (CONFIG_START_KAMAS > 1000000000) CONFIG_START_KAMAS = 1000000000
-                } else if (param.equals("ZAAP", ignoreCase = true)) {
-                    if (value.equals("true", ignoreCase = true)) {
-                        CONFIG_ZAAP = true
-                    }
-                } else if (param.equals("LVL_PVP", ignoreCase = true)) {
-                    CONFIG_LVL_PVP = value.toInt()
-                } else if (param.equals("ALLOW_MULE_PVP", ignoreCase = true)) {
-                    CONFIG_ALLOW_MULE_PVP = value.equals("true", ignoreCase = true)
-                } else if (param.equals("AURA_SYSTEM", ignoreCase = true)) {
-                    CONFIG_AURA_SYSTEM = value.equals("true", ignoreCase = true)
-                } else if (param.equals("MAX_IDLE_TIME", ignoreCase = true)) {
-                    CONFIG_MAX_IDLE_TIME = value.toInt() * 60000
-                } else if (param.equals("NOT_IN_HDV", ignoreCase = true)) {
-                    for (curID in value.split(",".toRegex()).toTypedArray()) {
-                        NOTINHDV.add(curID.toInt())
-                    }
-                } else if (param.equals("ARENA_MAP", ignoreCase = true)) {
-                    for (curID in value.split(",".toRegex()).toTypedArray()) {
-                        arenaMap.add(curID.toInt())
-                    }
-                } else if (param.equals("ARENA_TIMER", ignoreCase = true)) {
-                    CONFIG_ARENA_TIMER = value.toInt() * 60000
-                } else if (param.equals("USE_SUBSCRIBE", ignoreCase = true)) {
-                    USE_SUBSCRIBE = value.equals("true", ignoreCase = true)
+                    "ARENA_TIMER" -> CONFIG_ARENA_TIMER = value.toInt() * 60000
+                    "USE_SUBSCRIBE" -> USE_SUBSCRIBE = value == "true"
                 }
             }
             if (MULTI_IP == null || MULTI_BDD_IP == null || REALM_DB_NAME == null || REALM_DB_USER == null || REALM_DB_PASS == null || AUTH_KEY == null || COM_PORT == -1 || DB_NAME == null || DB_HOST == null || DB_PASS == null || DB_USER == null) {
@@ -452,7 +392,7 @@ object Main {
             try {
                 print("Creation d'une nouvelle connexion avec le Realm (ComServer) ... ")
                 com_Try = 1
-                while (com_Running == false && isRunning) {
+                while (!com_Running && isRunning) {
                     comServer = ComServer()
                     Thread.sleep(10000)
                 }

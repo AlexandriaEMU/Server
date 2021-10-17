@@ -1,23 +1,21 @@
 package common;
 
+import common.World.Couple;
+import objects.*;
+import objects.Fight.Fighter;
+import objects.Guild.GuildMember;
+
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
-import common.World.Couple;
-
-import objects.*;
-import objects.Fight.*;
-import objects.Guild.GuildMember;
-
 public class Formulas {
-	
-	public static int getRandomValue(int i1,int i2)
-	{
+
+	public static int getRandomValue(int i1, int i2) {
 		Random rand = new Random();
-		return (rand.nextInt((i2-i1)+1))+i1;
+		return (rand.nextInt((i2 - i1) + 1)) + i1;
 	}
-	
+
 	public static int getRandomJet(String jet)//1d5+6
 	{
 		try
@@ -58,8 +56,8 @@ public class Formulas {
 			agiT += T.getTotalStats().getEffect(Constants.STATS_ADD_AGIL);
 		}
 		int a = agiTR+25;
-		int b = agiTR+agiT+50;
-		int chance = (int)((long)(300*a/b)-100);
+		int b = agiTR + agiT + 50;
+		int chance = (int) ((300L * a / b) - 100);
 		if(chance <10)chance = 10;
 		if(chance >90)chance = 90;
 		return chance;
@@ -70,7 +68,7 @@ public class Formulas {
 		int statC = caster.getTotalStats().getEffect(Constants.STATS_ADD_INTE);
 		int soins = caster.getTotalStats().getEffect(Constants.STATS_ADD_SOIN);
 		if(statC<0)statC=0;
-		return (int)(jet * (100 + statC) / 100 + soins);
+		return jet * (100 + statC) / 100 + soins;
 	}
 	
 	public static int calculFinalDommage(Fight fight,Fighter caster,Fighter target,int statID,int jet,boolean isHeal, boolean isCaC, int spellid)
@@ -81,29 +79,26 @@ public class Formulas {
 		float num = 0;
 		float statC = 0, domC = 0, perdomC = 0, resfT = 0, respT = 0;
 		int multiplier = 0;
-		if(!isHeal)
-		{
+		if (!isHeal) {
 			domC = caster.getTotalStats().getEffect(Constants.STATS_ADD_DOMA);
 			perdomC = caster.getTotalStats().getEffect(Constants.STATS_ADD_PERDOM);
 			multiplier = caster.getTotalStats().getEffect(Constants.STATS_MULTIPLY_DOMMAGE);
-		}else
-		{
+		} else {
 			domC = caster.getTotalStats().getEffect(Constants.STATS_ADD_SOIN);
 		}
-		
-		switch(statID)
-		{
-			case Constants.ELEMENT_NULL://Fixe
+
+		switch (statID) {
+			case Constants.ELEMENT_NULL -> {//Fixe
 				statC = 0;
 				resfT = 0;
 				respT = 0;
 				respT = 0;
-			break;
-			case Constants.ELEMENT_NEUTRE://neutre
+			}
+			case Constants.ELEMENT_NEUTRE -> {//neutre
 				statC = caster.getTotalStats().getEffect(Constants.STATS_ADD_FORC);
 				resfT = target.getTotalStats().getEffect(Constants.STATS_ADD_R_NEU);
 				respT = target.getTotalStats().getEffect(Constants.STATS_ADD_RP_NEU);
-				if(caster.getPersonnage() != null)//Si c'est un joueur
+				if (caster.getPersonnage() != null)//Si c'est un joueur
 				{
 					respT += target.getTotalStats().getEffect(Constants.STATS_ADD_RP_PVP_NEU);
 					resfT += target.getTotalStats().getEffect(Constants.STATS_ADD_R_PVP_NEU);
@@ -112,12 +107,12 @@ public class Formulas {
 				domC += caster.getTotalStats().getEffect(142);
 				//Ajout de la resist Physique
 				resfT = target.getTotalStats().getEffect(184);
-			break;
-			case Constants.ELEMENT_TERRE://force
+			}
+			case Constants.ELEMENT_TERRE -> {//force
 				statC = caster.getTotalStats().getEffect(Constants.STATS_ADD_FORC);
 				resfT = target.getTotalStats().getEffect(Constants.STATS_ADD_R_TER);
 				respT = target.getTotalStats().getEffect(Constants.STATS_ADD_RP_TER);
-				if(caster.getPersonnage() != null)//Si c'est un joueur
+				if (caster.getPersonnage() != null)//Si c'est un joueur
 				{
 					respT += target.getTotalStats().getEffect(Constants.STATS_ADD_RP_PVP_TER);
 					resfT += target.getTotalStats().getEffect(Constants.STATS_ADD_R_PVP_TER);
@@ -126,43 +121,43 @@ public class Formulas {
 				domC += caster.getTotalStats().getEffect(142);
 				//Ajout de la resist Physique
 				resfT = target.getTotalStats().getEffect(184);
-			break;
-			case Constants.ELEMENT_EAU://chance
+			}
+			case Constants.ELEMENT_EAU -> {//chance
 				statC = caster.getTotalStats().getEffect(Constants.STATS_ADD_CHAN);
 				resfT = target.getTotalStats().getEffect(Constants.STATS_ADD_R_EAU);
 				respT = target.getTotalStats().getEffect(Constants.STATS_ADD_RP_EAU);
-				if(caster.getPersonnage() != null)//Si c'est un joueur
+				if (caster.getPersonnage() != null)//Si c'est un joueur
 				{
 					respT += target.getTotalStats().getEffect(Constants.STATS_ADD_RP_PVP_EAU);
 					resfT += target.getTotalStats().getEffect(Constants.STATS_ADD_R_PVP_EAU);
 				}
 				//Ajout de la resist Magique
 				resfT = target.getTotalStats().getEffect(183);
-			break;
-			case Constants.ELEMENT_FEU://intell
+			}
+			case Constants.ELEMENT_FEU -> {//intell
 				statC = caster.getTotalStats().getEffect(Constants.STATS_ADD_INTE);
 				resfT = target.getTotalStats().getEffect(Constants.STATS_ADD_R_FEU);
 				respT = target.getTotalStats().getEffect(Constants.STATS_ADD_RP_FEU);
-				if(caster.getPersonnage() != null)//Si c'est un joueur
+				if (caster.getPersonnage() != null)//Si c'est un joueur
 				{
 					respT += target.getTotalStats().getEffect(Constants.STATS_ADD_RP_PVP_FEU);
 					resfT += target.getTotalStats().getEffect(Constants.STATS_ADD_R_PVP_FEU);
 				}
 				//Ajout de la resist Magique
 				resfT = target.getTotalStats().getEffect(183);
-			break;
-			case Constants.ELEMENT_AIR://agilité
+			}
+			case Constants.ELEMENT_AIR -> {//agilité
 				statC = caster.getTotalStats().getEffect(Constants.STATS_ADD_AGIL);
 				resfT = target.getTotalStats().getEffect(Constants.STATS_ADD_R_AIR);
 				respT = target.getTotalStats().getEffect(Constants.STATS_ADD_RP_AIR);
-				if(caster.getPersonnage() != null)//Si c'est un joueur
+				if (caster.getPersonnage() != null)//Si c'est un joueur
 				{
 					respT += target.getTotalStats().getEffect(Constants.STATS_ADD_RP_PVP_AIR);
 					resfT += target.getTotalStats().getEffect(Constants.STATS_ADD_R_PVP_AIR);
 				}
 				//Ajout de la resist Magique
 				resfT = target.getTotalStats().getEffect(183);
-			break;
+			}
 		}
 		//On bride la resistance a 50% si c'est un joueur 
 		if(target.getMob() == null && respT >50)respT = 50;
@@ -185,102 +180,92 @@ public class Formulas {
 			if(caster.getPersonnage() != null && isCaC)
 			{
 			int ArmeType = caster.getPersonnage().getObjetByPos(1).getTemplate().getType();
-			
-			if((caster.getSpellValueBool(392) == true) && ArmeType == 2)//ARC
-			{
-				i = caster.getMaitriseDmg(392);
-			}
-			if((caster.getSpellValueBool(390) == true) && ArmeType == 4)//BATON
-			{
-				i = caster.getMaitriseDmg(390);
-			}
-			if((caster.getSpellValueBool(391) == true) && ArmeType == 6)//EPEE
-			{
-				i = caster.getMaitriseDmg(391);
-			}
-			if((caster.getSpellValueBool(393) == true) && ArmeType == 7)//MARTEAUX
-			{
-				i = caster.getMaitriseDmg(393);
-			}
-			if((caster.getSpellValueBool(394) == true) && ArmeType == 3)//BAGUETTE
-			{
-				i = caster.getMaitriseDmg(394);
-			}
-			if((caster.getSpellValueBool(395) == true) && ArmeType == 5)//DAGUES
-			{
-				i = caster.getMaitriseDmg(395);
-			}
-			if((caster.getSpellValueBool(396) == true) && ArmeType == 8)//PELLE
-			{
-				i = caster.getMaitriseDmg(396);
-			}
-			if((caster.getSpellValueBool(397) == true) && ArmeType == 19)//HACHE
-			{
-				i = caster.getMaitriseDmg(397);
-			}
+
+				if ((caster.getSpellValueBool(392)) && ArmeType == 2)//ARC
+				{
+					i = caster.getMaitriseDmg(392);
+				}
+				if ((caster.getSpellValueBool(390)) && ArmeType == 4)//BATON
+				{
+					i = caster.getMaitriseDmg(390);
+				}
+				if ((caster.getSpellValueBool(391)) && ArmeType == 6)//EPEE
+				{
+					i = caster.getMaitriseDmg(391);
+				}
+				if ((caster.getSpellValueBool(393)) && ArmeType == 7)//MARTEAUX
+				{
+					i = caster.getMaitriseDmg(393);
+				}
+				if ((caster.getSpellValueBool(394)) && ArmeType == 3)//BAGUETTE
+				{
+					i = caster.getMaitriseDmg(394);
+				}
+				if ((caster.getSpellValueBool(395)) && ArmeType == 5)//DAGUES
+				{
+					i = caster.getMaitriseDmg(395);
+				}
+				if ((caster.getSpellValueBool(396)) && ArmeType == 8)//PELLE
+				{
+					i = caster.getMaitriseDmg(396);
+				}
+				if ((caster.getSpellValueBool(397)) && ArmeType == 19)//HACHE
+				{
+					i = caster.getMaitriseDmg(397);
+				}
 				a = (((100+i)/100)*(j/100));
 			}
 			
 			num = a*(jet * ((100 + statC + perdomC + (multiplier*100)) / 100 ))+ domC;//dégats bruts
 			
 		//Poisons
-		if(spellid != -1)
-		{
-			switch(spellid)
-			{
-				/* 
-				 * case [SPELLID]: 
-				 * statC = caster.getTotalStats().getEffect([EFFECT]) 
-				 * num = (jet * ((100 + statC + perdomC + (multiplier*100)) / 100 ))+ domC; 
-				 * return (int) num; 
+		if(spellid != -1) {
+			switch (spellid) {
+				/*
+				 * case [SPELLID]:
+				 * statC = caster.getTotalStats().getEffect([EFFECT])
+				 * num = (jet * ((100 + statC + perdomC + (multiplier*100)) / 100 ))+ domC;
+				 * return (int) num;
 				 */
-				case 66 : 
-				statC = caster.getTotalStats().getEffect(Constants.STATS_ADD_AGIL);
-				num = (jet * ((100 + statC + perdomC + (multiplier*100)) / 100 ))+ domC;
-				if(target.hasBuff(105))
-				{
-					SocketManager.GAME_SEND_GA_PACKET_TO_FIGHT(fight, 7, 105, caster.getGUID()+"", target.getGUID()+","+target.getBuff(105).getValue());
-					return 0;
+				case 66 -> {
+					statC = caster.getTotalStats().getEffect(Constants.STATS_ADD_AGIL);
+					num = (jet * ((100 + statC + perdomC + (multiplier * 100)) / 100)) + domC;
+					if (target.hasBuff(105)) {
+						SocketManager.INSTANCE.GAME_SEND_GA_PACKET_TO_FIGHT(fight, 7, 105, caster.getGUID() + "", target.getGUID() + "," + target.getBuff(105).getValue());
+						return 0;
+					}
+					if (target.hasBuff(184)) {
+						SocketManager.INSTANCE.GAME_SEND_GA_PACKET_TO_FIGHT(fight, 7, 105, caster.getGUID() + "", target.getGUID() + "," + target.getBuff(184).getValue());
+						return 0;
+					}
+					return (int) num;
 				}
-				if(target.hasBuff(184))
-				{
-					SocketManager.GAME_SEND_GA_PACKET_TO_FIGHT(fight, 7, 105, caster.getGUID()+"", target.getGUID()+","+target.getBuff(184).getValue());
-					return 0;
-				}
-				return (int) num;
-				
-				case 71 :
-				case 196:
-				case 219:
+				case 71, 196, 219 -> {
 					statC = caster.getTotalStats().getEffect(Constants.STATS_ADD_FORC);
-					num = (jet * ((100 + statC + perdomC + (multiplier*100)) / 100 ))+ domC;
-					if(target.hasBuff(105))
-					{
-						SocketManager.GAME_SEND_GA_PACKET_TO_FIGHT(fight, 7, 105, caster.getGUID()+"", target.getGUID()+","+target.getBuff(105).getValue());
+					num = (jet * ((100 + statC + perdomC + (multiplier * 100)) / 100)) + domC;
+					if (target.hasBuff(105)) {
+						SocketManager.INSTANCE.GAME_SEND_GA_PACKET_TO_FIGHT(fight, 7, 105, caster.getGUID() + "", target.getGUID() + "," + target.getBuff(105).getValue());
 						return 0;
 					}
-					if(target.hasBuff(184))
-					{
-						SocketManager.GAME_SEND_GA_PACKET_TO_FIGHT(fight, 7, 105, caster.getGUID()+"", target.getGUID()+","+target.getBuff(184).getValue());
+					if (target.hasBuff(184)) {
+						SocketManager.INSTANCE.GAME_SEND_GA_PACKET_TO_FIGHT(fight, 7, 105, caster.getGUID() + "", target.getGUID() + "," + target.getBuff(184).getValue());
 						return 0;
 					}
-				return (int) num;
-				
-				case 181:
-				case 200:
+					return (int) num;
+				}
+				case 181, 200 -> {
 					statC = caster.getTotalStats().getEffect(Constants.STATS_ADD_INTE);
-					num = (jet * ((100 + statC + perdomC + (multiplier*100)) / 100 ))+ domC;
-					if(target.hasBuff(105))
-					{
-						SocketManager.GAME_SEND_GA_PACKET_TO_FIGHT(fight, 7, 105, caster.getGUID()+"", target.getGUID()+","+target.getBuff(105).getValue());
+					num = (jet * ((100 + statC + perdomC + (multiplier * 100)) / 100)) + domC;
+					if (target.hasBuff(105)) {
+						SocketManager.INSTANCE.GAME_SEND_GA_PACKET_TO_FIGHT(fight, 7, 105, caster.getGUID() + "", target.getGUID() + "," + target.getBuff(105).getValue());
 						return 0;
 					}
-					if(target.hasBuff(184))
-					{
-						SocketManager.GAME_SEND_GA_PACKET_TO_FIGHT(fight, 7, 105, caster.getGUID()+"", target.getGUID()+","+target.getBuff(184).getValue());
+					if (target.hasBuff(184)) {
+						SocketManager.INSTANCE.GAME_SEND_GA_PACKET_TO_FIGHT(fight, 7, 105, caster.getGUID() + "", target.getGUID() + "," + target.getBuff(184).getValue());
 						return 0;
 					}
-				return (int) num;
+					return (int) num;
+				}
 			}
 		}
 		//Renvoie
@@ -289,11 +274,11 @@ public class Formulas {
 		{
 			if(renvoie > num)renvoie = (int)num;
 			num -= renvoie;
-			SocketManager.GAME_SEND_GA_PACKET_TO_FIGHT(fight, 7, 107, "-1", target.getGUID()+","+renvoie);
+			SocketManager.INSTANCE.GAME_SEND_GA_PACKET_TO_FIGHT(fight, 7, 107, "-1", target.getGUID() + "," + renvoie);
 			if(renvoie>caster.getPDV())renvoie = caster.getPDV();
 			if(num<1)num =0;
 			caster.removePDV(renvoie);
-			SocketManager.GAME_SEND_GA_PACKET_TO_FIGHT(fight, 7, 100, caster.getGUID()+"", caster.getGUID()+",-"+renvoie);
+			SocketManager.INSTANCE.GAME_SEND_GA_PACKET_TO_FIGHT(fight, 7, 100, caster.getGUID() + "", caster.getGUID() + ",-" + renvoie);
 		}
 		
 		if(!isHeal)num -= resfT;//resis fixe
@@ -301,8 +286,9 @@ public class Formulas {
 		if(!isHeal)num -= reduc;
 		
 		int armor = getArmorResist(target,statID);
-		if(!isHeal)num -= armor;
-		if(!isHeal)if(armor > 0)SocketManager.GAME_SEND_GA_PACKET_TO_FIGHT(fight, 7, 105, caster.getGUID()+"", target.getGUID()+","+armor);
+		if (!isHeal) num -= armor;
+		if (!isHeal) if (armor > 0)
+			SocketManager.INSTANCE.GAME_SEND_GA_PACKET_TO_FIGHT(fight, 7, 105, caster.getGUID() + "", target.getGUID() + "," + armor);
 		//dégats finaux
 		if(num < 1)num=0;
 		
@@ -331,91 +317,66 @@ public class Formulas {
 
 	public static int calculZaapCost(Mapa map1, Mapa map2)
 	{
-		return (int) (10*(Math.abs(map2.getX()-map1.getX())+Math.abs(map2.getY()-map1.getY())-1));
+		return 10 * (Math.abs(map2.getX() - map1.getX()) + Math.abs(map2.getY() - map1.getY()) - 1);
 	}
 	
 	private static int getArmorResist(Fighter target, int statID)
 	{
 		int armor = 0;
-		for(SpellEffect SE : target.getBuffsByEffectID(265))
-		{
+		for(SpellEffect SE : target.getBuffsByEffectID(265)) {
 			Fighter fighter;
-			
-			switch(SE.getSpell())
-			{
-				case 1://Armure incandescente
+
+			switch (SE.getSpell()) {
+				case 1 -> {//Armure incandescente
 					//Si pas element feu, on ignore l'armure
-					if(statID != Constants.ELEMENT_FEU)continue;
+					if (statID != Constants.ELEMENT_FEU) continue;
 					//Les stats du féca sont prises en compte
 					fighter = SE.getCaster();
-				break;
-				case 6://Armure Terrestre
+				}
+				case 6 -> {//Armure Terrestre
 					//Si pas element terre/neutre, on ignore l'armure
-					if(statID != Constants.ELEMENT_TERRE && statID != Constants.ELEMENT_NEUTRE)continue;
+					if (statID != Constants.ELEMENT_TERRE && statID != Constants.ELEMENT_NEUTRE) continue;
 					//Les stats du féca sont prises en compte
 					fighter = SE.getCaster();
-				break;
-				case 14://Armure Venteuse
+				}
+				case 14 -> {//Armure Venteuse
 					//Si pas element air, on ignore l'armure
-					if(statID != Constants.ELEMENT_AIR)continue;
+					if (statID != Constants.ELEMENT_AIR) continue;
 					//Les stats du féca sont prises en compte
 					fighter = SE.getCaster();
-				break;
-				case 18://Armure aqueuse
+				}
+				case 18 -> {//Armure aqueuse
 					//Si pas element eau, on ignore l'armure
-					if(statID != Constants.ELEMENT_EAU)continue;
+					if (statID != Constants.ELEMENT_EAU) continue;
 					//Les stats du féca sont prises en compte
 					fighter = SE.getCaster();
-				break;
-				
-				default://Dans les autres cas on prend les stats de la cible et on ignore l'element de l'attaque
-					fighter = target;
-				break;
+				}
+				default ->//Dans les autres cas on prend les stats de la cible et on ignore l'element de l'attaque
+						fighter = target;
 			}
 			int intell = fighter.getTotalStats().getEffect(Constants.STATS_ADD_INTE);
-			int carac = 0;
-			switch(statID)
-			{
-				case Constants.ELEMENT_AIR:
-					carac = fighter.getTotalStats().getEffect(Constants.STATS_ADD_AGIL);
-				break;
-				case Constants.ELEMENT_FEU:
-					carac = fighter.getTotalStats().getEffect(Constants.STATS_ADD_INTE);
-				break;
-				case Constants.ELEMENT_EAU:
-					carac = fighter.getTotalStats().getEffect(Constants.STATS_ADD_CHAN);
-				break;
-				case Constants.ELEMENT_NEUTRE:
-				case Constants.ELEMENT_TERRE:
-					carac = fighter.getTotalStats().getEffect(Constants.STATS_ADD_FORC);
-				break;
-			}
+			int carac = switch (statID) {
+				case Constants.ELEMENT_AIR -> fighter.getTotalStats().getEffect(Constants.STATS_ADD_AGIL);
+				case Constants.ELEMENT_FEU -> fighter.getTotalStats().getEffect(Constants.STATS_ADD_INTE);
+				case Constants.ELEMENT_EAU -> fighter.getTotalStats().getEffect(Constants.STATS_ADD_CHAN);
+				case Constants.ELEMENT_NEUTRE, Constants.ELEMENT_TERRE -> fighter.getTotalStats().getEffect(Constants.STATS_ADD_FORC);
+				default -> 0;
+			};
 			int value = SE.getValue();
-			int a = value * (100 + (int)(intell/2) + (int)(carac/2))/100;
+			int a = value * (100 + (intell / 2) + (carac / 2)) / 100;
 			armor += a;
 		}
-		for(SpellEffect SE : target.getBuffsByEffectID(105))
-		{
+		for(SpellEffect SE : target.getBuffsByEffectID(105)) {
 			int intell = target.getTotalStats().getEffect(Constants.STATS_ADD_INTE);
-			int carac = 0;
-			switch(statID)
-			{
-				case Constants.ELEMENT_AIR:
-					carac = target.getTotalStats().getEffect(Constants.STATS_ADD_AGIL);
-				break;
-				case Constants.ELEMENT_FEU:
-					carac = target.getTotalStats().getEffect(Constants.STATS_ADD_INTE);
-				break;
-				case Constants.ELEMENT_EAU:
-					carac = target.getTotalStats().getEffect(Constants.STATS_ADD_CHAN);
-				break;
-				case Constants.ELEMENT_NEUTRE:
-				case Constants.ELEMENT_TERRE:
-					carac = target.getTotalStats().getEffect(Constants.STATS_ADD_FORC);
-				break;
-			}
+			int carac = switch (statID) {
+				case Constants.ELEMENT_AIR -> target.getTotalStats().getEffect(Constants.STATS_ADD_AGIL);
+				case Constants.ELEMENT_FEU -> target.getTotalStats().getEffect(Constants.STATS_ADD_INTE);
+				case Constants.ELEMENT_EAU -> target.getTotalStats().getEffect(Constants.STATS_ADD_CHAN);
+				case Constants.ELEMENT_NEUTRE, Constants.ELEMENT_TERRE -> target.getTotalStats().getEffect(Constants.STATS_ADD_FORC);
+				default -> 0;
+			};
 			int value = SE.getValue();
-			int a = value * (100 + (int)(intell/2) + (int)(carac/2))/100;
+			int a = value * (100 + (intell / 2) + (carac / 2)) / 100;
 			armor += a;
 		}
 		return armor;
@@ -442,11 +403,11 @@ public class Formulas {
 			if(esquiveT == 0)esquiveT=1;
 			if(esquiveC == 0)esquiveC=1;
 
-			float a = (float)(esquiveC/esquiveT);
-			float b = (ptsAct/ptsMax);
+			float a = esquiveC / esquiveT;
+			float b = (ptsAct / ptsMax);
 
-			float pourcentage = (float)(a*b*50);
-			int chance = (int)Math.ceil(pourcentage);
+			float pourcentage = a * b * 50;
+			int chance = (int) Math.ceil(pourcentage);
 			
 			/*
 			System.out.println("Esquive % : "+a+" Facteur PA/PM : "+b);
@@ -573,7 +534,7 @@ public class Formulas {
 			
 			xpWin = (long) (groupXP * rapport * bonus * taux * coef * rapport2);
 			if(star > 0)
-				xpWin = (long) (xpWin + xpWin*(star/100));
+				xpWin = xpWin + xpWin * (star / 100);
 			
 			/*/ DEBUG XP
 			System.out.println("=========");
@@ -622,7 +583,7 @@ public class Formulas {
 			toGuild = maxP;
 		}
 		xpWin.set((long)(xp - xp*pXpGive));
-		return (long) Math.round(toGuild);
+		return Math.round(toGuild);
 	}
 	
 	public static long getMountXpWin(Fighter perso, AtomicReference<Long> xpWin)
@@ -656,8 +617,8 @@ public class Formulas {
 		
 		if(pToMount > 0.2)
 			xpWin.set((long)(xp - (xp*(pToMount-0.2))));
-		
-		return (long)Math.round(xp * pToMount * coeff);
+
+		return Math.round(xp * pToMount * coeff);
 	}
 
 	public static int getKamasWin(Fighter i, ArrayList<Fighter> winners, int maxk, int mink)
@@ -680,7 +641,7 @@ public class Formulas {
 		if(lvlP == 1)K = 100;
 		else if (lvlP == 25)K = 175;
 		else if (lvlP == 50)K = 350;
-		return (int)((lvlM*100)/(K + lvlA));
+		return (lvlM * 100) / (K + lvlA);
 	}
 
 	public static int calculHonorWin(ArrayList<Fighter> winners,ArrayList<Fighter> loosers,Fighter F)
@@ -706,7 +667,7 @@ public class Formulas {
 		
 		if(totalLevelWin-totalLevelLoose > Main.CONFIG_LVL_PVP) return 0;
 
-		int base = (int)(100 * (float)(totalGradeLoose/totalGradeWin))/winners.size();
+		int base = (int) (100 * (totalGradeLoose / totalGradeWin)) / winners.size();
 		if(loosers.contains(F))base = -base;
 		return base * Main.RATE_HONOR;
 	}
@@ -722,38 +683,23 @@ public class Formulas {
 		return toReturn;
 	}
 	
-	public static int totalCaptChance(int pierreChance, Personaje p)
-	{
-		int sortChance = 0;
+	public static int totalCaptChance(int pierreChance, Personaje p) {
+		int sortChance = switch (p.getSortStatBySortIfHas(413).getLevel()) {
+			case 1 -> 1;
+			case 2 -> 3;
+			case 3 -> 6;
+			case 4 -> 10;
+			case 5 -> 15;
+			case 6 -> 25;
+			default -> 0;
+		};
 
-		switch(p.getSortStatBySortIfHas(413).getLevel())
-		{
-			case 1:
-				sortChance = 1;
-				break;
-			case 2:
-				sortChance = 3;
-				break;
-			case 3:
-				sortChance = 6;
-				break;
-			case 4:
-				sortChance = 10;
-				break;
-			case 5:
-				sortChance = 15;
-				break;
-			case 6:
-				sortChance = 25;
-				break;
-		}
-		
 		return sortChance + pierreChance;
 	}
 	
 	public static String parseReponse(String reponse)
 	{
-		StringBuilder toReturn = new StringBuilder("");
+		StringBuilder toReturn = new StringBuilder();
 		
 		String[] cut = reponse.split("[%]");
 		
