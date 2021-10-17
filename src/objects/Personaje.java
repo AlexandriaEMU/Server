@@ -438,7 +438,7 @@ public class Personaje {
 		{
 			if(stuff.charAt(stuff.length()-1) == '|')
 				stuff = stuff.substring(0,stuff.length()-1);
-			SQLManager.LOAD_ITEMS(stuff.replace("|",","));
+			SQLManager.INSTANCE.LOAD_ITEMS(stuff.replace("|", ","));
 		}
 		for(String item : stuff.split("\\|"))
 		{

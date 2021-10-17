@@ -698,7 +698,7 @@ public class GameThread implements Runnable {
 		//R�cup�ration du personnage � changer, et verification de quelques conditions de base
 		if(p == null)	//Arrive lorsque le personnage n'est pas charg� dans la m�moire
 		{
-			int guildId = SQLManager.isPersoInGuild(guid);	//R�cup�re l'id de la guilde du personnage qui n'est pas dans la m�moire
+			int guildId = SQLManager.INSTANCE.isPersoInGuild(guid);    //R�cup�re l'id de la guilde du personnage qui n'est pas dans la m�moire
 			
 			if(guildId < 0)return;	//Si le personnage � qui les droits doivent �tre modifi� n'existe pas ou n'a pas de guilde
 			
