@@ -8,11 +8,11 @@ import java.util.TreeMap;
 import java.util.Map.Entry;
 
 
-import objects.Personnage;
+import objects.Personaje;
 import objects.Metier.JobAction;
 import objects.Metier.StatsMetier;
 import objects.Objet.ObjTemplate;
-import objects.Personnage.Stats;
+import objects.Personaje.Stats;
 import objects.Sort.SortStats;
 
 public class Constants
@@ -1352,7 +1352,7 @@ public class Constants
 		return false;
 	}
 	
-	public static void onLevelUpSpells(Personnage perso,int lvl)
+	public static void onLevelUpSpells(Personaje perso, int lvl)
 	{
 		switch(perso.get_classe())
 		{
@@ -2927,7 +2927,7 @@ public class Constants
 		return -1;
 	}
 	
-	public static void applyPlotIOAction(Personnage perso,int mID, int cID)
+	public static void applyPlotIOAction(Personaje perso, int mID, int cID)
 	{
 		//Gère les differentes actions des "bornes" (IO des émotes)
 		switch(mID)
@@ -2950,7 +2950,7 @@ public class Constants
 		}
 	}
 	
-	public static int getNearCellidUnused(Personnage _perso)
+	public static int getNearCellidUnused(Personaje _perso)
 	{
 		int cellFront = 0;
 		int cellBack = 0;
@@ -2997,7 +2997,7 @@ public class Constants
 		return -1;
 	}
 	
-	public static String isValidPlaceToInviteCraft(Personnage perso, int caseID)
+	public static String isValidPlaceToInviteCraft(Personaje perso, int caseID)
 	{
 		int IOObject = 0;
 		if(perso.get_curCarte().getCase(caseID) != null && perso.get_curCarte().getCase(caseID).getObject() != null)

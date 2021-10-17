@@ -45,7 +45,7 @@ public class NPC_tmpl {
 			return _id;
 		}
 		
-		public String parseToDQPacket(Personnage perso)
+		public String parseToDQPacket(Personaje perso)
 		{
 			if(!ConditionParser.validConditions(perso, _cond))
 				return World.getNPCQuestion(falseQuestion).parseToDQPacket(perso);
@@ -62,7 +62,7 @@ public class NPC_tmpl {
 			return _reponses;
 		}
 		
-		private String parseArguments(String args, Personnage perso)
+		private String parseArguments(String args, Personaje perso)
 		{
 			String arg = args;
 			arg = arg.replace("[name]", perso.getStringVar("name"));
@@ -173,7 +173,7 @@ public class NPC_tmpl {
 			_actions.add(act);
 		}
 		
-		public void apply(Personnage perso)
+		public void apply(Personaje perso)
 		{
 			for(Action act : _actions)
 			act.apply(perso, null, -1, -1);

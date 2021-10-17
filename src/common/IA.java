@@ -10,7 +10,7 @@ import java.util.Map.Entry;
 
 import objects.*;
 import objects.Sort.SortStats;
-import objects.Carte.Case;
+import objects.Mapa.Case;
 import objects.Fight.*;
 
 public class IA {

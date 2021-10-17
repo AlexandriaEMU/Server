@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import objects.Carte.Case;
+import objects.Mapa.Case;
 import objects.Fight.Fighter;
 import objects.Fight.Glyphe;
 import objects.Fight.Piege;
@@ -1647,7 +1647,7 @@ public class SpellEffect
 		{
 			int cell = this.cell.getID();
 			int id = fight.getNextLowerFighterGuid();
-			Personnage Clone = caster.getPersonnage().ClonePerso(id);
+			Personaje Clone = caster.getPersonnage().ClonePerso(id);
 			Fighter F = new Fighter(fight,Clone);
 			F.setTeam(caster.getTeam());
 			F.setInvocator(caster);

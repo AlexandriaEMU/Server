@@ -1,0 +1,53 @@
+AlexandriaEMU - Comandos admin
+
+//Comandos para admin lvl 1
+
+- Comando INFORMACION - Info del server
+- Comando ACTUALIZARMOBS - Actualiza los mobs del server
+- Comando INFOMAPA - Lanza la informacion del mapa(NPC, MOBS, Recaudadores)
+- Comando ONLINE - Muestra los jugadores online en tiempo real
+- Comando POSPELEA - Muestra los pos de las peleas en tiempo real
+- Comando CREARGREMIO - Crear un gremio a gusto
+- Comando ALTERNARAGRESION - Activa y desactiva las agresiones sobre un personaje
+- Comando ANUNCIO - Genera un anuncio para todo el server
+- Comando DEMORPH - Quita la transformacion de un personaje
+- Comando IR - Te lleva donde el personaje seleccionado este
+- Comando TRAER - Trae el personaje hacia donde estes
+- Comando NANUNCIO - Crea un anuncio para todo el server con tu nombre por delante
+- Comando MOVER - Teletransportate a la ID del mapa que quieras
+- Comando IRMAPA - Teletransporta mediante coordenadas
+- Comando HACERACCION - Genera un accion desde la consola de admin (NAME TYPE ARGS COND)
+
+//Comandos para admin lvl 2
+
+- Comando SILENCIAR - Solencia al personaje por el tiempo que quieras
+- Comando HABLAR - Quita el silenciado a un personaje
+- Comando EXPULSAR - Saca a un personaje del servidor
+- Comando PUNTOSHECHIZO - Agrega los puntos de hechizo a ti mismo o a un personaj espesifico
+- Comando APRENDERHECHIZO - Aprende cualquier hechizo en tu personaje o uno espesifico
+- Comando ALINEACION - Cambia la alineacion de un personaje
+- Comando AGREGARESPUESTA - Agrega una respuesta a una pregunta de un NPC
+- Comando HONOR - Agrega honor a un personaje
+- Comando XPOFICIO - Agrega experiencia a los oficios
+- Comando APRENDEROFICIO - Aprende el oficio que quieras
+- Comando CAPITAL - Agrega puntos de capital al personaje
+- Comando TAMAÑO - Cambia el tamaño de un personaje
+- Comando TRANSFORMAR - Cambia la forma de un personaje
+- Comando MOVERNPC - Mueve un NPC de un lugar a otro
+- Comando AGREGARSET - Agrega el grupo de item que forman un set por ID
+- Comando NIVEL - Agrega la cantidad de nivel que quieras a un personaje
+- Comando PDVPORC - Aumenta el porcentaje de los puntos de vida
+- Comando KAMAS - Aumenta las kamas de un personaje
+- Comando OBJETO - Agregar cualquier item u objeto a un personaje
+- Comando TITULO - Cambia el titulo de cualquier personaje
+
+//Comandos para admin lvl 3
+
+- Comando SALIR - Cierra el servidor
+- Comando GUARDAR - Guarda todo el servidor completo
+- Comando ELIMINARCELDAPELEA - Elimina la celda de la posicion de pelea
+- Comando BAN - Banea a un personaje
+- Comando DESBAN - Elimina el baneo de un personaje
+- Comando AGREGARCELDAPELEA - Agrega una celda para posicion de pelea
+- Comando GRUPOMAXIMO - Modificar el maximo grupo de mobs del mapa
+- 

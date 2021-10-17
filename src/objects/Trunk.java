@@ -105,7 +105,7 @@ public class Trunk {
 		_owner_id = owner_id;
 	}
 	
-	public void Lock(Personnage P) 
+	public void Lock(Personaje P)
 	{
 		SocketManager.GAME_SEND_KODE(P, "CK1|8");
 	}
@@ -122,7 +122,7 @@ public class Trunk {
 		return null;
 	}
 	
-	public static void LockTrunk(Personnage P, String packet) 
+	public static void LockTrunk(Personaje P, String packet)
 	{
 		Trunk t = P.getInTrunk();
 		if(t == null) return;
@@ -139,7 +139,7 @@ public class Trunk {
 		return;
 	}
 	
-	public void HopIn(Personnage P)//Ouvrir coffre
+	public void HopIn(Personaje P)//Ouvrir coffre
 	{
 		// En gros si il fait quelque chose :)
 		if(P.get_fight() != null ||
@@ -177,7 +177,7 @@ public class Trunk {
 		}
 	}
 	
-	public static void OpenTrunk(Personnage P, String packet, boolean isTrunk)//Ouvrir un coffre
+	public static void OpenTrunk(Personaje P, String packet, boolean isTrunk)//Ouvrir un coffre
 	{	
 		Trunk t = P.getInTrunk();
 		if(t == null) return;
@@ -197,12 +197,12 @@ public class Trunk {
 		}
 	}
 	
-	public static void closeCode(Personnage P)
+	public static void closeCode(Personaje P)
 	{
 		SocketManager.GAME_SEND_KODE(P, "V");
 	}
 	
-	public boolean isTrunk(Personnage P, Trunk t)//Savoir si c'est son coffre
+	public boolean isTrunk(Personaje P, Trunk t)//Savoir si c'est son coffre
 	{
 		if(t.get_owner_id() == P.getAccID()) return true;
 		else return false;
@@ -232,7 +232,7 @@ public class Trunk {
 		return packet.toString();
 	}
 	
-	public void addInTrunk(int guid, int qua, Personnage P)
+	public void addInTrunk(int guid, int qua, Personaje P)
 	{
 		if(P.getInTrunk().get_id() != get_id()) return;
 		
@@ -312,7 +312,7 @@ public class Trunk {
 			}
 		}
 		
-		for(Personnage perso : P.get_curCarte().getPersos())
+		for(Personaje perso : P.get_curCarte().getPersos())
 		{
 			if(perso.getInTrunk() != null && get_id() == perso.getInTrunk().get_id())
 			{
@@ -324,7 +324,7 @@ public class Trunk {
 		SQLManager.UPDATE_TRUNK(this);
 	}
 	
-	public void removeFromTrunk(int guid, int qua, Personnage P)
+	public void removeFromTrunk(int guid, int qua, Personaje P)
 	{
 		if(P.getInTrunk().get_id() != get_id()) return;
 		
@@ -403,7 +403,7 @@ public class Trunk {
 			}
 		}
 		
-		for(Personnage perso : P.get_curCarte().getPersos())
+		for(Personaje perso : P.get_curCarte().getPersos())
 		{
 			if(perso.getInTrunk() != null && get_id() == perso.getInTrunk().get_id())
 			{

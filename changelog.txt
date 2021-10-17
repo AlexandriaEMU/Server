@@ -6,3 +6,7 @@ v0.00.0
 - Eliminado de columnas inecesarias en la BDD - Tabla miembros de gremio
 
 v0.00.1
+- Arreglo celdas de movimiento en mapas: 2056 -
+- Agregado movimiento automatico de los mobs
+- Nueva configuracion en config.txt para reducir o aumentar el tiempo para mover los moobs
+- Division y re organizacion de comandos admin y jugadores

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.Map.Entry;
-import objects.Personnage.Stats;
+import objects.Personaje.Stats;
 import common.Constants;
 import common.Formulas;
 import common.SQLManager;
@@ -239,7 +239,7 @@ public class Objet {
 			return (this.ID+";"+StrTemplate);
 		}
 		
-		public void applyAction(Personnage perso, Personnage target, int objID, short cellid)
+		public void applyAction(Personaje perso, Personaje target, int objID, short cellid)
 		{
 			for(Action a : onUseActions)a.apply(perso, target, objID, cellid);
 		}
@@ -249,7 +249,7 @@ public class Objet {
 	protected int quantity = 1;
 	protected int position = Constants.ITEM_POS_NO_EQUIPED;
 	protected int guid;
-	private Personnage.Stats Stats = new Stats();
+	private Personaje.Stats Stats = new Stats();
 	private ArrayList<SpellEffect> Effects = new ArrayList<>();
 	private Map<Integer,String> txtStats = new TreeMap<>();
 	private Map<Integer,Integer> SoulStats = new TreeMap<>();
@@ -361,7 +361,7 @@ public class Objet {
 		this.txtStats = _txtStats;
 	}
 	
-	public Personnage.Stats getStats()
+	public Personaje.Stats getStats()
 	{
 		return Stats;
 	}

@@ -329,7 +329,7 @@ public class Formulas {
 		}
 	}
 
-	public static int calculZaapCost(Carte map1,Carte map2)
+	public static int calculZaapCost(Mapa map1, Mapa map2)
 	{
 		return (int) (10*(Math.abs(map2.getX()-map1.getX())+Math.abs(map2.getY()-map1.getY())-1));
 	}
@@ -722,7 +722,7 @@ public class Formulas {
 		return toReturn;
 	}
 	
-	public static int totalCaptChance(int pierreChance, Personnage p)
+	public static int totalCaptChance(int pierreChance, Personaje p)
 	{
 		int sortChance = 0;
 
@@ -830,7 +830,7 @@ public class Formulas {
 		return returned;
 	}
 	
-	public static int getRandomChallenge(Personnage _perso)
+	public static int getRandomChallenge(Personaje _perso)
 	{
 	   int challenge = 0;
 	   if(_perso.get_lvl() < 6)

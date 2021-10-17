@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import objects.*;
-import objects.Carte.Case;
+import objects.Mapa.Case;
 
 public class CryptManager {
 	
@@ -105,7 +105,7 @@ public class CryptManager {
 		return HASH[c];
 	}
 	
-	public static ArrayList<Case> parseStartCell(Carte map,int num)
+	public static ArrayList<Case> parseStartCell(Mapa map, int num)
 	{
 		ArrayList<Case> list = null;
 		String infos = null;
@@ -123,7 +123,7 @@ public class CryptManager {
 		return list;
 	}
 
-	public static Map<Integer, Case> DecompileMapData(Carte map,String dData)
+	public static Map<Integer, Case> DecompileMapData(Mapa map, String dData)
 	{
 		Map<Integer, Case> cells = new TreeMap<>();
 		for (int f = 0; f < dData.length(); f += 10)

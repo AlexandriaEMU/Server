@@ -15,16 +15,15 @@ import java.io.File
 import java.io.FileWriter
 import java.io.IOException
 import java.lang.Exception
-import java.lang.StringBuilder
 import java.util.ArrayList
 
 object Main {
 
     /* REALM Server */
 	@JvmField
-	var REALM_IP: String? = null
+	var MULTI_IP: String? = null
     @JvmField
-	var REALM_DB_HOST: String? = null
+	var MULTI_BDD_IP: String? = null
     @JvmField
 	var REALM_DB_NAME: String? = null
     @JvmField
@@ -72,6 +71,8 @@ object Main {
 	var CONFIG_SAVE_TIME = 30 * 60000
     @JvmField
 	var CONFIG_LOAD_DELAY = 10 * 60000
+    @JvmField
+    var CONFIG_MOVER_MONSTRUOS = 10 * 30000
     @JvmField
 	var CONFIG_RELOAD_MOB_DELAY = 300 * 60000
 
@@ -145,7 +146,11 @@ object Main {
 	@JvmField
 	var USE_SUBSCRIBE = false
 
-    /** ComServer  */
+    //Comandos
+    @JvmField
+    var VER_COMANDOS = false
+
+    //ComServer
 	@JvmField
 	var comServer: ComServer? = null
     @JvmField
@@ -154,7 +159,7 @@ object Main {
     @JvmField
 	var com_Running = false
 
-    /** Logs  */
+    //Logs
 	@JvmField
 	var Log_GameSock: BufferedWriter? = null
     @JvmField
@@ -187,12 +192,11 @@ object Main {
         println("OK")
         print("Conectando a la base de datos: ")
         if (SQLManager.setUpConnexion()) println("OK") else {
-            println("Connexion echouee!")
+            println("Conexion invalida")
             System.exit(0)
         }
         println("Utiliza monstruos: " + CONFIG_USE_MOBS)
-        println("\n")
-        println("Creando el mundo:")
+        println("Creando el mundo:\n")
         val startTime = System.currentTimeMillis()
         World.createWorld()
         val endTime = System.currentTimeMillis()
@@ -231,10 +235,10 @@ object Main {
                 if (line.split("=".toRegex()).toTypedArray().size == 1) continue
                 val param = line.split("=".toRegex()).toTypedArray()[0].trim { it <= ' ' }
                 var value = line.split("=".toRegex()).toTypedArray()[1].trim { it <= ' ' }
-                if (param.equals("REALM_IP", ignoreCase = true)) {
-                    REALM_IP = value
-                } else if (param.equals("REALM_DB_HOST", ignoreCase = true)) {
-                    REALM_DB_HOST = value
+                if (param.equals("MULTI_IP", ignoreCase = true)) {
+                    MULTI_IP = value
+                } else if (param.equals("MULTI_BDD_IP", ignoreCase = true)) {
+                    MULTI_BDD_IP = value
                 } else if (param.equals("REALM_DB_USER", ignoreCase = true)) {
                     REALM_DB_USER = value
                 } else if (param.equals("REALM_DB_PASS", ignoreCase = true)) {
@@ -275,6 +279,8 @@ object Main {
                 } else if (param.equals("LOAD_ACTION_DELAY", ignoreCase = true)) {
                     CONFIG_LOAD_DELAY = value.toInt() * 60000
                 } else if (param.equals("SAVE_TIME", ignoreCase = true)) {
+                    CONFIG_MOVER_MONSTRUOS = value.toInt() * 30000
+                } else if (param.equals("MOVER_MONSTRUOS", ignoreCase = true)) {
                     CONFIG_SAVE_TIME = value.toInt() * 60000
                 } else if (param.equals("DB_HOST", ignoreCase = true)) {
                     DB_HOST = value
@@ -345,7 +351,7 @@ object Main {
                     USE_SUBSCRIBE = value.equals("true", ignoreCase = true)
                 }
             }
-            if (REALM_IP == null || REALM_DB_HOST == null || REALM_DB_NAME == null || REALM_DB_USER == null || REALM_DB_PASS == null || AUTH_KEY == null || COM_PORT == -1 || DB_NAME == null || DB_HOST == null || DB_PASS == null || DB_USER == null) {
+            if (MULTI_IP == null || MULTI_BDD_IP == null || REALM_DB_NAME == null || REALM_DB_USER == null || REALM_DB_PASS == null || AUTH_KEY == null || COM_PORT == -1 || DB_NAME == null || DB_HOST == null || DB_PASS == null || DB_USER == null) {
                 throw Exception()
             }
         } catch (e: Exception) {

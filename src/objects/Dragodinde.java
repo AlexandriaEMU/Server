@@ -7,7 +7,7 @@ import common.Constants;
 import common.SQLManager;
 import common.World;
 
-import objects.Personnage.Stats;
+import objects.Personaje.Stats;
 
 public class Dragodinde {
 

@@ -122,7 +122,7 @@ public class PetsEntry {
 		return poids;
 	}
 	
-	public void LooseFight(Personnage p)
+	public void LooseFight(Personaje p)
 	{
 		Objet obj = World.getObjet(this.ObjectID);
 		if(obj == null) return;
@@ -158,7 +158,7 @@ public class PetsEntry {
 		SocketManager.GAME_SEND_UPDATE_OBJECT_DISPLAY_PACKET(p, obj);
 	}
 	
-	public void Eat(Personnage p, int min, int max, int statsID)
+	public void Eat(Personaje p, int min, int max, int statsID)
 	{
 		Objet obj = World.getObjet(this.ObjectID);
 		if(obj == null) return;
@@ -241,7 +241,7 @@ public class PetsEntry {
 		}
 	}
 	
-	public void EatSouls(Personnage p, Map<Integer, Integer> souls)
+	public void EatSouls(Personaje p, Map<Integer, Integer> souls)
 	{
 		Objet obj = World.getObjet(this.ObjectID);
 		if(obj == null) return;
@@ -298,7 +298,7 @@ public class PetsEntry {
 		SocketManager.GAME_SEND_UPDATE_OBJECT_DISPLAY_PACKET(p, obj);
 	}
 	
-	public void update_pets(Personnage p, int max)
+	public void update_pets(Personaje p, int max)
 	{
 		Objet obj = World.getObjet(this.ObjectID);
 		if(obj == null) return;
@@ -383,7 +383,7 @@ public class PetsEntry {
 		SQLManager.SAVE_ITEM(obj);
 	}
 	
-	public void RestoreLife(Personnage p)
+	public void RestoreLife(Personaje p)
 	{
 		Objet obj = World.getObjet(this.ObjectID);
 		if(obj == null) return;
@@ -410,7 +410,7 @@ public class PetsEntry {
 		}
 	}
 	
-	public void Give_EPO(Personnage p)
+	public void Give_EPO(Personaje p)
 	{
 		Objet obj = World.getObjet(this.ObjectID);
 		if(obj == null) return;

@@ -9,29 +9,29 @@ import java.util.Map.Entry;
 
 import common.World.ItemSet;
 
-import objects.Carte;
+import objects.Mapa;
 import objects.Dragodinde;
 import objects.Guild;
 import objects.HdvEntry;
 import objects.Objet;
 import objects.Percepteur;
-import objects.Personnage;
+import objects.Personaje;
 import objects.Fight;
-import objects.Carte.Case;
-import objects.Carte.InteractiveObject;
-import objects.Carte.MountPark;
+import objects.Mapa.Case;
+import objects.Mapa.InteractiveObject;
+import objects.Mapa.MountPark;
 import objects.Fight.Fighter;
 import objects.Guild.GuildMember;
 import objects.Metier.StatsMetier;
 import objects.Monstre.MobGroup;
 import objects.NPC_tmpl.NPC;
 import objects.Objet.ObjTemplate;
-import objects.Personnage.Group;
+import objects.Personaje.Group;
 import objects.Trunk;
 
 public class SocketManager {
 	
-	public static void send(Personnage p, String packet)
+	public static void send(Personaje p, String packet)
 	{
 		if(p == null || p.get_compte() == null)return;
 		if(p.get_compte().getGameThread() == null)return;
@@ -104,11 +104,11 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_PERSO_LIST(PrintWriter out, Map<Integer, Personnage> persos, int subscriber)
+	public static void GAME_SEND_PERSO_LIST(PrintWriter out, Map<Integer, Personaje> persos, int subscriber)
 	{
 		StringBuilder packet = new StringBuilder();
 		packet.append("ALK").append(subscriber * 60).append("000").append("|").append(persos.size());
-		for(Entry<Integer,Personnage > entry : persos.entrySet())
+		for(Entry<Integer, Personaje> entry : persos.entrySet())
 		{
 			packet.append(entry.getValue().parseALK());
 			
@@ -169,7 +169,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 
-	public static void GAME_SEND_STATS_PACKET(Personnage perso)
+	public static void GAME_SEND_STATS_PACKET(Personaje perso)
 	{
 		String packet = perso.getAsPacket();
 		send(perso,packet);
@@ -177,7 +177,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_Rx_PACKET(Personnage out)
+	public static void GAME_SEND_Rx_PACKET(Personaje out)
 	{
 		String packet = "Rx"+out.getMountXpGive();
 		send(out,packet);
@@ -185,7 +185,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_Rn_PACKET(Personnage out,String name)
+	public static void GAME_SEND_Rn_PACKET(Personaje out, String name)
 	{
 		String packet = "Rn"+name;
 		send(out,packet);
@@ -193,7 +193,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_Re_PACKET(Personnage out,String sign,Dragodinde DD)
+	public static void GAME_SEND_Re_PACKET(Personaje out, String sign, Dragodinde DD)
 	{
 		String packet = "Re"+sign;
 		if(sign.equals("+"))packet += DD.parse();
@@ -203,7 +203,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_ASK(PrintWriter out,Personnage perso)
+	public static void GAME_SEND_ASK(PrintWriter out, Personaje perso)
 	{
 		StringBuilder packet = new StringBuilder();
 		packet.append("ASK|").append(perso.get_GUID()).append("|").append(perso.get_name()).append("|");
@@ -258,7 +258,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_Ow_PACKET(Personnage perso)
+	public static void GAME_SEND_Ow_PACKET(Personaje perso)
 	{
 		String packet =  "Ow"+perso.getPodUsed()+"|"+perso.getMaxPod();
 		send(perso,packet);
@@ -323,7 +323,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 
-	public static void GAME_SEND_MAP_MOBS_GMS_PACKETS(PrintWriter out, Carte carte)
+	public static void GAME_SEND_MAP_MOBS_GMS_PACKETS(PrintWriter out, Mapa carte)
 	{
 		String packet = carte.getMobGroupGMsPackets();
 		if(packet.equals(""))return;
@@ -332,7 +332,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_MAP_OBJECTS_GDS_PACKETS(PrintWriter out, Carte carte)
+	public static void GAME_SEND_MAP_OBJECTS_GDS_PACKETS(PrintWriter out, Mapa carte)
 	{
 		String packet = carte.getObjectsGDsPackets();
 		if(packet.equals(""))return;
@@ -341,7 +341,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_MAP_NPCS_GMS_PACKETS(PrintWriter out, Carte carte)
+	public static void GAME_SEND_MAP_NPCS_GMS_PACKETS(PrintWriter out, Mapa carte)
 	{
 		String packet = carte.getNpcsGMsPackets();
 		if(packet.equals("") && packet.length() < 4)return;
@@ -350,7 +350,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_MAP_PERCO_GMS_PACKETS(PrintWriter out, Carte carte)
+	public static void GAME_SEND_MAP_PERCO_GMS_PACKETS(PrintWriter out, Mapa carte)
 	{
 		String packet = Percepteur.parseGM(carte);
 		if(packet.length() < 5)return;
@@ -359,7 +359,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_MAP_GMS_PACKETS(PrintWriter out, Carte carte)
+	public static void GAME_SEND_MAP_GMS_PACKETS(PrintWriter out, Mapa carte)
 	{
 		String packet = carte.getGMsPackets();
 		send(out,packet);
@@ -367,10 +367,10 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 
-	public static void GAME_SEND_ERASE_ON_MAP_TO_MAP(Carte map,int guid)
+	public static void GAME_SEND_ERASE_ON_MAP_TO_MAP(Mapa map, int guid)
 	{
 		String packet = "GM|-"+guid;
-		for(Personnage z : map.getPersos())
+		for(Personaje z : map.getPersos())
 		{
 			if(z.get_compte().getGameThread() == null)continue;
 			send(z.get_compte().getGameThread().get_out(),packet);
@@ -429,10 +429,10 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Fight ID "+fight.get_id()+": Send>>"+packet);
 	}
 
-	public static void GAME_SEND_ADD_PLAYER_TO_MAP(Carte map, Personnage perso)
+	public static void GAME_SEND_ADD_PLAYER_TO_MAP(Mapa map, Personaje perso)
 	{
 		String packet = "GM|+"+perso.parseToGM();
-		for(Personnage z : map.getPersos()) send(z,packet);	
+		for(Personaje z : map.getPersos()) send(z,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Map "+map.get_id()+": Send>>"+packet);
 	}
@@ -453,31 +453,31 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 
-	public static void GAME_SEND_MAP_NEW_DUEL_TO_MAP(Carte map,int guid, int guid2)
+	public static void GAME_SEND_MAP_NEW_DUEL_TO_MAP(Mapa map, int guid, int guid2)
 	{
 		String packet = "GA;900;"+guid+";"+guid2;
-		for(Personnage z : map.getPersos()) send(z,packet);
+		for(Personaje z : map.getPersos()) send(z,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Map "+map.get_id()+": Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_CANCEL_DUEL_TO_MAP(Carte map, int guid,int guid2)
+	public static void GAME_SEND_CANCEL_DUEL_TO_MAP(Mapa map, int guid, int guid2)
 	{
 		String packet = "GA;902;"+guid+";"+guid2;
-		for(Personnage z : map.getPersos()) send(z,packet);
+		for(Personaje z : map.getPersos()) send(z,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Map: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_MAP_START_DUEL_TO_MAP(Carte map,int guid, int guid2)
+	public static void GAME_SEND_MAP_START_DUEL_TO_MAP(Mapa map, int guid, int guid2)
 	{
 		String packet = "GA;901;"+guid+";"+guid2;
-		for(Personnage z : map.getPersos()) send(z,packet);
+		for(Personaje z : map.getPersos()) send(z,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Map: Send>>"+packet);
 	}
 
-	public static void GAME_SEND_MAP_FIGHT_COUNT(PrintWriter out,Carte map)
+	public static void GAME_SEND_MAP_FIGHT_COUNT(PrintWriter out, Mapa map)
 	{
 		String packet = "fC"+map.getNbrFight();
 		send(out,packet);
@@ -511,24 +511,24 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Map: Send>>"+packet);
 	}
 
-	public static void GAME_SEND_MAP_FIGHT_COUNT_TO_MAP(Carte map)
+	public static void GAME_SEND_MAP_FIGHT_COUNT_TO_MAP(Mapa map)
 	{
 		String packet = "fC"+map.getNbrFight();
-		for(Personnage z : map.getPersos()) send(z,packet);
+		for(Personaje z : map.getPersos()) send(z,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Map: Send>>"+packet);
 	}
 
-	public static void GAME_SEND_GAME_ADDFLAG_PACKET_TO_MAP(Carte map,int arg1, int guid1,int guid2,int cell1,String str1,int cell2,String str2)
+	public static void GAME_SEND_GAME_ADDFLAG_PACKET_TO_MAP(Mapa map, int arg1, int guid1, int guid2, int cell1, String str1, int cell2, String str2)
 	{
 		StringBuilder packet = new StringBuilder();
 		packet.append("Gc+").append(guid1).append(";").append(arg1).append("|").append(guid1).append(";").append(cell1).append(";").append(str1).append("|").append(guid2).append(";").append(cell2).append(";").append(str2);
-		for(Personnage z : map.getPersos()) send(z,packet.toString());
+		for(Personaje z : map.getPersos()) send(z,packet.toString());
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Map: Send>>"+packet.toString());
 	}
 	
-	public static void GAME_SEND_GAME_ADDFLAG_PACKET_TO_PLAYER(Personnage p, Carte map,int arg1, int guid1,int guid2,int cell1,String str1,int cell2,String str2)
+	public static void GAME_SEND_GAME_ADDFLAG_PACKET_TO_PLAYER(Personaje p, Mapa map, int arg1, int guid1, int guid2, int cell1, String str1, int cell2, String str2)
 	{
 		StringBuilder packet = new StringBuilder();
 		packet.append("Gc+").append(guid1).append(";").append(arg1).append("|").append(guid1).append(";").append(cell1).append(";").append(str1).append("|").append(guid2).append(";").append(cell2).append(";").append(str2);
@@ -537,24 +537,24 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Map: Send>>"+packet.toString());
 	}
 	
-	public static void GAME_SEND_GAME_REMFLAG_PACKET_TO_MAP(Carte map, int guid)
+	public static void GAME_SEND_GAME_REMFLAG_PACKET_TO_MAP(Mapa map, int guid)
 	{
 		String packet = "Gc-"+guid;
-		for(Personnage z : map.getPersos()) send(z,packet);
+		for(Personaje z : map.getPersos()) send(z,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Map: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_ADD_IN_TEAM_PACKET_TO_MAP(Carte map,int teamID,Fighter perso)
+	public static void GAME_SEND_ADD_IN_TEAM_PACKET_TO_MAP(Mapa map, int teamID, Fighter perso)
 	{
 		StringBuilder packet = new StringBuilder();
 		packet.append("Gt").append(teamID).append("|+").append(perso.getGUID()).append(";").append(perso.getPacketsName()).append(";").append(perso.get_lvl());
-		for(Personnage z : map.getPersos()) send(z,packet.toString());
+		for(Personaje z : map.getPersos()) send(z,packet.toString());
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Map: Send>>"+packet.toString());
 	}
 	
-	public static void GAME_SEND_ADD_IN_TEAM_PACKET_TO_PLAYER(Personnage p, Carte map,int teamID,Fighter perso)
+	public static void GAME_SEND_ADD_IN_TEAM_PACKET_TO_PLAYER(Personaje p, Mapa map, int teamID, Fighter perso)
 	{
 		StringBuilder packet = new StringBuilder();
 		packet.append("Gt").append(teamID).append("|+").append(perso.getGUID()).append(";").append(perso.getPacketsName()).append(";").append(perso.get_lvl());
@@ -563,33 +563,33 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Map: Send>>"+packet.toString());
 	}
 	
-	public static void GAME_SEND_REMOVE_IN_TEAM_PACKET_TO_MAP(Carte map,int teamID,Fighter perso)
+	public static void GAME_SEND_REMOVE_IN_TEAM_PACKET_TO_MAP(Mapa map, int teamID, Fighter perso)
 	{
 		StringBuilder packet = new StringBuilder();
 		packet.append("Gt").append(teamID).append("|-").append(perso.getGUID()).append(";").append(perso.getPacketsName()).append(";").append(perso.get_lvl());
-		for(Personnage z : map.getPersos()) send(z,packet.toString());
+		for(Personaje z : map.getPersos()) send(z,packet.toString());
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Map: Send>>"+packet.toString());
 	}
 	
-	public static void GAME_SEND_MAP_MOBS_GMS_PACKETS_TO_MAP(Carte map)
+	public static void GAME_SEND_MAP_MOBS_GMS_PACKETS_TO_MAP(Mapa map)
 	{
 		String packet = map.getMobGroupGMsPackets(); // Un par un comme sa lors du respawn :)
-		for(Personnage z : map.getPersos()) send(z,packet);
+		for(Personaje z : map.getPersos()) send(z,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Map: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_MAP_MOBS_GM_PACKET(Carte map, MobGroup current_Mobs)
+	public static void GAME_SEND_MAP_MOBS_GM_PACKET(Mapa map, MobGroup current_Mobs)
 	{
 		String packet = "GM|";
 		packet += current_Mobs.parseGM(); // Un par un comme sa lors du respawn :)
-		for(Personnage z : map.getPersos()) send(z,packet);
+		for(Personaje z : map.getPersos()) send(z,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Map: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_MAP_GMS_PACKETS(Carte map, Personnage _perso)
+	public static void GAME_SEND_MAP_GMS_PACKETS(Mapa map, Personaje _perso)
 	{
 		String packet = map.getGMsPackets();
 		send(_perso, packet);
@@ -598,15 +598,15 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_ON_EQUIP_ITEM(Carte map, Personnage _perso)
+	public static void GAME_SEND_ON_EQUIP_ITEM(Mapa map, Personaje _perso)
 	{
 		String packet = _perso.parseToOa();
-		for(Personnage z : map.getPersos()) send(z,packet);
+		for(Personaje z : map.getPersos()) send(z,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Map: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_ON_EQUIP_ITEM_FIGHT(Personnage _perso, Fighter f, Fight F)
+	public static void GAME_SEND_ON_EQUIP_ITEM_FIGHT(Personaje _perso, Fighter f, Fight F)
 	{
 		String packet = _perso.parseToOa();
 		for(Fighter z : F.getFighters(f.getTeam2())) 
@@ -623,7 +623,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Map: Send>>"+packet);
 	}
 
-	public static void GAME_SEND_FIGHT_CHANGE_PLACE_PACKET_TO_FIGHT(Fight fight, int teams, Carte map, int guid, int cell)
+	public static void GAME_SEND_FIGHT_CHANGE_PLACE_PACKET_TO_FIGHT(Fight fight, int teams, Mapa map, int guid, int cell)
 	{
 		String packet = "GIC|"+guid+";"+cell+";1";
 		for(Fighter f : fight.getFighters(teams))
@@ -636,10 +636,10 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 
-	public static void GAME_SEND_FIGHT_CHANGE_OPTION_PACKET_TO_MAP(Carte map,char s,char option, int guid)
+	public static void GAME_SEND_FIGHT_CHANGE_OPTION_PACKET_TO_MAP(Mapa map, char s, char option, int guid)
 	{
 		String packet = "Go"+s+option+guid;
-		for(Personnage z : map.getPersos()) send(z,packet);
+		for(Personaje z : map.getPersos()) send(z,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
@@ -658,7 +658,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Fight: Send>>"+packet);
 	}
 
-	public static void GAME_SEND_GJK_PACKET(Personnage out,int state,int cancelBtn,int duel,int spec,int time,int unknown)
+	public static void GAME_SEND_GJK_PACKET(Personaje out, int state, int cancelBtn, int duel, int spec, int time, int unknown)
 	{
 		StringBuilder packet = new StringBuilder();
 		packet.append("GJK").append(state).append("|").append(cancelBtn).append("|").append(duel).append("|").append(spec).append("|").append(time).append("|").append(unknown);
@@ -678,13 +678,13 @@ public class SocketManager {
 	public static void GAME_SEND_Im_PACKET_TO_ALL(String str)
 	{
 		String packet = "Im"+str; 
-		for(Personnage perso : World.getOnlinePersos())
+		for(Personaje perso : World.getOnlinePersos())
 			send(perso,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_Im_PACKET(Personnage out,String str)
+	public static void GAME_SEND_Im_PACKET(Personaje out, String str)
 	{
 		String packet = "Im"+str;
 		send(out,packet);
@@ -692,7 +692,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_ILS_PACKET(Personnage out,int i)
+	public static void GAME_SEND_ILS_PACKET(Personaje out, int i)
 	{
 		String packet = "ILS"+i;
 		send(out,packet);
@@ -700,7 +700,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_ILF_PACKET(Personnage P,int i)
+	public static void GAME_SEND_ILF_PACKET(Personaje P, int i)
 	{
 		String packet = "ILF"+i;
 		send(P,packet);
@@ -708,18 +708,18 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_Im_PACKET_TO_MAP(Carte map, String id)
+	public static void GAME_SEND_Im_PACKET_TO_MAP(Mapa map, String id)
 	{
 		String packet = "Im"+id;
-		for(Personnage z : map.getPersos()) send(z,packet);
+		for(Personaje z : map.getPersos()) send(z,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Map: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_eUK_PACKET_TO_MAP(Carte map, int guid, int emote)
+	public static void GAME_SEND_eUK_PACKET_TO_MAP(Mapa map, int guid, int emote)
 	{
 		String packet = "eUK"+guid+"|"+emote;
-		for(Personnage z : map.getPersos()) send(z,packet);
+		for(Personaje z : map.getPersos()) send(z,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Map: Send>>"+packet);
 	}
@@ -737,7 +737,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Map: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_MESSAGE(Personnage out,String mess, String color)
+	public static void GAME_SEND_MESSAGE(Personaje out, String mess, String color)
 	{
 		String packet = "cs<font color='#"+color+"'>"+mess+"</font>";
 		send(out,packet);
@@ -745,10 +745,10 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_MESSAGE_TO_MAP(Carte map,String mess, String color)
+	public static void GAME_SEND_MESSAGE_TO_MAP(Mapa map, String mess, String color)
 	{
 		String packet = "cs<font color='#"+color+"'>"+mess+"</font>";
-		for(Personnage z : map.getPersos()) send(z,packet);
+		for(Personaje z : map.getPersos()) send(z,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Map: Send>>"+packet);
 	}
@@ -809,7 +809,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Fight : Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_GS_PACKET(Personnage out)
+	public static void GAME_SEND_GS_PACKET(Personaje out)
 	{
 		String packet = "GS";
 		send(out,packet);
@@ -829,7 +829,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Fight : Send>>"+fight.getGTL());
 	}
 	
-	public static void GAME_SEND_GTL_PACKET(Personnage out,Fight fight)
+	public static void GAME_SEND_GTL_PACKET(Personaje out, Fight fight)
 	{
 		String packet = fight.getGTL();
 		send(out,packet);
@@ -877,7 +877,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Fight : Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_GAMETURNSTART_PACKET(Personnage P,int guid, int time)
+	public static void GAME_SEND_GAMETURNSTART_PACKET(Personaje P, int guid, int time)
 	{
 		String packet = "GTS"+guid+"|"+time;
 		send(P,packet);
@@ -885,7 +885,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Fight : Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_GV_PACKET(Personnage P)
+	public static void GAME_SEND_GV_PACKET(Personaje P)
 	{
 		String packet = "GV";
 		send(P,packet);
@@ -988,7 +988,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Fight : Send>>"+packet);
 	}
 
-	public static void GAME_SEND_BN(Personnage out)
+	public static void GAME_SEND_BN(Personaje out)
 	{
 		String packet = "BN";
 		send(out,packet);
@@ -1030,10 +1030,10 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Fight : Send>>"+packet);
 	}
 
-	public static void GAME_SEND_EMOTICONE_TO_MAP(Carte map,int guid, int id)
+	public static void GAME_SEND_EMOTICONE_TO_MAP(Mapa map, int guid, int id)
 	{
 		String packet = "cS"+guid+"|"+id;
-		for(Personnage z : map.getPersos()) send(z,packet);
+		for(Personaje z : map.getPersos()) send(z,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Map: Send>>"+packet);
 	}
@@ -1054,7 +1054,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_SPELL_LIST(Personnage perso)
+	public static void GAME_SEND_SPELL_LIST(Personaje perso)
 	{
 		String packet = perso.parseSpellList();
 		send(perso,packet);
@@ -1110,7 +1110,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Fight : Send>>"+packet.toString());
 	}
 	
-	public static void GAME_SEND_MAP_FIGHT_GMS_PACKETS_TO_FIGHT(Fight fight, int teams,Carte map)
+	public static void GAME_SEND_MAP_FIGHT_GMS_PACKETS_TO_FIGHT(Fight fight, int teams, Mapa map)
 	{
 		String packet = map.getFightersGMsPackets();
 		for(Fighter f : fight.getFighters(teams))
@@ -1124,7 +1124,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Fight: Send>>"+packet);
 	}
 
-	public static void GAME_SEND_MAP_FIGHT_GMS_PACKETS(Fight fight,Carte map, Personnage _perso)
+	public static void GAME_SEND_MAP_FIGHT_GMS_PACKETS(Fight fight, Mapa map, Personaje _perso)
 	{
 		String packet = map.getFightersGMsPackets();
 		send(_perso, packet);
@@ -1151,7 +1151,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Fight: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_cMK_PACKET(Personnage perso,String suffix,int guid,String name,String msg)
+	public static void GAME_SEND_cMK_PACKET(Personaje perso, String suffix, int guid, String name, String msg)
 	{
 		String packet = "cMK"+suffix+"|"+guid+"|"+name+"|"+msg;
 		send(perso,packet);
@@ -1159,10 +1159,10 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_cMK_PACKET_TO_INCARNAM(Personnage perso,String suffix,int guid,String name,String msg)
+	public static void GAME_SEND_cMK_PACKET_TO_INCARNAM(Personaje perso, String suffix, int guid, String name, String msg)
 	{
 		String packet = "cMK"+suffix+"|"+guid+"|"+name+"|"+msg;
-		for(Personnage incarnamPerso : World.getOnlinePersos())
+		for(Personaje incarnamPerso : World.getOnlinePersos())
 		{
 			if(incarnamPerso.get_lvl() > 15) continue;
 			if(incarnamPerso.get_curCarte().getSubArea().get_area().get_id() == 45)
@@ -1174,7 +1174,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: ALL Incarnam("+World.getOnlinePersos().size()+"): Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_FIGHT_LIST_PACKET(PrintWriter out,Carte map)
+	public static void GAME_SEND_FIGHT_LIST_PACKET(PrintWriter out, Mapa map)
 	{
 		StringBuilder packet = new StringBuilder();
 		packet.append("fL");
@@ -1191,10 +1191,10 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet.toString());
 	}
 	
-	public static void GAME_SEND_cMK_PACKET_TO_MAP(Carte map,String suffix,int guid,String name,String msg)
+	public static void GAME_SEND_cMK_PACKET_TO_MAP(Mapa map, String suffix, int guid, String name, String msg)
 	{
 		String packet = "cMK"+suffix+"|"+guid+"|"+name+"|"+msg;
-		for(Personnage z : map.getPersos()) send(z,packet);
+		for(Personaje z : map.getPersos()) send(z,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Map: Send>>"+packet);
 	}
@@ -1202,7 +1202,7 @@ public class SocketManager {
 	public static void GAME_SEND_cMK_PACKET_TO_GUILD(Guild g,String suffix,int guid,String name,String msg)
 	{
 		String packet = "cMK"+suffix+"|"+guid+"|"+name+"|"+msg;
-		for(Personnage perso : g.getMembers())
+		for(Personaje perso : g.getMembers())
 		{
 			if(perso == null || !perso.isOnline())continue;
 					send(perso,packet);
@@ -1214,16 +1214,16 @@ public class SocketManager {
 	public static void GAME_SEND_cMK_PACKET_TO_ALL(String suffix,int guid,String name,String msg)
 	{
 		String packet = "cMK"+suffix+"|"+guid+"|"+name+"|"+msg;
-		for(Personnage perso : World.getOnlinePersos())
+		for(Personaje perso : World.getOnlinePersos())
 			send(perso,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: ALL("+World.getOnlinePersos().size()+"): Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_cMK_PACKET_TO_ALIGN(String suffix,int guid,String name,String msg, Personnage _perso)
+	public static void GAME_SEND_cMK_PACKET_TO_ALIGN(String suffix,int guid,String name,String msg, Personaje _perso)
 	{
 		String packet = "cMK"+suffix+"|"+guid+"|"+name+"|"+msg;
-		for(Personnage perso : World.getOnlinePersos())
+		for(Personaje perso : World.getOnlinePersos())
 		{
 			if(perso.get_align() == _perso.get_align())
 			{
@@ -1237,7 +1237,7 @@ public class SocketManager {
 	public static void GAME_SEND_cMK_PACKET_TO_ADMIN(String suffix,int guid,String name,String msg)
 	{
 		String packet = "cMK"+suffix+"|"+guid+"|"+name+"|"+msg;
-		for(Personnage perso : World.getOnlinePersos())if(perso.isOnline())if(perso.get_compte() != null)if(perso.get_compte().get_gmLvl()>0)send(perso,packet);
+		for(Personaje perso : World.getOnlinePersos())if(perso.isOnline())if(perso.get_compte() != null)if(perso.get_compte().get_gmLvl()>0)send(perso,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: ALL("+World.getOnlinePersos().size()+"): Send>>"+packet);
 	}
@@ -1299,15 +1299,15 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 
-	public static void GAME_SEND_eD_PACKET_TO_MAP(Carte map,int guid, int dir)
+	public static void GAME_SEND_eD_PACKET_TO_MAP(Mapa map, int guid, int dir)
 	{
 		String packet = "eD"+guid+"|"+dir;
-		for(Personnage z : map.getPersos()) send(z,packet);
+		for(Personaje z : map.getPersos()) send(z,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Map: Send>>"+packet);
 	}
 
-	public static void GAME_SEND_ECK_PACKET(Personnage out, int type,String str)
+	public static void GAME_SEND_ECK_PACKET(Personaje out, int type, String str)
 	{
 		String packet = "ECK"+type;
 		if(!str.equals(""))packet += "|"+str;
@@ -1341,7 +1341,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);	
 	}
 	
-	public static void GAME_SEND_ITEM_LIST_PACKET_SELLER(Personnage p, Personnage out)
+	public static void GAME_SEND_ITEM_LIST_PACKET_SELLER(Personaje p, Personaje out)
 	{
 		String packet = "EL"+p.parseStoreItemsList();
 		send(out,packet);
@@ -1413,7 +1413,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 
-	public static void GAME_SEND_OBJECT_QUANTITY_PACKET(Personnage out, Objet obj)
+	public static void GAME_SEND_OBJECT_QUANTITY_PACKET(Personaje out, Objet obj)
 	{
 		String packet = "OQ"+obj.getGuid()+"|"+obj.getQuantity();
 		send(out,packet);
@@ -1421,7 +1421,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_OAKO_PACKET(Personnage out, Objet obj)
+	public static void GAME_SEND_OAKO_PACKET(Personaje out, Objet obj)
 	{
 		String packet = "OAKO"+obj.parseItem();
 		send(out,packet);
@@ -1429,7 +1429,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_ESK_PACKET(Personnage out)
+	public static void GAME_SEND_ESK_PACKET(Personaje out)
 	{
 		String packet = "ESK";
 		send(out,packet);
@@ -1437,7 +1437,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 
-	public static void GAME_SEND_REMOVE_ITEM_PACKET(Personnage out, int guid)
+	public static void GAME_SEND_REMOVE_ITEM_PACKET(Personaje out, int guid)
 	{
 		String packet = "OR"+guid;
 		send(out,packet);
@@ -1453,7 +1453,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 
-	public static void GAME_SEND_OBJET_MOVE_PACKET(Personnage out,Objet obj)
+	public static void GAME_SEND_OBJET_MOVE_PACKET(Personaje out, Objet obj)
 	{
 		String packet = "OM"+obj.getGuid()+"|";
 		if(obj.getPosition() != Constants.ITEM_POS_NO_EQUIPED)
@@ -1496,7 +1496,7 @@ public class SocketManager {
 	public static void GAME_SEND_MESSAGE_TO_ALL(String msg,String color)
 	{
 		String packet = "cs<font color='#"+color+"'>"+msg+"</font>";
-		for(Personnage P : World.getOnlinePersos())
+		for(Personaje P : World.getOnlinePersos())
 		{
 			send(P,packet);
 		}
@@ -1528,7 +1528,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_EXCHANGE_MOVE_OK(Personnage out,char type,String signe,String s1)
+	public static void GAME_SEND_EXCHANGE_MOVE_OK(Personaje out, char type, String signe, String s1)
 	{
 		String packet = "EMK"+type+signe;
 		if(!s1.equals(""))
@@ -1595,7 +1595,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Groupe: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_PR_PACKET(Personnage out)
+	public static void GAME_SEND_PR_PACKET(Personaje out)
 	{
 		String packet = "PR";
 		send(out,packet);
@@ -1616,7 +1616,7 @@ public class SocketManager {
 		StringBuilder packet = new StringBuilder();
 		packet.append("PM+");
 		boolean first = true;
-		for(Personnage p : g.getPersos())
+		for(Personaje p : g.getPersos())
 		{
 			if(!first) packet.append("|");
 			packet.append(p.parseToPM());
@@ -1627,18 +1627,18 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet.toString());
 	}
 	
-	public static void GAME_SEND_PM_ADD_PACKET_TO_GROUP(Group g, Personnage p)
+	public static void GAME_SEND_PM_ADD_PACKET_TO_GROUP(Group g, Personaje p)
 	{
 		String packet = "PM+"+p.parseToPM();
-		for(Personnage P : g.getPersos())send(P,packet);
+		for(Personaje P : g.getPersos())send(P,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Groupe: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_PM_MOD_PACKET_TO_GROUP(Group g,Personnage p)
+	public static void GAME_SEND_PM_MOD_PACKET_TO_GROUP(Group g, Personaje p)
 	{
 		String packet = "PM~"+p.parseToPM();
-		for(Personnage P : g.getPersos())send(P,packet);
+		for(Personaje P : g.getPersos())send(P,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Groupe: Send>>"+packet);
 	}
@@ -1646,7 +1646,7 @@ public class SocketManager {
 	public static void GAME_SEND_PM_DEL_PACKET_TO_GROUP(Group g, int guid)
 	{
 		String packet = "PM-"+guid;
-		for(Personnage P : g.getPersos())send(P,packet);
+		for(Personaje P : g.getPersos())send(P,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Groupe: Send>>"+packet);
 	}
@@ -1654,7 +1654,7 @@ public class SocketManager {
 	public static void GAME_SEND_cMK_PACKET_TO_GROUP(Group g,String s, int guid, String name, String msg)
 	{
 		String packet = "cMK"+s+"|"+guid+"|"+name+"|"+msg+"|";
-		for(Personnage P : g.getPersos())send(P,packet);
+		for(Personaje P : g.getPersos())send(P,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Groupe: Send>>"+packet);
 	}
@@ -1672,7 +1672,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet.toString());
 	}
 
-	public static void GAME_SEND_IQ_PACKET(Personnage perso, int guid,	int qua)
+	public static void GAME_SEND_IQ_PACKET(Personaje perso, int guid, int qua)
 	{
 		String packet = "IQ"+guid+"|"+qua;
 		send(perso,packet);
@@ -1680,7 +1680,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_JN_PACKET(Personnage perso, int jobID,	int lvl)
+	public static void GAME_SEND_JN_PACKET(Personaje perso, int jobID, int lvl)
 	{
 		String packet = "JN"+jobID+"|"+lvl;
 		send(perso,packet);
@@ -1688,27 +1688,27 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_GDF_PACKET_TO_MAP(Carte map, Case cell)
+	public static void GAME_SEND_GDF_PACKET_TO_MAP(Mapa map, Case cell)
 	{
 		int cellID = cell.getID();
 		InteractiveObject object = cell.getObject();
 		String packet = "GDF|"+cellID+";"+object.getState()+";"+(object.isInteractive()?"1":"0");
-		for(Personnage z : map.getPersos()) send(z,packet);
+		for(Personaje z : map.getPersos()) send(z,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Map: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_GA_PACKET_TO_MAP(Carte map, String gameActionID, int actionID,String s1, String s2)
+	public static void GAME_SEND_GA_PACKET_TO_MAP(Mapa map, String gameActionID, int actionID, String s1, String s2)
 	{
 		String packet = "GA"+gameActionID+";"+actionID+";"+s1;
 		if(!s2.equals(""))packet += ";"+s2;
 		
-		for(Personnage z : map.getPersos()) send(z,packet);
+		for(Personaje z : map.getPersos()) send(z,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Map: Send>>"+packet);
 	}
 
-	public static void GAME_SEND_EL_BANK_PACKET(Personnage perso)
+	public static void GAME_SEND_EL_BANK_PACKET(Personaje perso)
 	{
 		String packet = "EL"+perso.parseBankPacket();
 		send(perso,packet);
@@ -1716,7 +1716,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_EL_TRUNK_PACKET(Personnage perso, Trunk t)
+	public static void GAME_SEND_EL_TRUNK_PACKET(Personaje perso, Trunk t)
 	{
 		String packet = "EL"+t.parseToTrunkPacket();
 		send(perso,packet);
@@ -1724,7 +1724,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 
-	public static void GAME_SEND_JX_PACKET(Personnage perso,ArrayList<StatsMetier> SMs)
+	public static void GAME_SEND_JX_PACKET(Personaje perso, ArrayList<StatsMetier> SMs)
 	{
 		StringBuilder packet = new StringBuilder();
 		packet.append("JX");
@@ -1737,7 +1737,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet.toString());
 	}
 	
-	public static void GAME_SEND_JO_PACKET(Personnage perso,ArrayList<StatsMetier> SMs)
+	public static void GAME_SEND_JO_PACKET(Personaje perso, ArrayList<StatsMetier> SMs)
 	{
 		for(StatsMetier sm : SMs)
 		{
@@ -1748,7 +1748,7 @@ public class SocketManager {
 		}
 	}
 	
-	public static void GAME_SEND_JO_PACKET(Personnage perso, StatsMetier sm)
+	public static void GAME_SEND_JO_PACKET(Personaje perso, StatsMetier sm)
 	{
 		String packet = "JO"+sm.getID()+"|"+sm.getOptBinValue()+"|"+sm.get_slotsPublic();
 		send(perso, packet);
@@ -1756,7 +1756,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_JS_PACKET(Personnage perso,ArrayList<StatsMetier> SMs)
+	public static void GAME_SEND_JS_PACKET(Personaje perso, ArrayList<StatsMetier> SMs)
 	{
 		StringBuilder packet = new StringBuilder("JS");
 		for(StatsMetier sm : SMs)
@@ -1768,7 +1768,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_EsK_PACKET(Personnage perso, String str)
+	public static void GAME_SEND_EsK_PACKET(Personaje perso, String str)
 	{
 		String packet = "EsK"+str;
 		send(perso,packet);
@@ -1787,7 +1787,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Fight: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_Ea_PACKET(Personnage perso, String str)
+	public static void GAME_SEND_Ea_PACKET(Personaje perso, String str)
 	{
 		String packet = "Ea"+str;
 		send(perso,packet);
@@ -1795,7 +1795,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_EA_PACKET(Personnage perso, String str)
+	public static void GAME_SEND_EA_PACKET(Personaje perso, String str)
 	{
 		String packet = "EA"+str;
 		send(perso,packet);
@@ -1803,7 +1803,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_Ec_PACKET(Personnage perso, String str)
+	public static void GAME_SEND_Ec_PACKET(Personaje perso, String str)
 	{
 		String packet = "Ec"+str;
 		send(perso,packet);
@@ -1811,7 +1811,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_Em_PACKET(Personnage perso, String str)
+	public static void GAME_SEND_Em_PACKET(Personaje perso, String str)
 	{
 		String packet = "Em"+str;
 		send(perso,packet);
@@ -1819,15 +1819,15 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_IO_PACKET_TO_MAP(Carte map,int guid,String str)
+	public static void GAME_SEND_IO_PACKET_TO_MAP(Mapa map, int guid, String str)
 	{
 		String packet = "IO"+guid+"|"+str;
-		for(Personnage z : map.getPersos()) send(z,packet);
+		for(Personaje z : map.getPersos()) send(z,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Map: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_FRIENDLIST_PACKET(Personnage perso)
+	public static void GAME_SEND_FRIENDLIST_PACKET(Personaje perso)
 	{
 		String packet = "FL"+perso.get_compte().parseFriendList();
 		send(perso,packet);
@@ -1842,7 +1842,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_FRIEND_ONLINE(Personnage logando, Personnage amigo) 
+	public static void GAME_SEND_FRIEND_ONLINE(Personaje logando, Personaje amigo)
 	{
 		String packet = "Im0143;"+logando.get_compte().get_pseudo()+" (<b><a href='asfunction:onHref,ShowPlayerPopupMenu,"+logando.get_name()+"'>"+logando.get_name()+"</a></b>)";
 		send(amigo, packet);
@@ -1850,7 +1850,7 @@ public class SocketManager {
 		GameServer.addToSockLog("Game: Send>>" + packet);
 	}
 
-	public static void GAME_SEND_FA_PACKET(Personnage perso, String str)
+	public static void GAME_SEND_FA_PACKET(Personaje perso, String str)
 	{
 		String packet = "FA"+str;
 		send(perso,packet);
@@ -1858,7 +1858,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_FD_PACKET(Personnage perso, String str)
+	public static void GAME_SEND_FD_PACKET(Personaje perso, String str)
 	{
 		String packet = "FD"+str;
 		send(perso,packet);
@@ -1866,7 +1866,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_Rp_PACKET(Personnage perso, MountPark MP)
+	public static void GAME_SEND_Rp_PACKET(Personaje perso, MountPark MP)
 	{
 		StringBuilder packet = new StringBuilder();
 		if(MP == null)return;
@@ -1889,7 +1889,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet.toString());
 	}
 	
-	public static void GAME_SEND_OS_PACKET(Personnage perso, int pano)
+	public static void GAME_SEND_OS_PACKET(Personaje perso, int pano)
 	{
 		StringBuilder packet = new StringBuilder();
 		packet.append("OS");
@@ -1921,7 +1921,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet.toString());
 	}
 
-	public static void GAME_SEND_MOUNT_DESCRIPTION_PACKET(Personnage perso,Dragodinde DD)
+	public static void GAME_SEND_MOUNT_DESCRIPTION_PACKET(Personaje perso, Dragodinde DD)
 	{
 		String packet = "Rd"+DD.parse();
 		send(perso,packet);
@@ -1929,7 +1929,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 
-	public static void GAME_SEND_Rr_PACKET(Personnage perso, String str)
+	public static void GAME_SEND_Rr_PACKET(Personaje perso, String str)
 	{
 		String packet = "Rr"+str;
 		send(perso,packet);
@@ -1937,15 +1937,15 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 
-	public static void GAME_SEND_ALTER_GM_PACKET(Carte map,	Personnage perso)
+	public static void GAME_SEND_ALTER_GM_PACKET(Mapa map, Personaje perso)
 	{
 		String packet = "GM|~"+perso.parseToGM();
-		for(Personnage z : map.getPersos()) send(z,packet);
+		for(Personaje z : map.getPersos()) send(z,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Map: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_Ee_PACKET(Personnage perso, char c,String s)
+	public static void GAME_SEND_Ee_PACKET(Personaje perso, char c, String s)
 	{
 		String packet = "Ee"+c+s;
 		send(perso,packet);
@@ -1953,7 +1953,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_cC_PACKET(Personnage perso, char c,String s)
+	public static void GAME_SEND_cC_PACKET(Personaje perso, char c, String s)
 	{
 		String packet = "cC"+c+s;
 		send(perso,packet);
@@ -1961,31 +1961,31 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_ADD_NPC_TO_MAP(Carte map, NPC npc)
+	public static void GAME_SEND_ADD_NPC_TO_MAP(Mapa map, NPC npc)
 	{
 		String packet = "GM|"+npc.parseGM();
-		for(Personnage z : map.getPersos()) send(z,packet);
+		for(Personaje z : map.getPersos()) send(z,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Map: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_ADD_PERCO_TO_MAP(Carte map)
+	public static void GAME_SEND_ADD_PERCO_TO_MAP(Mapa map)
 	{
 		String packet = "GM|"+Percepteur.parseGM(map);
-		for(Personnage z : map.getPersos()) send(z,packet);
+		for(Personaje z : map.getPersos()) send(z,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Map: Send>>"+packet);
 	}
 
-	public static void GAME_SEND_GDO_PACKET_TO_MAP(Carte map, char c,int cell, int itm, int i)
+	public static void GAME_SEND_GDO_PACKET_TO_MAP(Mapa map, char c, int cell, int itm, int i)
 	{
 		String packet = "GDO"+c+cell+";"+itm+";"+i;
-		for(Personnage z : map.getPersos()) send(z,packet);
+		for(Personaje z : map.getPersos()) send(z,packet);
 		if(Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Map: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_GDO_PACKET(Personnage p, char c,int cell, int itm, int i)
+	public static void GAME_SEND_GDO_PACKET(Personaje p, char c, int cell, int itm, int i)
 	{
 		String packet = "GDO"+c+cell+";"+itm+";"+i;
 		send(p,packet);
@@ -1993,7 +1993,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_ZC_PACKET(Personnage p,int a)
+	public static void GAME_SEND_ZC_PACKET(Personaje p, int a)
 	{
 		String packet = "ZC"+a;
 		send(p,packet);
@@ -2001,7 +2001,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_GIP_PACKET(Personnage p,int a)
+	public static void GAME_SEND_GIP_PACKET(Personaje p, int a)
 	{
 		String packet = "GIP"+a;
 		send(p,packet);
@@ -2009,7 +2009,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 
-	public static void GAME_SEND_gn_PACKET(Personnage p)
+	public static void GAME_SEND_gn_PACKET(Personaje p)
 	{
 		String packet = "gn";
 		send(p,packet);
@@ -2017,7 +2017,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_gC_PACKET(Personnage p, String s)
+	public static void GAME_SEND_gC_PACKET(Personaje p, String s)
 	{
 		String packet = "gC"+s;
 		send(p,packet);
@@ -2025,7 +2025,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_gV_PACKET(Personnage p)
+	public static void GAME_SEND_gV_PACKET(Personaje p)
 	{
 		String packet = "gV";
 		send(p,packet);
@@ -2033,7 +2033,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_gIM_PACKET(Personnage p, Guild g, char c)
+	public static void GAME_SEND_gIM_PACKET(Personaje p, Guild g, char c)
 	{
 		String packet = "gIM"+c;
 		switch(c)
@@ -2047,7 +2047,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_gIB_PACKET(Personnage p, String infos)
+	public static void GAME_SEND_gIB_PACKET(Personaje p, String infos)
 	{
 		String packet = "gIB"+infos;
 		send(p,packet);
@@ -2055,7 +2055,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_gIH_PACKET(Personnage p, String infos)
+	public static void GAME_SEND_gIH_PACKET(Personaje p, String infos)
 	{
 		String packet = "gIH"+infos;
 		send(p,packet);
@@ -2063,7 +2063,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_gS_PACKET(Personnage p, GuildMember gm)
+	public static void GAME_SEND_gS_PACKET(Personaje p, GuildMember gm)
 	{
 		StringBuilder packet = new StringBuilder();
 		packet.append("gS").append(gm.getGuild().get_name()).append("|").append(gm.getGuild().get_emblem().replace(',', '|')).append("|").append(gm.parseRights());
@@ -2072,7 +2072,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet.toString());
 	}
 	
-	public static void GAME_SEND_gJ_PACKET(Personnage p, String str)
+	public static void GAME_SEND_gJ_PACKET(Personaje p, String str)
 	{
 		String packet = "gJ"+str;
 		send(p,packet);
@@ -2080,7 +2080,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_gK_PACKET(Personnage p, String str)
+	public static void GAME_SEND_gK_PACKET(Personaje p, String str)
 	{
 		String packet = "gK"+str;
 		send(p,packet);
@@ -2088,7 +2088,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_gIG_PACKET(Personnage p, Guild g)
+	public static void GAME_SEND_gIG_PACKET(Personaje p, Guild g)
 	{
 		long xpMin = World.getExpLevel(g.get_lvl()).guilde;
 		long xpMax;
@@ -2114,7 +2114,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_WC_PACKET(Personnage perso)
+	public static void GAME_SEND_WC_PACKET(Personaje perso)
 	{
 		String packet = "WC"+perso.parseZaapList();
 		send(perso.get_compte().getGameThread().get_out(),packet);
@@ -2122,7 +2122,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 
-	public static void GAME_SEND_WV_PACKET(Personnage out)
+	public static void GAME_SEND_WV_PACKET(Personaje out)
 	{
 		String packet = "WV";
 		send(out,packet);
@@ -2130,19 +2130,19 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_ZAAPI_PACKET(Personnage perso, String list) {
+	public static void GAME_SEND_ZAAPI_PACKET(Personaje perso, String list) {
 		String packet = "Wc" + perso.get_curCarte().get_id()+ "|"+list;
 		send(perso, packet);
 		GameServer.addToSockLog("Game: Send>>" + packet);
 	}
 	
-	public static void GAME_SEND_CLOSE_ZAAPI_PACKET(Personnage out) {
+	public static void GAME_SEND_CLOSE_ZAAPI_PACKET(Personaje out) {
 		String packet = "Wv";
 		send(out, packet);
 		GameServer.addToSockLog("Game: Send>>" + packet);
 	}
 	
-	public static void GAME_SEND_WUE_PACKET(Personnage out)
+	public static void GAME_SEND_WUE_PACKET(Personaje out)
 	{
 		String packet = "WUE";
 		send(out,packet);
@@ -2150,7 +2150,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_EMOTE_LIST(Personnage perso,String s, String s1)
+	public static void GAME_SEND_EMOTE_LIST(Personaje perso, String s, String s1)
 	{
 		String packet = "eL"+s+"|"+s1;
 		send(perso, packet);
@@ -2158,7 +2158,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>" + packet);
 	}
 	
-	public static void GAME_SEND_NO_EMOTE(Personnage out)
+	public static void GAME_SEND_NO_EMOTE(Personaje out)
 	{
 		String packet = "eUE";
 		send(out, packet);
@@ -2191,7 +2191,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>" + packet);
 	}
 	
-	public static void GAME_SEND_ADD_ENEMY(Personnage out, String str)
+	public static void GAME_SEND_ADD_ENEMY(Personaje out, String str)
 	{
 		
 		String packet = "iAK"+str;
@@ -2200,7 +2200,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>" + packet);
 	}
 	
-	public static void GAME_SEND_iAEA_PACKET(Personnage out)
+	public static void GAME_SEND_iAEA_PACKET(Personaje out)
 	{
 		
 		String packet = "iAEA.";
@@ -2209,7 +2209,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>" + packet);
 	}
 	
-	public static void GAME_SEND_ENEMY_LIST(Personnage perso)
+	public static void GAME_SEND_ENEMY_LIST(Personaje perso)
 	{
 		
 		String packet = "iL"+perso.get_compte().parseEnemyList();
@@ -2218,7 +2218,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>" + packet);
 	}
 	
-	public static void GAME_SEND_iD_COMMANDE(Personnage perso, String str)
+	public static void GAME_SEND_iD_COMMANDE(Personaje perso, String str)
 	{
 		String packet = "iD"+str;
 		send(perso, packet);
@@ -2226,7 +2226,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>" + packet);
 	}
 	
-	public static void GAME_SEND_BWK(Personnage perso, String str)
+	public static void GAME_SEND_BWK(Personaje perso, String str)
 	{
 		String packet = "BWK"+str;
 		send(perso, packet);
@@ -2234,7 +2234,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>" + packet);
 	}
 	
-	public static void GAME_SEND_KODE(Personnage perso, String str)
+	public static void GAME_SEND_KODE(Personaje perso, String str)
 	{
 		String packet = "K"+str;
 		send(perso, packet);
@@ -2242,7 +2242,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>" + packet);
 	}
 	
-	public static void GAME_SEND_hOUSE(Personnage perso, String str) 
+	public static void GAME_SEND_hOUSE(Personaje perso, String str)
 	{
 		String packet = "h"+str;
 		send(perso, packet);
@@ -2251,7 +2251,7 @@ public class SocketManager {
 		
 	}
 	
-	public static void GAME_SEND_FORGETSPELL_INTERFACE(char sign,Personnage perso)
+	public static void GAME_SEND_FORGETSPELL_INTERFACE(char sign, Personaje perso)
 	{
 		String packet = "SF"+sign;
 		send(perso, packet);
@@ -2259,7 +2259,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>" + packet);
 	}
 	
-	public static void GAME_SEND_R_PACKET(Personnage perso, String str)
+	public static void GAME_SEND_R_PACKET(Personaje perso, String str)
 	{
 		String packet = "R"+str;
 		send(perso, packet);
@@ -2267,7 +2267,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>" + packet);
 	}
 	
-	public static void GAME_SEND_gIF_PACKET(Personnage perso, String str)
+	public static void GAME_SEND_gIF_PACKET(Personaje perso, String str)
 	{
 		String packet = "gIF"+str;
 		send(perso, packet);
@@ -2275,7 +2275,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>" + packet);
 	}
 	
-	public static void GAME_SEND_gITM_PACKET(Personnage perso, String str)
+	public static void GAME_SEND_gITM_PACKET(Personaje perso, String str)
 	{
 		String packet = "gITM"+str;
 		send(perso, packet);
@@ -2283,7 +2283,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>" + packet);
 	}
 	
-	public static void GAME_SEND_gITp_PACKET(Personnage perso, String str)
+	public static void GAME_SEND_gITp_PACKET(Personaje perso, String str)
 	{
 		String packet = "gITp"+str;
 		send(perso, packet);
@@ -2291,7 +2291,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>" + packet);
 	}
 	
-	public static void GAME_SEND_gITP_PACKET(Personnage perso, String str)
+	public static void GAME_SEND_gITP_PACKET(Personaje perso, String str)
 	{
 		String packet = "gITP"+str;
 		send(perso, packet);
@@ -2299,7 +2299,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>" + packet);
 	}
 	
-	public static void GAME_SEND_IH_PACKET(Personnage perso, String str)
+	public static void GAME_SEND_IH_PACKET(Personaje perso, String str)
 	{
 		String packet = "IH"+str;
 		send(perso, packet);
@@ -2307,7 +2307,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>" + packet);
 	}
 	
-	public static void GAME_SEND_FLAG_PACKET(Personnage perso, Personnage cible) 
+	public static void GAME_SEND_FLAG_PACKET(Personaje perso, Personaje cible)
 	{ 
 		String packet = "IC"+cible.get_curCarte().getX()+"|"+cible.get_curCarte().getY(); 
 		send(perso,packet); 
@@ -2315,7 +2315,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet); 
 	}
 	
-	public static void GAME_SEND_DELETE_FLAG_PACKET(Personnage perso) 
+	public static void GAME_SEND_DELETE_FLAG_PACKET(Personaje perso)
 	{ 
 		String packet = "IC|"; 
 		send(perso,packet); 
@@ -2323,7 +2323,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet); 
 	}
 	
-	public static void GAME_SEND_gT_PACKET(Personnage perso, String str) 
+	public static void GAME_SEND_gT_PACKET(Personaje perso, String str)
 	{ 
 		String packet = "gT"+str; 
 		send(perso,packet); 
@@ -2331,7 +2331,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet); 
 	}
 	
-	public static void GAME_SEND_PERCO_INFOS_PACKET(Personnage perso, Percepteur perco, String car) 
+	public static void GAME_SEND_PERCO_INFOS_PACKET(Personaje perso, Percepteur perco, String car)
 	{
 		StringBuilder str = new StringBuilder();
 		str.append("gA").append(car).append(perco.get_N1()).append(",").append(perco.get_N2()).append("|");
@@ -2342,7 +2342,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+str.toString()); 
 	}
 	
-	public static void GAME_SEND_GUILDHOUSE_PACKET(Personnage perso) 
+	public static void GAME_SEND_GUILDHOUSE_PACKET(Personaje perso)
 	{ 
 		String packet = "gUT"; 
 		send(perso,packet); 
@@ -2350,7 +2350,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet); 
 	}
 	
-	public static void GAME_SEND_GUILDENCLO_PACKET(Personnage perso) 
+	public static void GAME_SEND_GUILDENCLO_PACKET(Personaje perso)
 	{ 
 		String packet = "gUF"; 
 		send(perso,packet); 
@@ -2359,7 +2359,7 @@ public class SocketManager {
 	}
 	
 	/**HDV**/
-	public static void GAME_SEND_HDVITEM_SELLING(Personnage perso)
+	public static void GAME_SEND_HDVITEM_SELLING(Personaje perso)
 	{
 		StringBuilder packet = new StringBuilder("EL");
 		HdvEntry[] entries = perso.get_compte().getHdvItems(Math.abs(perso.get_isTradingWith()));//Récupère un tableau de tout les items que le personnage à en vente dans l'HDV où il est
@@ -2379,7 +2379,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>" + packet);
 	}
 	
-	public static void GAME_SEND_EHm_PACKET(Personnage out, String sign,String str)
+	public static void GAME_SEND_EHm_PACKET(Personaje out, String sign, String str)
 	{
 		String packet = "EHm"+sign + str;
 		
@@ -2388,7 +2388,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>" + packet);
 	}
 	
-	public static void GAME_SEND_EHM_PACKET(Personnage out, String sign,String str)
+	public static void GAME_SEND_EHM_PACKET(Personaje out, String sign, String str)
 	{
 		String packet = "EHM"+sign + str;
 		
@@ -2397,7 +2397,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>" + packet);
 	}
 	
-	public static void GAME_SEND_EHP_PACKET(Personnage out, int templateID, int price)	//Packet d'envoie du prix moyen du template (En réponse a un packet EHP)
+	public static void GAME_SEND_EHP_PACKET(Personaje out, int templateID, int price)	//Packet d'envoie du prix moyen du template (En réponse a un packet EHP)
 	{
 		
 		String packet = "EHP"+templateID+"|"+price;
@@ -2407,7 +2407,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>" + packet);
 	}
 	
-	public static void GAME_SEND_EHL_PACKET(Personnage out, int categ, String templates)//Packet de listage des templates dans une catégorie (En réponse au packet EHT)
+	public static void GAME_SEND_EHL_PACKET(Personaje out, int categ, String templates)//Packet de listage des templates dans une catégorie (En réponse au packet EHT)
 	{
 		String packet = "EHL"+categ+"|"+templates;
 		
@@ -2417,7 +2417,7 @@ public class SocketManager {
 	}
 	
 	
-	public static void GAME_SEND_EHl_PACKET(Personnage out, String items)//Packet de listage des objets en vente
+	public static void GAME_SEND_EHl_PACKET(Personaje out, String items)//Packet de listage des objets en vente
 	{
 		String packet = "EHl"+items;
 		
@@ -2427,16 +2427,16 @@ public class SocketManager {
 	}
 	/**HDV**/
 	
-	public static void GAME_SEND_WEDDING(Carte c, int action, int homme, int femme, int parlant)
+	public static void GAME_SEND_WEDDING(Mapa c, int action, int homme, int femme, int parlant)
 	{
 		String packet = "GA;"+action+";"+homme+";"+homme+","+femme+","+parlant;
-		Personnage Homme = World.getPersonnage(homme);
+		Personaje Homme = World.getPersonnage(homme);
 		send(Homme,packet);
 		if (Main.CONFIG_DEBUG)
 			GameServer.addToSockLog("Game: Send>>" + packet);
 	}
 	
-	public static void GAME_SEND_PF(Personnage perso, String str)
+	public static void GAME_SEND_PF(Personaje perso, String str)
 	{
 		String packet = "PF"+str;
 		send(perso,packet);
@@ -2444,7 +2444,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>" + packet);
 	} 
 	
-    public static void GAME_SEND_MERCHANT_LIST(Personnage P, short mapID) 
+    public static void GAME_SEND_MERCHANT_LIST(Personaje P, short mapID)
     {
     	StringBuilder packet = new StringBuilder();
     	packet.append("GM|~");
@@ -2462,7 +2462,7 @@ public class SocketManager {
         	GameServer.addToSockLog("Game: Send>>" + packet.toString());
     }
     
-    public static void GAME_SEND_UPDATE_OBJECT_DISPLAY_PACKET(Personnage perso,Objet item)
+    public static void GAME_SEND_UPDATE_OBJECT_DISPLAY_PACKET(Personaje perso, Objet item)
     {
     	StringBuilder packet = new StringBuilder();
     	packet.append("OCO").append(item.parseItem());
@@ -2471,7 +2471,7 @@ public class SocketManager {
         	GameServer.addToSockLog("Game: Send>>" + packet.toString());
     }
     
-    public static void GAME_SEND_WELCOME(Personnage perso)
+    public static void GAME_SEND_WELCOME(Personaje perso)
     {
     	StringBuilder packet = new StringBuilder();
     	packet.append("TB");
@@ -2480,14 +2480,14 @@ public class SocketManager {
         	GameServer.addToSockLog("Game: Send>>" + packet.toString());
     }
     
-	public static void GAME_SEND_TAXE(Personnage perso, long price)
+	public static void GAME_SEND_TAXE(Personaje perso, long price)
 	{ 
 		StringBuilder packet = new StringBuilder();
     	packet.append("Eq1|1|").append(price);
     	send(perso, packet.toString());
 	}
 	
-	public static void GAME_SEND_INFO_HIGHLIGHT_PACKET(Personnage perso, String args) 
+	public static void GAME_SEND_INFO_HIGHLIGHT_PACKET(Personaje perso, String args)
 	{
 	     String packet = "IH"+args;
 	     send(perso, packet);
@@ -2510,7 +2510,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet.toString());
 	}
 	
-	public static void GAME_SEND_CHALLENGE_PERSO(Personnage p, String str)
+	public static void GAME_SEND_CHALLENGE_PERSO(Personaje p, String str)
 	{
 		StringBuilder packet = new StringBuilder();
 		packet.append("Gd").append(str);
@@ -2533,7 +2533,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet);
 	}
 	
-	public static void GAME_SEND_SUBSCRIBE_MESSAGE(Personnage p, String str)
+	public static void GAME_SEND_SUBSCRIBE_MESSAGE(Personaje p, String str)
 	{
 		StringBuilder packet = new StringBuilder();
 		packet.append("BP").append(str);
@@ -2542,7 +2542,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet.toString());
 	}
 	
-	public static void GAME_SEND_CRAFT_PUBLIC_MODE(Personnage p, char C, String JobID)
+	public static void GAME_SEND_CRAFT_PUBLIC_MODE(Personaje p, char C, String JobID)
 	{
 		StringBuilder packet = new StringBuilder();
 		packet.append("EW").append(C).append(p.get_GUID()).append("|").append(JobID);
@@ -2551,7 +2551,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet.toString());
 	}
 	
-	public static void GAME_SEND_CRAFT_PUBLIC_MODE(Personnage p)
+	public static void GAME_SEND_CRAFT_PUBLIC_MODE(Personaje p)
 	{
 		StringBuilder packet = new StringBuilder();
 		packet.append("EW+");
@@ -2560,7 +2560,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet.toString());
 	}
 	
-	public static void GAME_SEND_Ej_PACKET(Personnage p, char S, int jobID)
+	public static void GAME_SEND_Ej_PACKET(Personaje p, char S, int jobID)
 	{
 		StringBuilder packet = new StringBuilder();
 		packet.append("Ej").append(S).append(jobID);
@@ -2569,7 +2569,7 @@ public class SocketManager {
 			GameServer.addToSockLog("Game: Send>>"+packet.toString());
 	}
 	
-	public static void GAME_SEND_EJ_PACKET(Personnage p, String str)
+	public static void GAME_SEND_EJ_PACKET(Personaje p, String str)
 	{
 		StringBuilder packet = new StringBuilder();
 		packet.append("EJ").append(str);

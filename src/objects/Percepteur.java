@@ -33,7 +33,7 @@ public class Percepteur
 	private Map<Integer,Objet> _LogObjets = new TreeMap<>();
 	private long _LogXP = 0;
 	//La d�fense
-	private Map<Integer, Personnage> _DefensepersosID = new TreeMap<>();
+	private Map<Integer, Personaje> _DefensepersosID = new TreeMap<>();
 	
 	public Percepteur(int guid, short map, int cellID, byte orientation, int GuildID, 
 			short N1, short N2, String items, long kamas, long xp)
@@ -115,7 +115,7 @@ public class Percepteur
 		return _timeTurn;
 	}
 	
-	public static String parseGM(Carte map)
+	public static String parseGM(Mapa map)
 	{
 		StringBuilder sock = new StringBuilder();
 		sock.append("GM|");
@@ -218,7 +218,7 @@ public class Percepteur
 		{
 			 if(perco.getValue().get_guildID() == GuildID)
     		 {
-				 	Carte map = World.getCarte((short)perco.getValue().get_mapID());
+				 	Mapa map = World.getCarte((short)perco.getValue().get_mapID());
 				 	if(isFirst) packet.append("+");
 	    			if(!isFirst) packet.append("|");
 	    			packet.append(perco.getValue().getGuid()).append(";").append(perco.getValue().get_N1()).append(",").append(perco.getValue().get_N2()).append(";");
@@ -300,7 +300,7 @@ public class Percepteur
 		return i;
 	}
 	
-	public static void parseAttaque(Personnage perso, int guildID)
+	public static void parseAttaque(Personaje perso, int guildID)
 	{
 		for(Entry<Integer, Percepteur> perco :  World.getPercos().entrySet()) 
 		{
@@ -311,7 +311,7 @@ public class Percepteur
 		}
 	}
 	
-	public static void parseDefense(Personnage perso, int guildID)
+	public static void parseDefense(Personaje perso, int guildID)
 	{
 		for(Entry<Integer, Percepteur> perco :  World.getPercos().entrySet()) 
 		{
@@ -344,9 +344,9 @@ public class Percepteur
 		StringBuilder str = new StringBuilder();
 		str.append("+").append(perco.getGuid());
 		
-		for(Entry<Integer, Personnage> P : perco.getDefenseFight().entrySet())//Defense
+		for(Entry<Integer, Personaje> P : perco.getDefenseFight().entrySet())//Defense
 		{
-			Personnage p = P.getValue();
+			Personaje p = P.getValue();
 			if(p == null) continue;
 			str.append("|");
 			str.append(Integer.toString(p.get_GUID(), 36)).append(";");
@@ -386,7 +386,7 @@ public class Percepteur
 	}
 	
 	
-	public void removeFromPercepteur(Personnage P, int guid, int qua)
+	public void removeFromPercepteur(Personaje P, int guid, int qua)
 	{
 		Objet PercoObj = World.getObjet(guid);
 		Objet PersoObj = P.getSimilarItem(PercoObj);
@@ -512,7 +512,7 @@ public class Percepteur
 			if(perco.getValue().get_guildID() == GuildID)
 			{
 				World.getPercos().remove(perco.getKey());
-				for(Personnage p : World.getCarte((short) perco.getValue().get_mapID()).getPersos())
+				for(Personaje p : World.getCarte((short) perco.getValue().get_mapID()).getPersos())
 				{
 					SocketManager.GAME_SEND_ERASE_ON_MAP_TO_MAP(p.get_curCarte(), perco.getValue().getGuid());//Suppression visuelle
 				}
@@ -524,7 +524,7 @@ public class Percepteur
 		}
 	}
 	
-	public boolean addDefenseFight(Personnage P)
+	public boolean addDefenseFight(Personaje P)
 	{
 		if(_DefensepersosID.size() >= World.getCarte(this.get_mapID()).get_maxTeam1())
 		{
@@ -536,7 +536,7 @@ public class Percepteur
 		}
 	}
 	
-	public void delDefenseFight(Personnage P)
+	public void delDefenseFight(Personaje P)
 	{
 		if(_DefensepersosID.containsKey(P.get_GUID()))
 			_DefensepersosID.remove(P.get_GUID());
@@ -547,7 +547,7 @@ public class Percepteur
 		_DefensepersosID.clear();
 	}
 	
-	public Map<Integer, Personnage> getDefenseFight()
+	public Map<Integer, Personaje> getDefenseFight()
 	{
 		return _DefensepersosID;
 	}

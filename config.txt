@@ -1,12 +1,12 @@
 # Fichero de configuracion de AlexandriaEMU - SERVER
 
 # IP de interconexion con el multi
-REALM_IP = 127.0.0.1
+MULTI_IP = 127.0.0.1
 
 # Configuracion a la base de datos del multi
-REALM_DB_HOST = 127.0.0.1
+MULTI_BDD_IP = 127.0.0.1
 REALM_DB_USER = root
-REALM_DB_PASS = 
+REALM_DB_PASS =
 REALM_DB_NAME = alexandria_multi
 
 # Logs/Debug
@@ -30,6 +30,7 @@ MOTD = Bienvenido a <b>AlexandriaEMU</b> - http://rltech.click
 MOTD_COLOR = 173ff
 PLAYER_LIMIT = 100
 LOAD_ACTION_DELAY = 10
+MOVER_MONSTRUOS = 30
 SAVE_TIME = 30
 
 # Configuracion de la base de datos del server

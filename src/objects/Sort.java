@@ -10,7 +10,7 @@ import common.Constants;
 import common.Formulas;
 import common.Pathfinding;
 import common.World;
-import objects.Carte.Case;
+import objects.Mapa.Case;
 import objects.Fight.Fighter;
 
 public class Sort {

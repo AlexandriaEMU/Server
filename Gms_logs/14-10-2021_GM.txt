@@ -1,0 +1,7 @@
+Abriendo el servidor
+[1:53:7]127.0.0.1: admin Player-xD=>online
+[1:53:34]127.0.0.1: admin Player-xD=>creargremio
+[1:56:19]127.0.0.1: admin Player-xD=>mover 7379 150
+Abriendo el servidor
+[2:1:19]127.0.0.1: admin Player-xD=>mover 7379 150
+[2:1:30]127.0.0.1: admin Player-xD=>mover 7414 150

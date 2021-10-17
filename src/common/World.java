@@ -12,15 +12,15 @@ import objects.Compte.FriendList;
 import objects.Others.Bank;
 import objects.NPC_tmpl.*;
 import objects.Objet.ObjTemplate;
-import objects.Personnage.Stats;
+import objects.Personaje.Stats;
 
 public class World {
 
 	private static Map<Integer,Compte> 	Comptes	= new TreeMap<>();
 	private static Map<String,Integer> 	ComptebyName	= new TreeMap<>();
-	private static Map<Integer,Personnage> 	Persos	= new TreeMap<>();
+	private static Map<Integer, Personaje> 	Persos	= new TreeMap<>();
 	private static Map<String,Integer> 	PersosbyName	= new TreeMap<>();
-	private static Map<Short,Carte> 	Cartes	= new TreeMap<>();
+	private static Map<Short, Mapa> 	Cartes	= new TreeMap<>();
 	private static Map<Integer,Objet> 	Objets	= new TreeMap<>();
 	private static Map<Integer,ExpLevel> ExpLevels = new TreeMap<>();
 	private static Map<Integer,Sort>	Sorts = new TreeMap<>();
@@ -42,9 +42,9 @@ public class World {
 	private static Map<Integer,Map<Integer,ArrayList<HdvEntry>>> HdvsItems = new HashMap<>();//Contient tout les items en ventes des comptes dans le format<compteID,<hdvID,items<>>>
 	private static Map<Integer,Map<Integer,Map<Integer, Map<Integer, Objet>>>> HdvsTypes = new HashMap<>();//Contient tout les items en ventes des comptes dans le format<TypeID,<hdvID,<TemplateID,<ItemID,items<>>>>>
 	private static Map<Integer,Map<Integer, HdvEntry>> HdvsTemplates = new HashMap<>();//Contient tout les items en ventes des comptes dans le format<TemplateID,<ItemID, HdvEntry>>>>
-	private static Map<Integer,Personnage> Married = new TreeMap<>();
+	private static Map<Integer, Personaje> Married = new TreeMap<>();
 	private static Map<Integer,Animations> Animations = new TreeMap<>();
-	private static Map<Short,Carte.MountPark> MountPark = new TreeMap<>();
+	private static Map<Short, Mapa.MountPark> MountPark = new TreeMap<>();
 	private static Map<Integer,Trunk> Trunks = new TreeMap<>();
 	private static Map<Integer,Percepteur> Percepteurs = new TreeMap<>();
 	private static Map<Integer,House> Houses = new TreeMap<>();
@@ -218,9 +218,9 @@ public class World {
 			_subAreas.add(sa);
 		}
 		
-		public ArrayList<Carte> getMaps()
+		public ArrayList<Mapa> getMaps()
 		{
-			ArrayList<Carte> maps = new ArrayList<>();
+			ArrayList<Mapa> maps = new ArrayList<>();
 			for(SubArea SA : _subAreas)maps.addAll(SA.getMaps());
 			return maps;
 		}
@@ -233,7 +233,7 @@ public class World {
 		private int _alignement;
 		private String _name;
 		private boolean _subscribeNeed;
-		private ArrayList<Carte> _maps = new ArrayList<>();
+		private ArrayList<Mapa> _maps = new ArrayList<>();
 		
 		public SubArea(int id, int areaID, int alignement,String name, boolean subscribe)
 		{
@@ -259,11 +259,11 @@ public class World {
 		{
 			return _alignement;
 		}
-		public ArrayList<Carte> getMaps()
+		public ArrayList<Mapa> getMaps()
 		{
 			return _maps;
 		}
-		public void addMap(Carte carte)
+		public void addMap(Mapa carte)
 		{
 			_maps.add(carte);
 		}
@@ -323,8 +323,8 @@ public class World {
 	
 	public static class Exchange
 	{
-		private Personnage perso1;
-		private Personnage perso2;
+		private Personaje perso1;
+		private Personaje perso2;
 		private long kamas1 = 0;
 		private long kamas2 = 0;
 		private ArrayList<Couple<Integer,Integer>> items1 = new ArrayList<>();
@@ -332,7 +332,7 @@ public class World {
 		private boolean ok1;
 		private boolean ok2;
 		
-		public Exchange(Personnage p1, Personnage p2)
+		public Exchange(Personaje p1, Personaje p2)
 		{
 			perso1 = p1;
 			perso2 = p2;
@@ -834,18 +834,21 @@ public class World {
 		NPCTemplates.put(temp.get_id(), temp);
 	}
 	
-	public static Carte getCarte(short id)
-	{
+	public static Mapa getCarte(short id) {
 		return Cartes.get(id);
 	}
-	
-	public static  void addCarte(Carte map)
+
+	public static Collection<Mapa> getCartes() {
+		return Cartes.values();
+	}
+
+	public static  void addCarte(Mapa map)
 	{
 		if(!Cartes.containsKey(map.get_id()))
 			Cartes.put(map.get_id(),map);
 	}
 	
-	public static void delCarte(Carte map) 
+	public static void delCarte(Mapa map)
 	{
 		  if (Cartes.containsKey(map.get_id()))
 			  Cartes.remove(map.get_id());
@@ -856,7 +859,7 @@ public class World {
 		return (ComptebyName.get(name.toLowerCase())!=null?Comptes.get(ComptebyName.get(name.toLowerCase())):null);
 	}
 	
-	public static Personnage getPersonnage(int guid)
+	public static Personaje getPersonnage(int guid)
 	{
 		return Persos.get(guid);
 	}
@@ -876,18 +879,18 @@ public class World {
 		}
 	}
 	
-	public static void addPersonnage(Personnage perso)
+	public static void addPersonnage(Personaje perso)
 	{
 		Persos.put(perso.get_GUID(), perso);
 		PersosbyName.put(perso.get_name().toLowerCase(), perso.get_GUID());
 	}
 	
-	public static Personnage getPersoByName(String name)
+	public static Personaje getPersoByName(String name)
 	{
 		return (PersosbyName.get(name.toLowerCase())!=null?Persos.get(PersosbyName.get(name.toLowerCase())):null);
 	}
 	
-	public static void deletePerso(Personnage perso)
+	public static void deletePerso(Personaje perso)
 	{
 		if(perso.get_guild() != null)
 		{
@@ -897,8 +900,8 @@ public class World {
 			}else if(perso.getGuildMember().getRank() == 1)//On passe les pouvoir a celui qui a le plus de droits si il est meneur
 			{
 				int curMaxRight = 0;
-				Personnage Meneur = null;
-				for(Personnage newMeneur : perso.get_guild().getMembers())
+				Personaje Meneur = null;
+				for(Personaje newMeneur : perso.get_guild().getMembers())
 				{
 					if(newMeneur == perso) continue;
 					if(newMeneur.getGuildMember().getRights() < curMaxRight)
@@ -980,10 +983,10 @@ public class World {
 		return MobTemplates.get(id);
 	}
 
-	public static List<Personnage> getOnlinePersos()
+	public static List<Personaje> getOnlinePersos()
 	{
-		List<Personnage> online = new ArrayList<>();
-		for(Entry<Integer,Personnage> perso : Persos.entrySet())
+		List<Personaje> online = new ArrayList<>();
+		for(Entry<Integer, Personaje> perso : Persos.entrySet())
 		{
 			if(perso.getValue().isOnline() && perso.getValue().get_compte().getGameThread() != null)
 			{
@@ -1035,7 +1038,7 @@ public class World {
 	{
 		Dragodindes.remove(DID);
 	}
-	public static void saveAll(Personnage saver)
+	public static void saveAll(Personaje saver)
 	{
 		PrintWriter _out = null;
 		if(saver != null)
@@ -1053,7 +1056,7 @@ public class World {
 			Thread.sleep(5000);
 			
 			GameServer.addToLog("Guardando los personajes.");
-			for(Personnage perso : Persos.values())
+			for(Personaje perso : Persos.values())
 			{
 				if(!perso.isOnline())continue;
 				Thread.sleep(100);//0.1 sec. pour 1 objets
@@ -1115,7 +1118,7 @@ public class World {
 			Thread.sleep(2000);
 			
 			GameServer.addToLog("Guardando los cercados...");
-			for(Carte.MountPark mp : MountPark.values())
+			for(Mapa.MountPark mp : MountPark.values())
 			{
 				if(mp.get_owner() > 0 || mp.get_owner() == -1)
 				{
@@ -1184,7 +1187,7 @@ public class World {
 	public static void RefreshAllMob()
 	{
 		SocketManager.GAME_SEND_MESSAGE_TO_ALL("Recharge des Mobs en cours, des latences peuvent survenir.", Main.CONFIG_MOTD_COLOR);
-		for(Carte map : Cartes.values())
+		for(Mapa map : Cartes.values())
 		{
 			map.refreshSpawns();
 		}
@@ -1267,9 +1270,9 @@ public class World {
 		return max+1;
 	}
 
-	public static Carte getCarteByPosAndCont(int mapX, int mapY, int contID)
+	public static Mapa getCarteByPosAndCont(int mapX, int mapY, int contID)
 	{
-		for(Carte map : Cartes.values())
+		for(Mapa map : Cartes.values())
 		{
 			if( map.getX() == mapX
 			&&	map.getY() == mapY
@@ -1319,7 +1322,7 @@ public class World {
 	{
 		C.get_persos().clear();
 		SQLManager.LOAD_PERSO_BY_ACCOUNT(C.get_GUID());
-		for(Personnage P : Persos.values())
+		for(Personaje P : Persos.values())
 		{
 			if(P.getAccID() == C.get_GUID())
 			{
@@ -1359,7 +1362,7 @@ public class World {
 		//Maison de guilde+SQL
 		House.removeHouseGuild(id);
 		//Enclo+SQL
-		Carte.MountPark.removeMountPark(id);
+		Mapa.MountPark.removeMountPark(id);
 		//Percepteur+SQL
 		Percepteur.removePercepteur(id);
 		//Guilde
@@ -1376,7 +1379,7 @@ public class World {
 	
 	public static void unloadPerso(int g)
 	{
-		Personnage toRem = Persos.get(g);
+		Personaje toRem = Persos.get(g);
 		if(!toRem.getItems().isEmpty())
 		{
 			for(Entry<Integer,Objet> curObj : toRem.getItems().entrySet())
@@ -1516,14 +1519,14 @@ public class World {
 		}
 	}
 	/** HDV **/
-	public static Personnage getMarried(int ordre)
+	public static Personaje getMarried(int ordre)
 	{
 		return Married.get(ordre);
 	}
 	
-	public static void AddMarried(int ordre,Personnage perso)
+	public static void AddMarried(int ordre, Personaje perso)
 	{
-		Personnage Perso = Married.get(ordre);
+		Personaje Perso = Married.get(ordre);
 		if(Perso != null)
 		{
 			if(perso.get_GUID() == Perso.get_GUID()) // Si c'est le meme joueur...
@@ -1543,10 +1546,10 @@ public class World {
 		}
 	}
 	
-	public static void PriestRequest(Personnage perso, Carte carte, int IdPretre)
+	public static void PriestRequest(Personaje perso, Mapa carte, int IdPretre)
 	{
-		Personnage Homme = Married.get(0);
-		Personnage Femme = Married.get(1);
+		Personaje Homme = Married.get(0);
+		Personaje Femme = Married.get(1);
 		if(Homme.getWife() != 0){
 			SocketManager.GAME_SEND_MESSAGE_TO_MAP(carte, Homme.get_name()+" est deja marier!", Main.CONFIG_MOTD_COLOR);
 			return;
@@ -1559,7 +1562,7 @@ public class World {
 		SocketManager.GAME_SEND_WEDDING(carte, 617, (Homme==perso?Homme.get_GUID():Femme.get_GUID()), (Homme==perso?Femme.get_GUID():Homme.get_GUID()), IdPretre);
 	}
 	
-	public static void Wedding(Personnage Homme, Personnage Femme, int isOK)
+	public static void Wedding(Personaje Homme, Personaje Femme, int isOK)
 	{
 		if(isOK > 0)
 		{
@@ -1630,12 +1633,12 @@ public class World {
 		return Trunks;
 	}
 	
-	public static void addMountPark(Carte.MountPark mp)
+	public static void addMountPark(Mapa.MountPark mp)
 	{
 		MountPark.put(mp.get_map().get_id(), mp);
 	}
 	
-	public static Map<Short, Carte.MountPark> getMountPark()
+	public static Map<Short, Mapa.MountPark> getMountPark()
 	{
 		return MountPark;
 	}
@@ -1647,7 +1650,7 @@ public class World {
 		StringBuilder packet = new StringBuilder();
 		packet.append(enclosMax);
 		
-		for(Entry<Short, Carte.MountPark> mp : MountPark.entrySet())
+		for(Entry<Short, Mapa.MountPark> mp : MountPark.entrySet())
 		{
 			if(mp.getValue().get_guild() != null && mp.getValue().get_guild().get_id() == GuildID)
 			{
@@ -1663,7 +1666,7 @@ public class World {
 	public static int totalMPGuild(int GuildID)
 	{
 		int i = 0;
-		for(Entry<Short, Carte.MountPark> mp : MountPark.entrySet())
+		for(Entry<Short, Mapa.MountPark> mp : MountPark.entrySet())
 		{
 			if(mp.getValue().get_guild() != null && mp.getValue().get_guild().get_id() == GuildID)
 			{
@@ -1676,7 +1679,7 @@ public class World {
 		return i;
 	}
 	
-	public static void addSeller(Personnage p)
+	public static void addSeller(Personaje p)
 	{
 		if(Seller.get(p.get_curCarte().get_id()) == null)
 		{
@@ -1941,7 +1944,7 @@ public class World {
 	
 	public static void MoveMobsOnMaps()
 	{
-		for(Carte map : Cartes.values())
+		for(Mapa map : Cartes.values())
 		{
 			map.onMap_MonstersDisplacement();
 		}

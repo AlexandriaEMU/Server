@@ -17,7 +17,7 @@ import java.util.Map.Entry;
 
 import javax.swing.Timer;
 
-import objects.Carte.*;
+import objects.Mapa.*;
 import objects.Fight.*;
 import objects.Guild.GuildMember;
 import objects.Metier.*;
@@ -32,7 +32,7 @@ import common.World;
 import common.World.Exchange;
 import common.World.ItemSet;
 
-public class Personnage {
+public class Personaje {
 	
 	private int _GUID;
 	private String _name;
@@ -68,7 +68,7 @@ public class Personnage {
 	private boolean _hasEndFight = false;
 	private Fight _fight;
 	private boolean _away;
-	private Carte _curCarte;
+	private Mapa _curCarte;
 	private Case _curCell;
 	private boolean _sitted;
 	private boolean _ready = false;
@@ -134,8 +134,8 @@ public class Personnage {
 	private int _wife = 0;
 	private int _isOK = 0;
 	//Suiveur - Suivi
-	public Map<Integer,Personnage> _Follower = new TreeMap<>();
-	public Personnage _Follows = null;
+	public Map<Integer, Personaje> _Follower = new TreeMap<>();
+	public Personaje _Follows = null;
 	//Fantome
 	private int _isDead = 0;
 	private String _Restriction = "0";
@@ -150,20 +150,20 @@ public class Personnage {
 	public static class traque 
 	{
 		private long _time;
-		private Personnage _traqued;
+		private Personaje _traqued;
 		
-		public traque(long time, Personnage p)
+		public traque(long time, Personaje p)
 		{
 			this._time = time;
 			this._traqued = p;
 		}
 		
-		public void set_traqued(Personnage tempP)
+		public void set_traqued(Personaje tempP)
 		{
 			_traqued = tempP;
 		}
 		
-		public Personnage get_traqued()
+		public Personaje get_traqued()
 		{
 			return _traqued;
 		}
@@ -181,10 +181,10 @@ public class Personnage {
 	
 	public static class Group
 	{
-		private ArrayList<Personnage> _persos = new ArrayList<>();
-		private Personnage _chief;
+		private ArrayList<Personaje> _persos = new ArrayList<>();
+		private Personaje _chief;
 		
-		public Group(Personnage p1,Personnage p2)
+		public Group(Personaje p1, Personaje p2)
 		{
 			_chief = p1;
 			_persos.add(p1);
@@ -196,7 +196,7 @@ public class Personnage {
 			return _chief.get_GUID() == guid;
 		}
 		
-		public void addPerso(Personnage p)
+		public void addPerso(Personaje p)
 		{
 			_persos.add(p);
 		}
@@ -209,24 +209,24 @@ public class Personnage {
 		public int getGroupLevel()
 		{
 			int lvls = 0;
-			for(Personnage p : _persos)
+			for(Personaje p : _persos)
 			{
 				lvls += p.get_lvl();
 			}
 			return lvls;
 		}
 		
-		public ArrayList<Personnage> getPersos()
+		public ArrayList<Personaje> getPersos()
 		{
 			return _persos;
 		}
 
-		public Personnage getChief()
+		public Personaje getChief()
 		{
 			return _chief;
 		}
 
-		public void leave(Personnage p)
+		public void leave(Personaje p)
 		{
 			if(!_persos.contains(p))return;
 			p.setGroup(null);
@@ -246,7 +246,7 @@ public class Personnage {
 	{
 		private Map<Integer,Integer> Effects = new TreeMap<>();
 		
-		public Stats(boolean addBases,Personnage perso)
+		public Stats(boolean addBases, Personaje perso)
 		{
 			Effects = new TreeMap<>();
 			if(!addBases)return;
@@ -257,7 +257,7 @@ public class Personnage {
 			Effects.put(Constants.STATS_CREATURE, 1);
 			Effects.put(Constants.STATS_ADD_INIT, 1);
 		}
-		public Stats(Map<Integer, Integer> stats, boolean addBases,Personnage perso)
+		public Stats(Map<Integer, Integer> stats, boolean addBases, Personaje perso)
 		{
 			Effects = stats;
 			if(!addBases)return;
@@ -472,11 +472,11 @@ public class Personnage {
 		}
 	}
 	
-	public Personnage(int _guid, String _name, int _sexe, int _classe,
-			int _color1, int _color2, int _color3,long _kamas, int pts, int _capital, int _energy, int _lvl, long exp,
-			int _size, int _gfxid, byte alignement, int _compte, Map<Integer,Integer> stats,
-			byte seeFriend, byte seeAlign, byte seeSeller, String canaux, short map, int cell, String stuff, String storeObjets,int pdvPer,String spells, String savePos,String jobs,
-			int mountXp,int mount,int honor,int deshonor,int alvl,String z, byte title, int wifeGuid)
+	public Personaje(int _guid, String _name, int _sexe, int _classe,
+					 int _color1, int _color2, int _color3, long _kamas, int pts, int _capital, int _energy, int _lvl, long exp,
+					 int _size, int _gfxid, byte alignement, int _compte, Map<Integer,Integer> stats,
+					 byte seeFriend, byte seeAlign, byte seeSeller, String canaux, short map, int cell, String stuff, String storeObjets, int pdvPer, String spells, String savePos, String jobs,
+					 int mountXp, int mount, int honor, int deshonor, int alvl, String z, byte title, int wifeGuid)
 	{
 		this._GUID = _guid;
 		this._name = _name;
@@ -625,7 +625,7 @@ public class Personnage {
 		if(_energy == 0) set_isDead();
 	}
 	
-	public static Personnage CREATE_PERSONNAGE(String name, int sexe, int classe, int color1, int color2, int color3,Compte compte)
+	public static Personaje CREATE_PERSONNAGE(String name, int sexe, int classe, int color1, int color2, int color3, Compte compte)
 	{
 		StringBuilder z = new StringBuilder();
 		if(Main.CONFIG_ZAAP)
@@ -636,7 +636,7 @@ public class Personnage {
 				z.append(i.getKey());
 			}
 		}
-		Personnage perso = new Personnage(
+		Personaje perso = new Personaje(
 				SQLManager.getNextPersonnageGuid(),
 				name,
 				sexe,
@@ -691,7 +691,7 @@ public class Personnage {
 		return perso;
 	}
 	/**Clone/Double**/
-	public Personnage(int _guid, String _name, int _sexe, int _classe, int _color1, int _color2, int _color3,int _lvl, int _size, int _gfxid, Map<Integer,Integer> stats, String stuff,int pdvPer, byte seeAlign, int mount, int alvl, byte alignement)
+	public Personaje(int _guid, String _name, int _sexe, int _classe, int _color1, int _color2, int _color3, int _lvl, int _size, int _gfxid, Map<Integer,Integer> stats, String stuff, int pdvPer, byte seeAlign, int mount, int alvl, byte alignement)
 	{
 		this._GUID = _guid;
 		this._name = _name;
@@ -737,7 +737,7 @@ public class Personnage {
 		if(mount != -1)this._mount = World.getDragoByID(mount);
 	}
 	
-	public Personnage ClonePerso(int id)
+	public Personaje ClonePerso(int id)
 	{	
 		TreeMap<Integer,Integer> stats = new TreeMap<>();
 		stats.put(Constants.STATS_ADD_VITA, get_baseStats().getEffect(Constants.STATS_ADD_VITA));
@@ -769,7 +769,7 @@ public class Personnage {
 			mountID = getMount().get_id();
 		}
 		
-		Personnage Clone = new Personnage(
+		Personaje Clone = new Personaje(
 				id, 
 				get_name(), 
 				get_sexe(), 
@@ -1411,7 +1411,7 @@ public class Personnage {
 		return _GUID;
 	}
 
-	public Carte get_curCarte()
+	public Mapa get_curCarte()
 	{
 		return _curCarte;
 	}
@@ -1560,7 +1560,7 @@ public class Personnage {
 		try
 		{
 			int id = Integer.parseInt(str);
-			Carte map = _curCarte;
+			Mapa map = _curCarte;
 			if(_fight == null)
 				SocketManager.GAME_SEND_EMOTICONE_TO_MAP(map,_GUID,id);
 			else
@@ -1573,7 +1573,7 @@ public class Personnage {
 		return get_compte().isMuted();
 	}
 	
-	public void set_curCarte(Carte carte)
+	public void set_curCarte(Mapa carte)
 	{
 		_curCarte = carte;
 	}
@@ -1786,7 +1786,7 @@ public class Personnage {
 		
 		if(!_Follower.isEmpty())//On met a jour la carte des personnages qui nous suivent
 		{
-			for(Personnage t : _Follower.values())
+			for(Personaje t : _Follower.values())
 			{
 				if(t.isOnline())
 					SocketManager.GAME_SEND_FLAG_PACKET(t, this);
@@ -1812,7 +1812,7 @@ public class Personnage {
 		return "";
 	}
 	
-	public boolean isDispo(Personnage sender)
+	public boolean isDispo(Personaje sender)
 	{
 		if(_isAbsent)
 			return false;
@@ -3718,7 +3718,7 @@ public class Personnage {
 	
 	public void Zaapi_use(String packet)
 	{
-		Carte map = World.getCarte(Short.valueOf(packet.substring(2)));
+		Mapa map = World.getCarte(Short.valueOf(packet.substring(2)));
 	
 		short idcelula = 100;
 		if (map != null)
@@ -3754,7 +3754,7 @@ public class Personnage {
 	}
 	/** Zaap/Zaapi **/
 	/** Mariage **/
-	public void MarryTo(Personnage wife)
+	public void MarryTo(Personaje wife)
 	{
 		_wife = wife.get_GUID();
 		SQLManager.SAVE_PERSONNAGE(this,true);
@@ -3762,7 +3762,7 @@ public class Personnage {
 	
 	public String get_wife_friendlist()
 	{
-		Personnage wife = World.getPersonnage(_wife);
+		Personaje wife = World.getPersonnage(_wife);
 		StringBuilder str = new StringBuilder();
 		if(wife != null)
 		{
@@ -3788,7 +3788,7 @@ public class Personnage {
 		return _curCarte.get_id() + "|" + _lvl + "|" + f;
 	}
 	
-	public void meetWife(Personnage p)// Se teleporter selon les sacro-saintes autorisations du mariage.
+	public void meetWife(Personaje p)// Se teleporter selon les sacro-saintes autorisations du mariage.
 	{
 		if(p == null)return; // Ne devrait theoriquement jamais se produire.
 		
@@ -3910,7 +3910,7 @@ public class Personnage {
 	        		{
 	        			Percepteur perco = World.getPerco(get_isOnPercepteurID());
 	        			if(perco == null) return;
-	        			for(Personnage z : World.getGuild(perco.get_guildID()).getMembers())
+	        			for(Personaje z : World.getGuild(perco.get_guildID()).getMembers())
 	        			{
 	        				if(z.isOnline())
 	        				{

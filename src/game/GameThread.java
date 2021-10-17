@@ -11,59 +11,55 @@ import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicReference;
 
 
+import common.comandos.jugadores.ComandosDisponibles;
+import common.comandos.jugadores.Informacion;
+import common.comandos.jugadores.Inicio;
 import objects.*;
-import objects.Carte.*;
+import objects.Mapa.*;
 import objects.Fight.Fighter;
 import objects.Guild.GuildMember;
 import objects.Metier.StatsMetier;
 import objects.Others.Bank;
 import objects.NPC_tmpl.*;
 import objects.Objet.ObjTemplate;
-import objects.Personnage.Group;
+import objects.Personaje.Group;
 import objects.Sort.SortStats;
 import common.*;
 
-public class GameThread implements Runnable
-{
+public class GameThread implements Runnable {
 	private BufferedReader _in;
 	private Thread _t;
 	private PrintWriter _out;
 	private Socket _s;
 	private Compte _compte;
-	private Personnage _perso;
+	private Personaje _perso;
 	private Map<Integer,GameAction> _actions = new TreeMap<>();
 	private long _timeLastTradeMsg = 0, _timeLastRecrutmentMsg = 0, _timeLastsave = 0, _timeLastAlignMsg = 0, _timeLastIncarnamMsg = 0;
 	
-	private Commands command;
+	private Comandos command;
 	
-	public static class GameAction
-	{
+	public static class GameAction {
 		public int _id;
 		public int _actionID;
 		public String _packet;
 		public String _args;
 		
-		public GameAction(int aId, int aActionId,String aPacket)
-		{
+		public GameAction(int aId, int aActionId,String aPacket) {
 			_id = aId;
 			_actionID = aActionId;
 			_packet = aPacket;
 		}
 	}
 	
-	public GameThread(Socket sock)
-	{
-		try
-		{
+	public GameThread(Socket sock) {
+		try {
 			_s = sock;
 			_in = new BufferedReader(new InputStreamReader(_s.getInputStream()));
 			_out = new PrintWriter(_s.getOutputStream());
 			_t = new Thread(this);
 			_t.setDaemon(true);
 			_t.start();
-		}
-		catch(IOException e)
-		{
+		} catch(IOException e) {
 			try {
 				GameServer.addToLog(e.getMessage());
 				if(!_s.isClosed())_s.close();
@@ -71,53 +67,41 @@ public class GameThread implements Runnable
 		}
 	}
 	
-	public void run()
-	{
-		try
-    	{
+	public void run() {
+		try {
 			String packet = "";
 			char charCur[] = new char[1];
 			SocketManager.GAME_SEND_HELLOGAME_PACKET(_out);
-	    	while(_in.read(charCur, 0, 1)!=-1 && Main.isRunning)
-	    	{
-	    		if (charCur[0] != '\u0000' && charCur[0] != '\n' && charCur[0] != '\r')
-		    	{
+	    	while(_in.read(charCur, 0, 1)!=-1 && Main.isRunning) {
+	    		if (charCur[0] != '\u0000' && charCur[0] != '\n' && charCur[0] != '\r') {
 	    			packet += charCur[0];
-		    	}else if(!packet.isEmpty())
-		    	{
+		    	}else if(!packet.isEmpty()) {
 		    		packet = CryptManager.toUnicode(packet);
 		    		GameServer.addToSockLog("Game: Recv << "+packet);
 		    		parsePacket(packet);
 		    		packet = "";
 		    	}
 	    	}
-    	}catch(IOException e)
-    	{
-    		try
-    		{
+    	}catch(IOException e) {
+    		try {
     			GameServer.addToLog(e.getMessage());
 	    		_in.close();
 	    		_out.close();
-	    		if(_compte != null)
-	    		{
+	    		if(_compte != null) {
 	    			_compte.setCurPerso(null);
 	    			_compte.setGameThread(null);
 	    		}
 	    		if(!_s.isClosed())_s.close();
 	    	}catch(IOException e1){e1.printStackTrace();}
-        }catch(Exception e)
-    	{
+        }catch(Exception e) {
     		e.printStackTrace();
     		GameServer.addToLog(e.getMessage());
-    	}
-    	finally
-    	{
+    	} finally {
     		kick();
     	}
 	}
 
-	private void parsePacket(String packet)
-	{
+	private void parsePacket(String packet) {
 		if(_perso != null) {
 			_perso.refreshLastPacketTime();
 		}
@@ -304,7 +288,7 @@ public class GameThread implements Runnable
 		{
 			case '%'://Nom de perso
 				packet = packet.substring(3);
-				Personnage P = World.getPersoByName(packet);
+				Personaje P = World.getPersoByName(packet);
 				if(P == null)
 				{
 					SocketManager.GAME_SEND_FD_PACKET(_perso, "Ef");
@@ -324,7 +308,7 @@ public class GameThread implements Runnable
 			break;
 			default:
 				packet = packet.substring(2);
-				Personnage Pr = World.getPersoByName(packet);
+				Personaje Pr = World.getPersoByName(packet);
 				if(Pr == null?true:!Pr.isOnline())
 				{
 					SocketManager.GAME_SEND_FD_PACKET(_perso, "Ef");
@@ -349,7 +333,7 @@ public class GameThread implements Runnable
 		{
 			case '%'://Nom de perso
 				packet = packet.substring(3);
-				Personnage P = World.getPersoByName(packet);
+				Personaje P = World.getPersoByName(packet);
 				if(P == null)
 				{
 					SocketManager.GAME_SEND_FD_PACKET(_perso, "Ef");
@@ -369,7 +353,7 @@ public class GameThread implements Runnable
 			break;
 			default:
 				packet = packet.substring(2);
-				Personnage Pr = World.getPersoByName(packet);
+				Personaje Pr = World.getPersoByName(packet);
 				if(Pr == null?true:!Pr.isOnline())
 				{
 					SocketManager.GAME_SEND_FD_PACKET(_perso, "Ef");
@@ -552,7 +536,7 @@ public class GameThread implements Runnable
 				//SocketManager.GAME_SEND_g_PACKET(_perso, "V");//FIXME : Paquet pour que le clients ne soit plus en "liste"
 			break;
 		}
-		for(Personnage z : World.getGuild(perco.get_guildID()).getMembers())
+		for(Personaje z : World.getGuild(perco.get_guildID()).getMembers())
 		{
 			if(z == null) continue;
 			if(z.isOnline())
@@ -574,7 +558,7 @@ public class GameThread implements Runnable
 		SocketManager.GAME_SEND_ERASE_ON_MAP_TO_MAP(_perso.get_curCarte(), IDPerco);
 		SQLManager.DELETE_PERCO(perco.getGuid());
 		perco.DelPerco(perco.getGuid());
-		for(Personnage z : _perso.get_guild().getMembers())
+		for(Personaje z : _perso.get_guild().getMembers())
 		{
 			if(z.isOnline())
 			{
@@ -618,7 +602,7 @@ public class GameThread implements Runnable
 		World.addPerco(perco);
 		SocketManager.GAME_SEND_ADD_PERCO_TO_MAP(_perso.get_curCarte());
 		SQLManager.ADD_PERCO_ON_MAP(id, _perso.get_curCarte().get_id(), _perso.get_guild().get_id(), _perso.get_curCell().getID(), 3, random1, random2);
-		for(Personnage z : _perso.get_guild().getMembers())
+		for(Personaje z : _perso.get_guild().getMembers())
 		{
 			if(z != null && z.isOnline())
 			{
@@ -704,7 +688,7 @@ public class GameThread implements Runnable
 		byte xpGive = Byte.parseByte(infos[2]);
 		int right = Integer.parseInt(infos[3]);
 		
-		Personnage p = World.getPersonnage(guid);	//Cherche le personnage a qui l'on change les droits dans la m�moire
+		Personaje p = World.getPersonnage(guid);	//Cherche le personnage a qui l'on change les droits dans la m�moire
 		GuildMember toChange;
 		GuildMember changer = _perso.getGuildMember();
 		
@@ -796,7 +780,7 @@ public class GameThread implements Runnable
 	private void guild_kick(String name)
 	{
 		if(_perso.get_guild() == null)return;
-		Personnage P = World.getPersoByName(name);
+		Personaje P = World.getPersoByName(name);
 		int guid = -1,guildId = -1;
 		Guild toRemGuild;
 		GuildMember toRemMember;
@@ -865,7 +849,7 @@ public class GameThread implements Runnable
 		switch(packet.charAt(0))
 		{
 		case 'R'://Nom perso
-			Personnage P = World.getPersoByName(packet.substring(1));
+			Personaje P = World.getPersoByName(packet.substring(1));
 			if(P == null || _perso.get_guild() == null)
 			{
 				SocketManager.GAME_SEND_gJ_PACKET(_perso, "Eu");
@@ -906,7 +890,7 @@ public class GameThread implements Runnable
 		case 'E'://ou Refus
 			if(packet.substring(1).equalsIgnoreCase(_perso.getInvitation()+""))
 			{
-				Personnage p = World.getPersonnage(_perso.getInvitation());
+				Personaje p = World.getPersonnage(_perso.getInvitation());
 				if(p == null)return;//Pas cens� arriver
 				SocketManager.GAME_SEND_gJ_PACKET(p,"Ec");
 			}
@@ -914,7 +898,7 @@ public class GameThread implements Runnable
 		case 'K'://Accepte
 			if(packet.substring(1).equalsIgnoreCase(_perso.getInvitation()+""))
 			{
-				Personnage p = World.getPersonnage(_perso.getInvitation());
+				Personaje p = World.getPersonnage(_perso.getInvitation());
 				if(p == null)return;//Pas cens� arriver
 				Guild G = p.get_guild();
 				GuildMember GM = G.addNewMember(_perso);
@@ -1086,7 +1070,7 @@ public class GameThread implements Runnable
 			case 'b'://Achat d'un enclos
 				SocketManager.GAME_SEND_R_PACKET(_perso, "v");//Fermeture du panneau
 				MountPark MP = _perso.get_curCarte().getMountPark();
-				Personnage Seller = World.getPersonnage(MP.get_owner());
+				Personaje Seller = World.getPersonnage(MP.get_owner());
 				if(MP.get_owner() == -1)
 				{
 					SocketManager.GAME_SEND_Im_PACKET(_perso, "196");
@@ -1137,7 +1121,7 @@ public class GameThread implements Runnable
 				SQLManager.SAVE_MOUNTPARK(MP);
 				SQLManager.SAVE_PERSONNAGE(_perso, true);
 				//On rafraichit l'enclo
-				for(Personnage z:_perso.get_curCarte().getPersos())
+				for(Personaje z:_perso.get_curCarte().getPersos())
 				{
 					SocketManager.GAME_SEND_Rp_PACKET(z, MP);
 				}
@@ -1185,7 +1169,7 @@ public class GameThread implements Runnable
 				SQLManager.SAVE_MOUNTPARK(MP1);
 				SQLManager.SAVE_PERSONNAGE(_perso, true);
 				//On rafraichit l'enclo
-				for(Personnage z:_perso.get_curCarte().getPersos())
+				for(Personaje z:_perso.get_curCarte().getPersos())
 				{
 					SocketManager.GAME_SEND_Rp_PACKET(z, MP1);
 				}
@@ -1276,7 +1260,7 @@ public class GameThread implements Runnable
 
 	private void FriendLove(String packet)
 	{
-		Personnage Wife = World.getPersonnage(_perso.getWife());
+		Personaje Wife = World.getPersonnage(_perso.getWife());
 		if(Wife == null) return;
 		if(!Wife.isOnline())
 		{
@@ -1319,7 +1303,7 @@ public class GameThread implements Runnable
 		{
 			case '%'://Nom de perso
 				packet = packet.substring(3);
-				Personnage P = World.getPersoByName(packet);
+				Personaje P = World.getPersoByName(packet);
 				if(P == null)//Si P est nul, ou si P est nonNul et P offline
 				{
 					SocketManager.GAME_SEND_FD_PACKET(_perso, "Ef");
@@ -1339,7 +1323,7 @@ public class GameThread implements Runnable
 			break;
 			default:
 				packet = packet.substring(2);
-				Personnage Pr = World.getPersoByName(packet);
+				Personaje Pr = World.getPersoByName(packet);
 				if(Pr == null?true:!Pr.isOnline())//Si P est nul, ou si P est nonNul et P offline
 				{
 					SocketManager.GAME_SEND_FD_PACKET(_perso, "Ef");
@@ -1364,7 +1348,7 @@ public class GameThread implements Runnable
 		{
 			case '%'://Nom de perso
 				packet = packet.substring(3);
-				Personnage P = World.getPersoByName(packet);
+				Personaje P = World.getPersoByName(packet);
 				if(P == null?true:!P.isOnline())//Si P est nul, ou si P est nonNul et P offline
 				{
 					SocketManager.GAME_SEND_FA_PACKET(_perso, "Ef");
@@ -1384,7 +1368,7 @@ public class GameThread implements Runnable
 			break;
 			default:
 				packet = packet.substring(2);
-				Personnage Pr = World.getPersoByName(packet);
+				Personaje Pr = World.getPersoByName(packet);
 				if(Pr == null?true:!Pr.isOnline())//Si P est nul, ou si P est nonNul et P offline
 				{
 					SocketManager.GAME_SEND_FA_PACKET(_perso, "Ef");
@@ -1421,7 +1405,7 @@ public class GameThread implements Runnable
 
                 if(pGuid == -1) return;
 				
-				Personnage P = World.getPersonnage(pGuid);
+				Personaje P = World.getPersonnage(pGuid);
 				
 				if(P == null || !P.isOnline()) return;
 				
@@ -1456,13 +1440,13 @@ public class GameThread implements Runnable
 
                 if(pGuid2 == -1) return;
 				
-				Personnage P2 = World.getPersonnage(pGuid2);
+				Personaje P2 = World.getPersonnage(pGuid2);
 				
 				if(P2 == null || !P2.isOnline()) return;
 				
 				if(packet.charAt(2) == '+')//Suivre
 				{
-					for(Personnage T : g2.getPersos())
+					for(Personaje T : g2.getPersos())
 					{
 						if(T.get_GUID() == P2.get_GUID()) continue;
 						if(T._Follows != null)
@@ -1477,7 +1461,7 @@ public class GameThread implements Runnable
 				}
 				else if(packet.charAt(2) == '-')//Ne plus suivre
 				{
-					for(Personnage T : g2.getPersos())
+					for(Personaje T : g2.getPersos())
 					{
 						if(T.get_GUID() == P2.get_GUID()) continue;
 						SocketManager.GAME_SEND_DELETE_FLAG_PACKET(T);
@@ -1512,7 +1496,7 @@ public class GameThread implements Runnable
 		if(g == null)return;
 		StringBuilder str = new StringBuilder();
 		boolean isFirst = true;
-		for(Personnage GroupP : _perso.getGroup().getPersos())
+		for(Personaje GroupP : _perso.getGroup().getPersos())
 		{
 			if(!isFirst) str.append("|");
 			str.append(GroupP.get_curCarte().getX()).append(";").append(GroupP.get_curCarte().getY()).append(";").append(GroupP.get_curCarte().get_id()).append(";2;").append(GroupP.get_GUID()).append(";").append(GroupP.get_name());
@@ -1539,7 +1523,7 @@ public class GameThread implements Runnable
 				guid = Integer.parseInt(packet.substring(2));
 			}catch(NumberFormatException e){return;}
             if(guid == -1)return;
-			Personnage t = World.getPersonnage(guid);
+			Personaje t = World.getPersonnage(guid);
 			g.leave(t);
 			SocketManager.GAME_SEND_PV_PACKET(t.get_compte().getGameThread().get_out(),""+_perso.get_GUID());
 			SocketManager.GAME_SEND_IH_PACKET(t, "");
@@ -1550,7 +1534,7 @@ public class GameThread implements Runnable
 	{
 		if(_perso == null)return;
 		String name = packet.substring(2);
-		Personnage target = World.getPersoByName(name);
+		Personaje target = World.getPersoByName(name);
 		if(target == null)return;
 		if(!target.isOnline())
 		{
@@ -1578,7 +1562,7 @@ public class GameThread implements Runnable
 		if(_perso == null)return;
 		if(_perso.getInvitation() == 0)return;
 		SocketManager.GAME_SEND_BN(_out);
-		Personnage t = World.getPersonnage(_perso.getInvitation());
+		Personaje t = World.getPersonnage(_perso.getInvitation());
 		_perso.setInvitation(0);
 		if(t == null) return;
 		t.setInvitation(0);
@@ -1589,7 +1573,7 @@ public class GameThread implements Runnable
 	{
 		if(_perso == null)return;
 		if(_perso.getInvitation() == 0)return;
-		Personnage t = World.getPersonnage(_perso.getInvitation());
+		Personaje t = World.getPersonnage(_perso.getInvitation());
 		if(t == null) return;
 		Group g = t.getGroup();
 		if(g == null)
@@ -1688,7 +1672,7 @@ public class GameThread implements Runnable
 		int guid = -1;
 		int targetGuid = -1;
 		short cellID = -1;
-		Personnage Target = null;
+		Personaje Target = null;
 		try
 		{
 			String[] infos = packet.substring(2).split("\\|");
@@ -2096,7 +2080,7 @@ public class GameThread implements Runnable
 						{
 							for(Integer ID : World.getCrafterOnBook(JobID))
 							{
-								Personnage artisans = World.getPersonnage(ID);
+								Personaje artisans = World.getPersonnage(ID);
 								if(artisans == null || !artisans.isOnline() || !artisans.is_onCraftBookCrafter() || artisans.getMetierByID(JobID) == null) return;
 								int inWorkshop = 0;//FIXME
 								str = "+"+JobID+";"+ID+";"+artisans.get_name()+";"+artisans.getMetierByID(JobID).get_lvl()+";"+artisans.get_curCarte().get_id()+";"
@@ -2171,12 +2155,12 @@ public class GameThread implements Runnable
 		        }
 		        int orientation = Formulas.getRandomValue(1, 3);
 		        _perso.set_orientation(orientation);
-		        Carte map = _perso.get_curCarte();
+		        Mapa map = _perso.get_curCarte();
 		        _perso.set_showSeller(true);
 		        _perso.set_kamas(_perso.get_kamas()-buyIt_End);
 		        World.addSeller(_perso);
 		        kick();
-		        for(Personnage z : map.getPersos())
+		        for(Personaje z : map.getPersos())
 		        {
 		        	if(z != null && z.isOnline())
 		        		SocketManager.GAME_SEND_MERCHANT_LIST(z, z.get_curCarte().get_id());
@@ -2806,7 +2790,7 @@ public class GameThread implements Runnable
                          	_perso.set_kamas(_perso.get_kamas()+kamas);//On ajoute les kamas du personnage
                          	SocketManager.GAME_SEND_STATS_PACKET(_perso);
                         }
-                        for(Personnage P : World.getOnlinePersos())
+                        for(Personaje P : World.getOnlinePersos())
                         {
                         	if(P.getInTrunk() != null && _perso.getInTrunk().get_id() == P.getInTrunk().get_id())
                             {
@@ -2900,7 +2884,7 @@ public class GameThread implements Runnable
 	{
 		if(_perso.get_isCraftingWith() != 0 && _perso.get_isCraftingWithskID() != 0)
 		{
-			Personnage artisan = World.getPersonnage(_perso.get_isCraftingWith());
+			Personaje artisan = World.getPersonnage(_perso.get_isCraftingWith());
 			if(artisan == null || artisan.get_GUID() != _perso.get_isCraftingWith())return;
 			int jobID = Constants.getJobIDbySkillID(artisan.get_isCraftingWithskID());
 			if(jobID == 0) return;
@@ -2910,7 +2894,7 @@ public class GameThread implements Runnable
 		}
 		if(_perso.get_isTradingWith() != 0)
 		{
-			Personnage target = World.getPersonnage(_perso.get_isTradingWith());
+			Personaje target = World.getPersonnage(_perso.get_isTradingWith());
 			if(target == null)return;
 			SocketManager.GAME_SEND_EXCHANGE_CONFIRM_OK(_out,1);
 			SocketManager.GAME_SEND_EXCHANGE_CONFIRM_OK(target.get_compte().getGameThread().get_out(),1);
@@ -2947,7 +2931,7 @@ public class GameThread implements Runnable
 		
         if (_perso.get_isTradingWith() > 0)
         {
-            Personnage seller = World.getPersonnage(_perso.get_isTradingWith());
+            Personaje seller = World.getPersonnage(_perso.get_isTradingWith());
             if (seller != null) 
             {
             	int itemID = 0;
@@ -3080,7 +3064,7 @@ public class GameThread implements Runnable
 		//prop d'echange avec un joueur
 		if(_perso.get_isTradingWith() > 0)
 		{
-			Personnage p = World.getPersonnage(_perso.get_isTradingWith());
+			Personaje p = World.getPersonnage(_perso.get_isTradingWith());
 			if(p != null)
 			{
 				if(p.isOnline())
@@ -3096,7 +3080,7 @@ public class GameThread implements Runnable
 		{
 			Percepteur perco = World.getPerco(_perso.get_isOnPercepteurID());
 			if(perco == null) return;
-			for(Personnage z : World.getGuild(perco.get_guildID()).getMembers())
+			for(Personaje z : World.getGuild(perco.get_guildID()).getMembers())
 			{
 				if(z.isOnline())
 				{
@@ -3120,7 +3104,7 @@ public class GameThread implements Runnable
 		//Si craft avec client
 		if(_perso.get_isCraftingWith() != 0)
 		{
-			Personnage target = World.getPersonnage(_perso.get_isCraftingWith());
+			Personaje target = World.getPersonnage(_perso.get_isCraftingWith());
 			if(target == null || target.get_isCraftingWith() != _perso.get_GUID()) return;
 			SocketManager.GAME_SEND_EV_PACKET(target.get_compte().getGameThread().get_out());
 			target.set_isCraftingWith(0);
@@ -3233,7 +3217,7 @@ public class GameThread implements Runnable
 							SkID = Integer.parseInt(packet.substring(2).split("\\|")[2]);
 						}catch(NumberFormatException e){ return; }
 						
-						Personnage target2 = World.getPersonnage(TargetGuid);
+						Personaje target2 = World.getPersonnage(TargetGuid);
 						
 						if(target2 == null )
 						{
@@ -3266,7 +3250,7 @@ public class GameThread implements Runnable
 						try
 						{
 							int guidTarget = Integer.parseInt(packet.substring(4));
-							Personnage target = World.getPersonnage(guidTarget);
+							Personaje target = World.getPersonnage(guidTarget);
 							if(target == null )
 							{
 								SocketManager.GAME_SEND_EXCHANGE_REQUEST_ERROR(_out,'E');
@@ -3299,7 +3283,7 @@ public class GameThread implements Runnable
             		//cellID = Integer.valueOf(packet.split("\\|")[2]);
 				}catch(NumberFormatException e){return;}
                 if(_perso.get_isTradingWith() > 0)return;
-				Personnage seller = World.getPersonnage(pID);
+				Personaje seller = World.getPersonnage(pID);
 				if(seller == null) return;
 				_perso.set_isTradingWith(pID);
 				SocketManager.GAME_SEND_ECK_PACKET(_perso, 4, seller.get_GUID()+"");
@@ -3551,15 +3535,15 @@ public class GameThread implements Runnable
 		}
 	}
 	
-	public Personnage getPerso()
+	public Personaje getPerso()
 	{
 		return _perso;
 	}
 	  
 	private void Basic_console(String packet)
 	{
-		if(command == null) command = new Commands(_perso);
-		command.consoleCommand(packet);
+		if(command == null) command = new Comandos(_perso);
+		command.comandosdeconsola(packet);
 	}
 
 	private void Basic_chatMessage(String packet)
@@ -3572,61 +3556,43 @@ public class GameThread implements Runnable
 		}
 		packet = packet.replace("<", "");
 		packet = packet.replace(">", "");
-		if(packet.length() == 3)return;
-		switch(packet.charAt(2))
-		{
+		if(packet.length() == 3)
+			return;
+
+		switch(packet.charAt(2)) {
 			case '*'://Canal noir
-				if(!_perso.get_canaux().contains(packet.charAt(2)+""))return;
+				if(!_perso.get_canaux().contains(packet.charAt(2)+""))
+					return;
+
 				msg = packet.split("\\|",2)[1];
 				
-				//Commandes joueurs
-				if(msg.charAt(0) == '.')
-				{
-					//Retour au point de sauvegarde
-					if(msg.length() > 7 && msg.substring(1, 8).equalsIgnoreCase("command"))
-					{
-						SocketManager.GAME_SEND_MESSAGE(_perso, "Commandes Disponibles : \n.start\n.infos\n.save", Main.CONFIG_MOTD_COLOR);
+				//Comandos de jugadores
+				if(msg.charAt(0) == '.') {
+
+					//Comando .comandos - Muestra los comandos disponibles
+					if(msg.length() > 8 && msg.substring(1, 9).equalsIgnoreCase("comandos")) {
+						ComandosDisponibles.INSTANCE.comandosdisponibles(_perso);
 						return;
 					}else
-					if(msg.length() > 5 && msg.substring(1, 6).equalsIgnoreCase("start"))
-					{
-						if(_perso.get_fight() != null)return;
-						_perso.warpToSavePos();
+
+					//Comando .inicio - Devuelve el personaje al mapa inicial
+					if(msg.length() > 6 && msg.substring(1, 7).equalsIgnoreCase("inicio")) {
+						Inicio.INSTANCE.inicio(_perso);
 						return;
 					}else
-					if(msg.length() > 5 && msg.substring(1, 6).equalsIgnoreCase("infos"))
-					{
-						long uptime = System.currentTimeMillis() - Main.gameServer.getStartTime();
-						int jour = (int) (uptime/(1000*3600*24));
-						uptime %= (1000*3600*24);
-						int hour = (int) (uptime/(1000*3600));
-						uptime %= (1000*3600);
-						int min = (int) (uptime/(1000*60));
-						uptime %= (1000*60);
-						int sec = (int) (uptime/(1000));
-						
-						String mess =	"===========\n"
-							+			"AlexandriaEMU - http://rltech.click\n"
-							+			"===========\n"
-							+			"Tiempo en linea: "+jour+"D "+hour+"H "+min+"M "+sec+"S\n"
-							+			"Jugadores en linea: "+ Main.gameServer.getPlayerNumber()+"\n"
-							+			"Maximos conectados: "+ Main.gameServer.getMaxPlayer()+"\n"
-							+			"===========";
-						SocketManager.GAME_SEND_MESSAGE(_perso, mess, Main.CONFIG_MOTD_COLOR);
+
+					//Comando .info - Devuelve informacion del server
+					if(msg.length() > 4 && msg.substring(1, 5).equalsIgnoreCase("info")) {
+						Informacion.INSTANCE.info(_perso);
 						return;
 					}else
-					if(msg.length() > 4 && msg.substring(1, 5).equalsIgnoreCase("save"))
-					{
-						if((System.currentTimeMillis() - _timeLastsave) < 360000)
-						{
-							return;
-						}
-						_timeLastsave = System.currentTimeMillis();
-						if(_perso.get_fight() != null)return;
-						SQLManager.SAVE_PERSONNAGE(_perso,true);
-						SocketManager.GAME_SEND_MESSAGE(_perso,  _perso.get_name()+" sauvegard�.", Main.CONFIG_MOTD_COLOR);
+
+					//Comando .guardar - Guarda tu personaje en este momento
+					if(msg.length() > 7 && msg.substring(1, 8).equalsIgnoreCase("guardar")) {
+
 						return;
 					}
+
 				}
 				if(_perso.get_fight() == null)
 					SocketManager.GAME_SEND_cMK_PACKET_TO_MAP(_perso.get_curCarte(), "", _perso.get_GUID(), _perso.get_name(), msg);
@@ -3731,7 +3697,7 @@ public class GameThread implements Runnable
 					GameServer.addToLog("ChatHandler: Chanel non gere : "+nom);
 				else
 				{
-					Personnage target = World.getPersoByName(nom);
+					Personaje target = World.getPersoByName(nom);
 					if(target == null)//si le personnage n'existe pas
 					{
 						SocketManager.GAME_SEND_CHAT_ERROR_PACKET(_out, nom);
@@ -3768,7 +3734,7 @@ public class GameThread implements Runnable
 	private void Basic_infosmessage(String packet)
 	{
 			packet = packet.substring(2);
-			Personnage T = World.getPersoByName(packet);
+			Personaje T = World.getPersoByName(packet);
 			if(T == null) return;
 			SocketManager.GAME_SEND_BWK(_perso, T.get_compte().get_pseudo()+"|1|"+T.get_name()+"|-1");
 	}
@@ -3831,7 +3797,7 @@ public class GameThread implements Runnable
 		if(_perso.get_fight() == null)return;
 		if(targetID > 0)//Expulsion d'un joueurs autre que soi-meme
 		{
-			Personnage target = World.getPersonnage(targetID);
+			Personaje target = World.getPersonnage(targetID);
 			//On ne quitte pas un joueur qui : est null, ne combat pas, n'est pas de �a team.
 			if(target == null || target.get_fight() == null || target.get_fight().getTeamID(target.get_GUID()) != _perso.get_fight().getTeamID(_perso.get_GUID()))return;
 			_perso.get_fight().leftFight(_perso, target);
@@ -4131,7 +4097,7 @@ public class GameThread implements Runnable
 			if(_perso == null)return;
 			if(_perso.get_fight() != null)return;
 			int id = Integer.parseInt(packet.substring(5));
-			Personnage target = World.getPersonnage(id);
+			Personaje target = World.getPersonnage(id);
 			if(target == null || !target.isOnline() || target.get_fight() != null
 			|| target.get_curCarte().get_id() != _perso.get_curCarte().get_id()
 			|| target.get_align() == _perso.get_align()
@@ -4228,7 +4194,7 @@ public class GameThread implements Runnable
 					SocketManager.GAME_SEND_GA903_ERROR_PACKET(_out,'o',guid);
 					return;
 				}
-				Personnage FightStarter = World.getPersonnage(guid);
+				Personaje FightStarter = World.getPersonnage(guid);
 				if(FightStarter == null)return;
 				if((FightStarter.get_fight().get_type() == Constants.FIGHT_TYPE_AGRESSION || 
 					FightStarter.get_fight().get_type() == Constants.FIGHT_TYPE_CHALLENGE || 
@@ -4283,7 +4249,7 @@ public class GameThread implements Runnable
 		{
 			int guid = Integer.parseInt(packet.substring(5));
 			if(_perso.is_away() || _perso.get_fight() != null){SocketManager.GAME_SEND_DUEL_Y_AWAY(_out, _perso.get_GUID());return;}
-			Personnage Target = World.getPersonnage(guid);
+			Personaje Target = World.getPersonnage(guid);
 			if(Target == null) return;
 			if(Target.is_away() || Target.get_fight() != null || Target.get_curCarte().get_id() != _perso.get_curCarte().get_id())
 			{
@@ -4496,7 +4462,7 @@ public class GameThread implements Runnable
 					playerId = Integer.parseInt(args[1]);
 				}catch(NumberFormatException e){return;}
 
-                Personnage player = World.getPersonnage(playerId);
+                Personaje player = World.getPersonnage(playerId);
 				if(player == null) return;
 				Compte account = player.get_compte();
 				if(account == null) return;

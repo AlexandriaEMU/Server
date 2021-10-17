@@ -1,0 +1,3 @@
+-2: Crear un gremio
+-1: Abrir el banco
+0: Teletransportar

@@ -12,8 +12,8 @@ import java.util.Map.Entry;
 
 import javax.swing.Timer;
 
-import objects.Carte.Case;
-import objects.Carte.InteractiveObject;
+import objects.Mapa.Case;
+import objects.Mapa.InteractiveObject;
 import objects.Objet.ObjTemplate;
 import common.*;
 
@@ -75,7 +75,7 @@ public class Metier {
 			_noRessource = noRessource;
 		}
 
-		public void levelUp(Personnage P,boolean send)
+		public void levelUp(Personaje P, boolean send)
 		{
 			_lvl++;
 			_posActions = Constants.getPosActionsToJob(_template.getId(),_lvl);
@@ -114,7 +114,7 @@ public class Metier {
 			return _xp;
 		}
 		
-		public void startAction(int id,Personnage P,InteractiveObject IO,GameAction GA,Case cell)
+		public void startAction(int id, Personaje P, InteractiveObject IO, GameAction GA, Case cell)
 		{
 			for(JobAction JA : _posActions)
 			{
@@ -127,7 +127,7 @@ public class Metier {
 			}
 		}
 		
-		public void endAction(int id,Personnage P,InteractiveObject IO,GameAction GA,Case cell)
+		public void endAction(int id, Personaje P, InteractiveObject IO, GameAction GA, Case cell)
 		{
 			if(_curAction == null)return;
 			_curAction.endAction(P,IO,GA,cell);
@@ -139,7 +139,7 @@ public class Metier {
 			SocketManager.GAME_SEND_JX_PACKET(P, list);
 		}
 		
-		public void addXp(Personnage P,long xp)
+		public void addXp(Personaje P, long xp)
 		{
 			if(_lvl >99)return;
 			int exLvl = _lvl;
@@ -246,7 +246,7 @@ public class Metier {
 		private Map<Integer,Integer> _ingredients = new TreeMap<>();
 		private Map<Integer,Integer> _lastCraft = new TreeMap<>();
 		private Timer _craftTimer;
-		private Personnage _P;
+		private Personaje _P;
 		
 		public JobAction(int sk,int min, int max,boolean craft, int arg,int xpWin)
 		{
@@ -268,7 +268,7 @@ public class Metier {
 			});
 		}
 		
-		public void endAction(Personnage P, InteractiveObject IO, GameAction GA,Case cell)
+		public void endAction(Personaje P, InteractiveObject IO, GameAction GA, Case cell)
 		{
 			if(!_isCraft)
 			{
@@ -311,7 +311,7 @@ public class Metier {
 			}
 		}
 
-		public void startAction(Personnage P, InteractiveObject IO, GameAction GA,Case cell)
+		public void startAction(Personaje P, InteractiveObject IO, GameAction GA, Case cell)
 		{
 			_P = P;
 			if(!_isCraft)
@@ -360,7 +360,7 @@ public class Metier {
 			return _isCraft;
 		}
 		
-		public void modifIngredient(Personnage P,int guid, int qua)
+		public void modifIngredient(Personaje P, int guid, int qua)
 		{
 			//on prend l'ancienne valeur
 			int q = _ingredients.get(guid)==null?0:_ingredients.get(guid);
@@ -1387,7 +1387,7 @@ public class Metier {
 			_ingredients.clear();
 		}
 
-		public void repeat(int time,Personnage P)
+		public void repeat(int time, Personaje P)
 		{
 			_craftTimer.stop();
 			// /!\ Time = Nombre Réel -1
@@ -1403,7 +1403,7 @@ public class Metier {
 			SocketManager.GAME_SEND_Ea_PACKET(P, "1");
 		}
 
-		public void startCraft(Personnage P)
+		public void startCraft(Personaje P)
 		{
 			//on retarde le lancement du craft en cas de packet EMR (craft auto)
 			_craftTimer.start();

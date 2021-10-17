@@ -109,11 +109,11 @@ public class Compte {
 	private String _curIP = "";
 	private String _lastConnectionDate = "";
 	private GameThread _gameThread;
-	private Personnage _curPerso;
+	private Personaje _curPerso;
 	private boolean _mute = false;
 	public Timer _muteTimer;
 	private Map<Integer,ArrayList<HdvEntry>> _hdvsItems;// Contient les items des HDV format : <hdvID,<cheapestID>>
-	private Map<Integer, Personnage> _persos = new TreeMap<>();
+	private Map<Integer, Personaje> _persos = new TreeMap<>();
 	private Bank _bank;
 	private FriendList _friends;
 	private EnemyList _enemys;
@@ -229,7 +229,7 @@ public class Compte {
 			str.append("|").append(g);
 			if (World.getCompteByPseudo(g) == null)
 				continue;
-			Personnage P = World.getCompteByPseudo(g).get_curPerso();
+			Personaje P = World.getCompteByPseudo(g).get_curPerso();
 			if (P == null)
 				continue;
 			str.append(P.parseToFriendList(_GUID));
@@ -245,7 +245,7 @@ public class Compte {
 			str.append("|").append(g);
 			if (World.getCompteByPseudo(g) == null)
 				continue;
-			Personnage P = World.getCompteByPseudo(g).get_curPerso();
+			Personaje P = World.getCompteByPseudo(g).get_curPerso();
 			if (P == null)
 				continue;
 			str.append(P.parseToEnemyList(_GUID));
@@ -556,12 +556,12 @@ public class Compte {
 		return false;
 	}
 	
-	public Map<Integer, Personnage> get_persos() 
+	public Map<Integer, Personaje> get_persos()
 	{
 		return _persos;
 	}
 	
-	public Personnage get_curPerso() 
+	public Personaje get_curPerso()
 	{
 		return _curPerso;
 	}
@@ -571,7 +571,7 @@ public class Compte {
 		return _persos.size();
 	}
 	
-	public void addPerso(Personnage perso)
+	public void addPerso(Personaje perso)
 	{
 		_persos.put(perso.get_GUID(),perso);
 	}
@@ -579,7 +579,7 @@ public class Compte {
 	public boolean createPerso(String name, int sexe, int classe,int color1, int color2, int color3)
 	{
 		
-		Personnage perso = Personnage.CREATE_PERSONNAGE(name, sexe, classe, color1, color2, color3, this);
+		Personaje perso = Personaje.CREATE_PERSONNAGE(name, sexe, classe, color1, color2, color3, this);
 		if(perso==null)
 		{
 			return false;
@@ -595,7 +595,7 @@ public class Compte {
 		_persos.remove(guid);
 	}
 	
-	public void setCurPerso(Personnage perso)
+	public void setCurPerso(Personaje perso)
 	{
 		_curPerso = perso;
 	}
@@ -611,7 +611,7 @@ public class Compte {
 
 	public void resetAllChars(boolean save)
 	{
-		for(Personnage P : _persos.values())
+		for(Personaje P : _persos.values())
 		{
 			//Si Echange avec un joueur
 			if(P.get_curExchange() != null)P.get_curExchange().cancel();
@@ -626,7 +626,7 @@ public class Compte {
 			//Mettre fin aux demande d'échange
 			if(P.get_isTradingWith() > 0)
 			{
-				Personnage p = World.getPersonnage(P.get_isTradingWith());
+				Personaje p = World.getPersonnage(P.get_isTradingWith());
 				if(p != null)
 				{
 					if(p.isOnline())
@@ -640,7 +640,7 @@ public class Compte {
 			//Mettre fin au demande d'échange craft
 			if(P.get_isCraftingWith() != 0)
 			{
-				Personnage target = World.getPersonnage(P.get_isCraftingWith());
+				Personaje target = World.getPersonnage(P.get_isCraftingWith());
 				if(target == null || target.get_isCraftingWith() != P.get_GUID()) return;
 				SocketManager.GAME_SEND_EV_PACKET(target.get_compte().getGameThread().get_out());
 				target.set_isCraftingWith(0);

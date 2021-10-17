@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
 import objects.*;
-import objects.Carte.Case;
+import objects.Mapa.Case;
 import objects.Fight.Fighter;
 import objects.Fight.Piege;
 
@@ -14,7 +14,7 @@ public class Pathfinding {
 
 	private static Integer _nSteps = new Integer(0);
 
-	public static int isValidPath(Carte map, int cellID, AtomicReference<String> pathRef,Fight fight)
+	public static int isValidPath(Mapa map, int cellID, AtomicReference<String> pathRef, Fight fight)
 	{
 		synchronized(_nSteps)
 		{
@@ -75,7 +75,7 @@ public class Pathfinding {
 		}
 	}
 	
-	public static ArrayList<Fighter> getEnemyFighterArround(int cellID,Carte map,Fight fight)
+	public static ArrayList<Fighter> getEnemyFighterArround(int cellID, Mapa map, Fight fight)
 	{
 		char[] dirs = {'b','d','f','h'};
 		ArrayList<Fighter> enemy = new ArrayList<>();
@@ -103,7 +103,7 @@ public class Pathfinding {
 			return false;
 	}
 	
-	public static String ValidSinglePath(int CurrentPos, String Path, Carte map, Fight fight)
+	public static String ValidSinglePath(int CurrentPos, String Path, Mapa map, Fight fight)
 	{
 		_nSteps = 0;
         char dir = Path.charAt(0);
@@ -151,7 +151,7 @@ public class Pathfinding {
         return "no:";
 	}
 
-	public static int GetCaseIDFromDirrection(int CaseID, char Direction,Carte map, boolean Combat)
+	public static int GetCaseIDFromDirrection(int CaseID, char Direction, Mapa map, boolean Combat)
 	{
 		switch (Direction)
         {
@@ -175,7 +175,7 @@ public class Pathfinding {
         return -1; 
 	}
 	
-	public static int getDistanceBetween(Carte map,int id1,int id2)
+	public static int getDistanceBetween(Mapa map, int id1, int id2)
 	{
 		if(id1 == id2)return 0;
 		if(map == null)return 0;
@@ -184,7 +184,7 @@ public class Pathfinding {
 		return (diffX + diffY);
 	}
 
-	public static int newCaseAfterPush(Carte map, Case CCase,Case TCase, int value)
+	public static int newCaseAfterPush(Mapa map, Case CCase, Case TCase, int value)
 	{
 		//Si c'est les memes case, il n'y a pas a bouger
 		if(CCase.getID() == TCase.getID())return 0;
@@ -233,7 +233,7 @@ public class Pathfinding {
 		return 0x00;
 	}
 
-	public static boolean casesAreInSameLine(Carte map,int c1,int c2,char dir)
+	public static boolean casesAreInSameLine(Mapa map, int c1, int c2, char dir)
 	{
 		if(c1 == c2)
 			return true;
@@ -321,7 +321,7 @@ public class Pathfinding {
 		return cibles;
 	}
 
-	private static Fighter get1StFighterOnCellFromDirection(Carte map, int id, char c)
+	private static Fighter get1StFighterOnCellFromDirection(Mapa map, int id, char c)
 	{ 
 		if(c == (char)('a'-1))
 			c = 'h';
@@ -330,13 +330,13 @@ public class Pathfinding {
 		return map.getCase(GetCaseIDFromDirrection(id,c,map,false)).getFirstFighter();
 	}
 
-	private static Fighter getFighter2CellBefore(int CellID, char c,Carte map)
+	private static Fighter getFighter2CellBefore(int CellID, char c, Mapa map)
 	{
 		int new2CellID = GetCaseIDFromDirrection(GetCaseIDFromDirrection(CellID,c,map,false),c,map,false);
 		return map.getCase(new2CellID).getFirstFighter();
 	}
 
-	public static char getDirBetweenTwoCase(int cell1ID, int cell2ID,Carte map, boolean Combat)
+	public static char getDirBetweenTwoCase(int cell1ID, int cell2ID, Mapa map, boolean Combat)
 	{
 		ArrayList<Character> dirs = new ArrayList<>();
 		dirs.add('b');
@@ -363,7 +363,7 @@ public class Pathfinding {
 		return 0;
 	}
 
-	public static ArrayList<Case> getCellListFromAreaString(Carte map,int cellID,int castCellID, String zoneStr, int PONum, boolean isCC)
+	public static ArrayList<Case> getCellListFromAreaString(Mapa map, int cellID, int castCellID, String zoneStr, int PONum, boolean isCC)
 	{
 		ArrayList<Case> cases = new ArrayList<>();
 		int c = PONum;
@@ -425,14 +425,14 @@ public class Pathfinding {
 		return cases;
 	}
 
-	public static int getCellXCoord(Carte map, int cellID)
+	public static int getCellXCoord(Mapa map, int cellID)
 	{
 		if(map == null) return 0;
 		int w = map.get_w();
 		return ((cellID - (w -1) * getCellYCoord(map,cellID)) / w);
 	}
 	
-	public static int getCellYCoord(Carte map, int cellID)
+	public static int getCellYCoord(Mapa map, int cellID)
 	{
 		int w = map.get_w();
 		int loc5 = (int)(cellID/ ((w*2) -1));
@@ -441,7 +441,7 @@ public class Pathfinding {
 		return (loc5 - loc7);
 	}
 	
-	public static boolean checkLoS(Carte map, int cell1, int cell2,Fighter fighter)
+	public static boolean checkLoS(Mapa map, int cell1, int cell2, Fighter fighter)
 	{
 		if(fighter.getPersonnage() != null)return true;
 		int dist = getDistanceBetween(map,cell1,cell2);
@@ -466,7 +466,7 @@ public class Pathfinding {
 		return true;
 	}
 	
-	public static int getNearestCellAround(Carte map,int startCell, int endCell, ArrayList<Case> forbidens)
+	public static int getNearestCellAround(Mapa map, int startCell, int endCell, ArrayList<Case> forbidens)
 	{
 		//On prend la cellule autour de la cible, la plus proche
 		int dist = 1000;
@@ -487,7 +487,7 @@ public class Pathfinding {
 		return cellID==startCell?-1:cellID;
 	}
 	
-	public static ArrayList<Case> getShortestPathBetween(Carte map, int start, int dest, int distMax)
+	public static ArrayList<Case> getShortestPathBetween(Mapa map, int start, int dest, int distMax)
 	{	
 		ArrayList<Case> curPath = new ArrayList<>();
 		ArrayList<Case> curPath2 = new ArrayList<>();
@@ -575,7 +575,7 @@ public class Pathfinding {
 		return curPath;
 	}
 	
-	public static String getShortestStringPathBetween(Carte map, int start, int dest, int distMax)
+	public static String getShortestStringPathBetween(Mapa map, int start, int dest, int distMax)
 	{
 		if (start == dest) return null;
 		ArrayList<Case> path = getShortestPathBetween(map, start, dest, distMax);
@@ -745,7 +745,7 @@ public class Pathfinding {
 		return null;
 	}
 	
-	public static ArrayList<Fighter> getFightersAround(int cellID,Carte map,Fight fight)
+	public static ArrayList<Fighter> getFightersAround(int cellID, Mapa map, Fight fight)
 	{
 		char[] dirs = {'b','d','f','h'};
 		ArrayList<Fighter> fighters = new ArrayList<>();

@@ -10,8 +10,9 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import objects.Mapa;
 import objects.Compte;
-import objects.Personnage;
+import objects.Personaje;
 
 import common.*;
 
@@ -22,11 +23,11 @@ public class GameServer implements Runnable{
 	private ArrayList<GameThread> _clients = new ArrayList<>();
 	private ArrayList<Compte> _waitings = new ArrayList<>();
 
-    private int _saveTimer = 0, _loadActionTimer = 0, _reloadMobTimer = 0;
+    private int _saveTimer = 0, _loadActionTimer = 0, _reloadMobTimer = 0, _movermonstruos = 0;
 	
 	private long _startTime;
 	private int _maxPlayer = 0;
-	
+
 	public GameServer(String Ip)
 	{
 		try {
@@ -39,35 +40,45 @@ public class GameServer implements Runnable{
 					_saveTimer++;
 					_loadActionTimer++;
 					_reloadMobTimer++;
-					if(_saveTimer == (Main.CONFIG_SAVE_TIME/60000))
-					{
-						if(!Main.isSaving)
-						{
+
+					//Guardado automatico del server
+					if(_saveTimer == (Main.CONFIG_SAVE_TIME/60000)) {
+						if(!Main.isSaving) {
 							Thread t = new Thread(new SaveThread());
 							t.start();
 						}
 						_saveTimer = 0;
 					}
-					if(_loadActionTimer == (Main.CONFIG_LOAD_DELAY/60000))
-					{
+
+					//v0.00.1 - Agregamos movimiento de monstruos
+					//Movimiento de monstruos, recaudadores y npc
+					if(_movermonstruos == (Main.CONFIG_MOVER_MONSTRUOS/30000)) {
+						for (Mapa mapa : World.getCartes()) {
+							mapa.movimientodemonstruosenmapa();
+						}
+						GameServer.addToLog("Se movieron los monstruos");
+						_movermonstruos = 0;
+					}
+
+					//Acciones en tiempo real
+					if(_loadActionTimer == (Main.CONFIG_LOAD_DELAY/60000)) {
 						SQLManager.LOAD_ACTION();
-						GameServer.addToLog("Les live actions ont ete appliquees");
+						GameServer.addToLog("Las acciones en tiempo real se han realizado");
 						_loadActionTimer = 0;
 					}
-					if(_reloadMobTimer == (Main.CONFIG_RELOAD_MOB_DELAY/60000))
-					{
+
+					//Actualizacion de moobs
+					if(_reloadMobTimer == (Main.CONFIG_RELOAD_MOB_DELAY/60000)) {
 						World.RefreshAllMob();
-						GameServer.addToLog("La recharge des mobs est finie");
+						GameServer.addToLog("La actualizacion de mobs ha finalizado");
 						_reloadMobTimer = 0;
 					}
-					for(Personnage perso : World.getOnlinePersos()) 
-					{
-						if (perso.getLastPacketTime() + Main.CONFIG_MAX_IDLE_TIME < System.currentTimeMillis())
-						{
+
+					for(Personaje perso : World.getOnlinePersos()) {
+						if (perso.getLastPacketTime() + Main.CONFIG_MAX_IDLE_TIME < System.currentTimeMillis()) {
 							
-							if(perso != null && perso.get_compte().getGameThread() != null && perso.isOnline())
-							{
-								GameServer.addToLog("Kick pour inactiviter de : "+perso.get_name());
+							if(perso != null && perso.get_compte().getGameThread() != null && perso.isOnline()) {
+								GameServer.addToLog("Kick por inactividad del jugador: "+perso.get_name());
 								SocketManager.MESSAGE_BOX(perso.get_compte().getGameThread().get_out(),"01|"); 
 								perso.get_compte().getGameThread().kick();
 							}
@@ -76,7 +87,7 @@ public class GameServer implements Runnable{
 					World.MoveMobsOnMaps();
 				}
 			}, 60000,60000);
-			
+
 			_SS = new ServerSocket(Main.CONFIG_GAME_PORT);
 			if(Main.CONFIG_USE_IP)
 				Main.GAMESERVER_IP = CryptManager.CryptIP(Ip)+CryptManager.CryptPort(Main.CONFIG_GAME_PORT);
@@ -89,12 +100,9 @@ public class GameServer implements Runnable{
 		}
 	}
 	
-	public static class SaveThread implements Runnable
-	{
-		public void run()
-		{
-			if(Main.isSaving == false)
-			{
+	public static class SaveThread implements Runnable {
+		public void run() {
+			if(Main.isSaving == false) {
 				SocketManager.GAME_SEND_Im_PACKET_TO_ALL("1164");
 				World.saveAll(null);
 				SocketManager.GAME_SEND_Im_PACKET_TO_ALL("1165");

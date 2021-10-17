@@ -15,7 +15,7 @@ public class ComServer implements Runnable {
 
     public ComServer() {
         	try {
-                Socket _s = new Socket(Main.REALM_IP, Main.COM_PORT);
+                Socket _s = new Socket(Main.MULTI_IP, Main.COM_PORT);
                 Thread _t = new Thread(this);
     			_t.setDaemon(true);
     			_t.start();

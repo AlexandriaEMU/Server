@@ -6,7 +6,7 @@ import objects.Metier.StatsMetier;
 import objects.Monstre.MobGroup;
 import objects.NPC_tmpl.NPC_question;
 import objects.Objet.ObjTemplate;
-import objects.Personnage.traque;
+import objects.Personaje.traque;
 
 import common.Main;
 import common.ConditionParser;
@@ -18,98 +18,52 @@ import common.World;
 
 import game.GameServer;
 import game.GameThread;
+import objects.acciones.cero;
+import objects.acciones.menosdos;
+import objects.acciones.menosuno;
 
 public class Action {
 
 	private int ID;
-	private String args;
-	private String cond;
+	private String argumento;
+	private String condicion;
 	
-	public Action(int id, String args, String cond)
-	{
+	public Action(int id, String args, String cond) {
 		this.ID = id;
-		this.args = args;
-		this.cond = cond;
+		this.argumento = args;
+		this.condicion = cond;
 	}
 
 
-	public void apply(Personnage perso, Personnage target, int itemID, int cellid)
-	{
+	public void apply(Personaje perso, Personaje target, int itemID, int cellid) {
 		if(perso == null)return;
-		if(!cond.equalsIgnoreCase("") && !cond.equalsIgnoreCase("-1")&& !ConditionParser.validConditions(perso,cond))
-		{
+		if(!condicion.equalsIgnoreCase("") && !condicion.equalsIgnoreCase("-1")&& !ConditionParser.validConditions(perso, condicion)) {
 			SocketManager.GAME_SEND_Im_PACKET(perso, "119");
 			return;
 		}
 		if(perso.get_compte().getGameThread() == null) return;
 		PrintWriter out = perso.get_compte().getGameThread().get_out();	
-		switch(ID)
-		{
-			case -2://créer guilde
-				if(perso.is_away())return;
-				if(perso.get_guild() != null || perso.getGuildMember() != null)
-				{
-					SocketManager.GAME_SEND_gC_PACKET(perso, "Ea");
-					return;
-				}
-				SocketManager.GAME_SEND_gn_PACKET(perso);
+		switch(ID) {
+
+			//Crear un gremio
+			case -2:
+				menosdos.INSTANCE.menosdos(perso);
 			break;
-			case -1://Ouvrir banque
-				//Sauvagarde du perso et des item avant.
-				SQLManager.SAVE_PERSONNAGE(perso,true);
-				if(perso.getDeshonor() >= 1) 
-				{
-					SocketManager.GAME_SEND_Im_PACKET(perso, "183");
-					return;
-				}
-				int cost = perso.get_compte().getBankCost();
-				if(cost > 0)
-				{
-					final long playerKamas = perso.get_kamas();
-                    final long kamasRemaining = playerKamas - cost;
-                    final long bankKamas = perso.get_compte().GetBankKamas();
-                    final long totalKamas = bankKamas+playerKamas;
-                    if(kamasRemaining < 0)//Si le joueur n'a pas assez de kamas SUR LUI pour ouvrir la banque
-                    {
-                        if(bankKamas >= cost)
-                        {
-                        	perso.get_compte().setBankKamas(bankKamas-cost); //On modifie les kamas de la banque
-                        }
-                        else if(totalKamas >= cost)
-                        {
-                        	perso.set_kamas(0);//On puise l'entièreter des kamas du joueurs. Ankalike ?
-                        	perso.get_compte().setBankKamas(totalKamas-cost);//On modifie les kamas de la banque
-                        	SocketManager.GAME_SEND_STATS_PACKET(perso);
-                        	SocketManager.GAME_SEND_Im_PACKET(perso, "020;"+playerKamas);
-                        }else
-                        {
-                        	SocketManager.MESSAGE_BOX(perso.get_compte().getGameThread().get_out(), "110|"+cost);
-                        	return;
-                        }
-                    }else //Si le joueur a les kamas sur lui on lui retire directement
-                    {
-                    	perso.set_kamas(kamasRemaining);
-                    	SocketManager.GAME_SEND_STATS_PACKET(perso);
-                    	SocketManager.GAME_SEND_Im_PACKET(perso, "020;"+cost);
-                    }
-				}
-				SocketManager.GAME_SEND_ECK_PACKET(perso.get_compte().getGameThread().get_out(), 5, "");
-				SocketManager.GAME_SEND_EL_BANK_PACKET(perso);
-				perso.set_away(true);
-				perso.setInBank(true);
+
+			//Abrir el banco
+			case -1:
+				menosuno.INSTANCE.menosuno(perso);
 			break;
-			case 0://Téléportation
-				try
-				{
-					short newMapID = Short.parseShort(args.split(",",2)[0]);
-					int newCellID = Integer.parseInt(args.split(",",2)[1]);
-					
-					perso.teleport(newMapID,newCellID);	
-				}catch(Exception e ){return;}
+
+			//Teletransportar
+			case 0:
+				cero.INSTANCE.cero(perso, argumento);
 				break;
-			case 1://Discours NPC
+
+			//Continuar el dialogo con un NPC
+			case 1:
 				out = perso.get_compte().getGameThread().get_out();
-				if(args.equalsIgnoreCase("DV"))
+				if(argumento.equalsIgnoreCase("DV"))
 				{
 					SocketManager.GAME_SEND_END_DIALOG_PACKET(out);
 					perso.set_isTalkingWith(0);
@@ -118,7 +72,7 @@ public class Action {
 					int qID = -1;
 					try
 					{
-						qID = Integer.parseInt(args);
+						qID = Integer.parseInt(argumento);
 					}catch(NumberFormatException e){}
 
 					NPC_question  quest = World.getNPCQuestion(qID);
@@ -135,7 +89,7 @@ public class Action {
 			case 4://Kamas
 				try
 				{
-					int count = Integer.parseInt(args);
+					int count = Integer.parseInt(argumento);
 					long curKamas = perso.get_kamas();
 					long newKamas = curKamas + count;
 					if(newKamas <0) newKamas = 0;
@@ -149,10 +103,10 @@ public class Action {
 			case 5://objet
 				try
 				{
-					int tID = Integer.parseInt(args.split(",")[0]);
-					int count = Integer.parseInt(args.split(",")[1]);
+					int tID = Integer.parseInt(argumento.split(",")[0]);
+					int count = Integer.parseInt(argumento.split(",")[1]);
 					boolean send = true;
-					if(args.split(",").length >2)send = args.split(",")[2].equals("1");
+					if(argumento.split(",").length >2)send = argumento.split(",")[2].equals("1");
 					
 					//Si on ajoute
 					if(count > 0)
@@ -186,7 +140,7 @@ public class Action {
 			case 6://Apprendre un métier
 				try
 				{
-					int mID = Integer.parseInt(args);
+					int mID = Integer.parseInt(argumento);
 					if(World.getMetier(mID) == null)return;
 					// Si c'est un métier 'basic' :
 					if(mID == 	2 || mID == 11 ||
@@ -263,8 +217,8 @@ public class Action {
 			case 8://Ajouter une Stat
 				try
 				{
-					int statID = Integer.parseInt(args.split(",",2)[0]);
-					int number = Integer.parseInt(args.split(",",2)[1]);
+					int statID = Integer.parseInt(argumento.split(",",2)[0]);
+					int number = Integer.parseInt(argumento.split(",",2)[1]);
 					perso.get_baseStats().addOneStat(statID, number);
 					SocketManager.GAME_SEND_STATS_PACKET(perso);
 					int messID = switch (statID) {
@@ -278,7 +232,7 @@ public class Action {
 			case 9://Apprendre un sort
 				try
 				{
-					int sID = Integer.parseInt(args);
+					int sID = Integer.parseInt(argumento);
 					if(World.getSort(sID) == null)return;
 					perso.learnSpell(sID,1, true,true);
 				}catch(Exception e){GameServer.addToLog(e.getMessage());}
@@ -286,8 +240,8 @@ public class Action {
 			case 10://Pain/potion/viande/poisson
 				try
 				{
-					int min = Integer.parseInt(args.split(",",2)[0]);
-					int max = Integer.parseInt(args.split(",",2)[1]);
+					int min = Integer.parseInt(argumento.split(",",2)[0]);
+					int max = Integer.parseInt(argumento.split(",",2)[1]);
 					if(max == 0) max = min;
 					int val = Formulas.getRandomValue(min, max);
 					if(target != null)
@@ -307,8 +261,8 @@ public class Action {
 			case 11://Definir l'alignement
 				try
 				{
-					byte newAlign = Byte.parseByte(args.split(",",2)[0]);
-					boolean replace = Integer.parseInt(args.split(",",2)[1]) == 1;
+					byte newAlign = Byte.parseByte(argumento.split(",",2)[0]);
+					boolean replace = Integer.parseInt(argumento.split(",",2)[1]) == 1;
 					//Si le perso n'est pas neutre, et qu'on doit pas remplacer, on passe
 					if(perso.get_align() != Constants.ALIGNEMENT_NEUTRE && !replace)return;
 					perso.modifAlignement(newAlign);
@@ -318,8 +272,8 @@ public class Action {
 			case 12://Spawn d'un groupe de monstre
 				try
 				{
-					boolean delObj = args.split(",")[0].equals("true");
-					boolean inArena = args.split(",")[1].equals("true");
+					boolean delObj = argumento.split(",")[0].equals("true");
+					boolean inArena = argumento.split(",")[1].equals("true");
 
 					if(inArena && !World.isArenaMap(perso.get_curCarte().get_id()))return;	//Si la map du personnage n'est pas classé comme étant dans l'arène
 
@@ -356,10 +310,10 @@ public class Action {
 			case 15://Téléportation donjon
 				try
 				{
-					short newMapID = Short.parseShort(args.split(",")[0]);
-					int newCellID = Integer.parseInt(args.split(",")[1]);
-					int ObjetNeed = Integer.parseInt(args.split(",")[2]);
-					int MapNeed = Integer.parseInt(args.split(",")[3]);
+					short newMapID = Short.parseShort(argumento.split(",")[0]);
+					int newCellID = Integer.parseInt(argumento.split(",")[1]);
+					int ObjetNeed = Integer.parseInt(argumento.split(",")[2]);
+					int MapNeed = Integer.parseInt(argumento.split(",")[3]);
 					if(ObjetNeed == 0)
 					{
 						//Téléportation sans objets
@@ -400,7 +354,7 @@ public class Action {
 				{
 					if(perso.get_align() != 0)
 					{
-						int AddHonor = Integer.parseInt(args);
+						int AddHonor = Integer.parseInt(argumento);
 						int ActualHonor = perso.get_honor();
 						perso.set_honor(ActualHonor+AddHonor);
 					}
@@ -409,8 +363,8 @@ public class Action {
 			case 17://Xp métier JobID,XpValue
 				try
 				{
-					int JobID = Integer.parseInt(args.split(",")[0]);
-					int XpValue = Integer.parseInt(args.split(",")[1]);
+					int JobID = Integer.parseInt(argumento.split(",")[0]);
+					int XpValue = Integer.parseInt(argumento.split(",")[1]);
 					if(perso.getMetierByID(JobID) != null)
 					{
 						perso.getMetierByID(JobID).addXp(perso, XpValue);
@@ -436,7 +390,7 @@ public class Action {
 			case 20://+Points de sorts
 				try
 				{
-					int pts = Integer.parseInt(args);
+					int pts = Integer.parseInt(argumento);
 					if(pts < 1) return;
 					perso.addSpellPoint(pts);
 					SocketManager.GAME_SEND_STATS_PACKET(perso);
@@ -445,7 +399,7 @@ public class Action {
 			case 21://+Energie
 				try
 				{
-					int Energy = Integer.parseInt(args);
+					int Energy = Integer.parseInt(argumento);
 					if(Energy < 1) return;
 					
 					int EnergyTotal = perso.get_energy()+Energy;
@@ -458,7 +412,7 @@ public class Action {
 			case 22://+Xp
 				try
 				{
-					long XpAdd = Integer.parseInt(args);
+					long XpAdd = Integer.parseInt(argumento);
 					if(XpAdd < 1) return;
 					
 					long TotalXp = perso.get_curExp()+XpAdd;
@@ -469,7 +423,7 @@ public class Action {
 			case 23://UnlearnJob
 				try
 				{
-					int Job = Integer.parseInt(args);
+					int Job = Integer.parseInt(argumento);
 					if(Job < 1) return;
 					StatsMetier m = perso.getMetierByID(Job);
 					if(m == null) return;
@@ -481,7 +435,7 @@ public class Action {
 			case 24://SimpleMorph
 				try
 				{
-					int morphID = Integer.parseInt(args);
+					int morphID = Integer.parseInt(argumento);
 					if(morphID < 0)return;
 					perso.set_gfxID(morphID);
 					SocketManager.GAME_SEND_ERASE_ON_MAP_TO_MAP(perso.get_curCarte(), perso.get_GUID());
@@ -501,7 +455,7 @@ public class Action {
 				StringBuilder ValidMobGroup = new StringBuilder();
 				try
 		        {
-					for(String MobAndLevel : args.split("\\|"))
+					for(String MobAndLevel : argumento.split("\\|"))
 					{
 						int monsterID = -1;
 						int monsterLevel = -1;
@@ -525,7 +479,7 @@ public class Action {
 				int Job = 0;
 				try
 				{
-					Job = Integer.parseInt(args);
+					Job = Integer.parseInt(argumento);
 				}catch(Exception e){GameServer.addToLog(e.getMessage());}
 				if(perso.is_onCraftBookCrafter())
 				{
@@ -547,14 +501,14 @@ public class Action {
 				}
 				if(perso.get_traque().get_time() < System.currentTimeMillis() - 600000 || perso.get_traque().get_time() == 0)
 				{
-					Personnage tempP = null;
+					Personaje tempP = null;
 					int tmp = 15;
 					int diff = 0;
 					for(byte b = 0; b < 100; b++)
 					{
 					if(b == Main.gameServer.getClients().size())break;
 					GameThread GT = Main.gameServer.getClients().get(b);
-					Personnage P = GT.getPerso();
+					Personaje P = GT.getPerso();
 					if(P == null || P == perso)continue;
 					if(P.get_compte().get_curIP().compareTo(perso.get_compte().get_curIP()) == 0)continue;
 					//SI pas sériane ni neutre et si alignement opposé
@@ -628,7 +582,7 @@ public class Action {
 				{
 					break;	
 				}
-				Personnage cible = World.getPersoByName(perr);
+				Personaje cible = World.getPersoByName(perr);
 				if(cible==null)break;
 				if(!cible.isOnline())
 				{
@@ -670,7 +624,7 @@ public class Action {
 				}else
 				{
 					perso.set_kamas(perso.get_kamas()-50000);
-					Personnage wife = World.getPersonnage(perso.getWife());
+					Personaje wife = World.getPersonnage(perso.getWife());
 					wife.Divorce();
 					perso.Divorce();
 				}
@@ -690,7 +644,7 @@ public class Action {
 			case 228://Faire animation Hors Combat
 				try
 				{
-					int AnimationId = Integer.parseInt(args);
+					int AnimationId = Integer.parseInt(argumento);
 					Animations animation = World.getAnimation(AnimationId);
 					if(perso.get_fight() != null) return;
 					perso.changeOrientation(1);

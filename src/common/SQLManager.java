@@ -19,7 +19,7 @@ import objects.*;
 import objects.NPC_tmpl.*;
 import objects.Objet.*;
 import objects.Sort.*;
-import objects.Carte.*;
+import objects.Mapa.*;
 import objects.Compte.EnemyList;
 import objects.Compte.FriendList;
 import objects.Guild.GuildMember;
@@ -96,7 +96,7 @@ public class SQLManager {
 			gameCon = DriverManager.getConnection("jdbc:mysql://"+ Main.DB_HOST+"/"+ Main.DB_NAME, Main.DB_USER, Main.DB_PASS);
 			gameCon.setAutoCommit(false);
 			
-			realmCon = DriverManager.getConnection("jdbc:mysql://"+ Main.REALM_DB_HOST+"/"+ Main.REALM_DB_NAME, Main.REALM_DB_USER, Main.REALM_DB_PASS);
+			realmCon = DriverManager.getConnection("jdbc:mysql://"+ Main.MULTI_BDD_IP +"/"+ Main.REALM_DB_NAME, Main.REALM_DB_USER, Main.REALM_DB_PASS);
 			realmCon.setAutoCommit(false);
 			
 			if(!gameCon.isValid(1000) || !realmCon.isValid(1000))
@@ -414,7 +414,7 @@ public class SQLManager {
 			ResultSet RS = SQLManager.executeQuery("SELECT * from mountpark_data;", Main.DB_NAME);
 			while(RS.next())
 			{
-				Carte map = World.getCarte(RS.getShort("mapid"));
+				Mapa map = World.getCarte(RS.getShort("mapid"));
 				if(map == null)continue;
 					World.addMountPark(
 						new MountPark(
@@ -519,7 +519,7 @@ public class SQLManager {
 			ResultSet RS = SQLManager.executeQuery("SELECT * from npcs;", Main.DB_NAME);
 			while(RS.next())
 			{
-				Carte map = World.getCarte(RS.getShort("mapid"));
+				Mapa map = World.getCarte(RS.getShort("mapid"));
 				if(map == null)continue;
 				map.addNpc(RS.getInt("npcid"), RS.getInt("cellid"), RS.getInt("orientation"));
 				
@@ -542,7 +542,7 @@ public class SQLManager {
 			ResultSet RS = SQLManager.executeQuery("SELECT * from percepteurs;", Main.DB_NAME);
 			while(RS.next())
 			{
-				Carte map = World.getCarte(RS.getShort("mapid"));
+				Mapa map = World.getCarte(RS.getShort("mapid"));
 				if(map == null)continue;
 				
 				World.addPerco(
@@ -577,7 +577,7 @@ public class SQLManager {
 			ResultSet RS = SQLManager.executeQuery("SELECT * from houses;", Main.DB_NAME);
 			while(RS.next())
 			{
-				Carte map = World.getCarte(RS.getShort("map_id"));
+				Mapa map = World.getCarte(RS.getShort("map_id"));
 				if(map == null)continue;
 				
 				World.addHouse(
@@ -639,7 +639,7 @@ public class SQLManager {
 				stats.put(Constants.STATS_ADD_CHAN, RS.getInt("chance"));
 				stats.put(Constants.STATS_ADD_AGIL, RS.getInt("agilite"));
 				
-				Personnage perso = new Personnage(
+				Personaje perso = new Personaje(
 						RS.getInt("guid"),
 						RS.getString("name"),
 						RS.getInt("sexe"),
@@ -717,7 +717,7 @@ public class SQLManager {
 						
 						accID = RS.getInt("account");
 						
-						Personnage perso = new Personnage(
+						Personaje perso = new Personaje(
 								RS.getInt("guid"),
 								RS.getString("name"),
 								RS.getInt("sexe"),
@@ -792,7 +792,7 @@ public class SQLManager {
 				stats.put(Constants.STATS_ADD_CHAN, RS.getInt("chance"));
 				stats.put(Constants.STATS_ADD_AGIL, RS.getInt("agilite"));
 				
-				Personnage perso = new Personnage(
+				Personaje perso = new Personaje(
 						RS.getInt("guid"),
 						RS.getString("name"),
 						RS.getInt("sexe"),
@@ -846,7 +846,7 @@ public class SQLManager {
 			Main.closeServers();
 		}
 	}
-	public static boolean DELETE_PERSO_IN_BDD(Personnage perso)
+	public static boolean DELETE_PERSO_IN_BDD(Personaje perso)
 	{
 		int guid = perso.get_GUID();
 		String baseQuery = "DELETE FROM personnages WHERE guid = ?;";
@@ -892,7 +892,7 @@ public class SQLManager {
 			return false;
 		}
 	}
-	public static boolean ADD_PERSO_IN_BDD(Personnage perso)
+	public static boolean ADD_PERSO_IN_BDD(Personaje perso)
 	{
 		String baseQuery = "INSERT INTO personnages( `guid` , `name` , `sexe` , `class` , `color1` , `color2` , `color3` , `kamas` , `spellboost` , `capital` , `energy` , `level` , `xp` , `size` , `gfx` , `account`,`cell`,`map`,`spells`,`objets`, `storeObjets`)" +
 				" VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'', '');";
@@ -984,7 +984,7 @@ public class SQLManager {
 			while(RS.next())
 			{
 					World.addCarte(
-							new Carte(
+							new Mapa(
 							RS.getShort("id"),
 							RS.getString("date"),
 							RS.getByte("width"),
@@ -1003,7 +1003,7 @@ public class SQLManager {
 			RS = SQLManager.executeQuery("SELECT  * from mobgroups_fix;", Main.DB_NAME);
 			while(RS.next())
 			{
-					Carte c = World.getCarte(RS.getShort("mapid"));
+					Mapa c = World.getCarte(RS.getShort("mapid"));
 					if(c == null)continue;
 					if(c.getCase(RS.getInt("cellid")) == null)continue;
 					c.addStaticGroup(RS.getInt("cellid"), RS.getString("groupData"));
@@ -1015,7 +1015,7 @@ public class SQLManager {
 			System.exit(1);
 		}
 	}
-	public static void SAVE_PERSONNAGE(Personnage _perso, boolean saveAll)
+	public static void SAVE_PERSONNAGE(Personaje _perso, boolean saveAll)
 	{
 		String baseQuery = "UPDATE `personnages` SET "+
 						"`kamas`= ?,"+
@@ -1474,7 +1474,7 @@ public class SQLManager {
 			ResultSet RS = SQLManager.executeQuery("SELECT * FROM endfight_action;", Main.DB_NAME);
 			while(RS.next())
 			{
-				Carte map = World.getCarte(RS.getShort("map"));
+				Mapa map = World.getCarte(RS.getShort("map"));
 				if(map == null)continue;
 				map.addEndFightAction(RS.getInt("fighttype"),
 						new Action(RS.getInt("action"),RS.getString("args"),RS.getString("cond")));
@@ -1751,7 +1751,7 @@ public class SQLManager {
 		}
 		return false;
 	}
-	public static boolean SAVE_MAP_DATA(Carte map)
+	public static boolean SAVE_MAP_DATA(Mapa map)
 	{
 		String baseQuery = "UPDATE `maps` SET "+
 		"`places` = ?, "+
@@ -2147,7 +2147,7 @@ public class SQLManager {
 	public static void LOAD_ACTION()
 	{
 			/*Variables repr�sentant les champs de la base*/
-			Personnage perso;
+			Personaje perso;
 			int action;
 			int nombre;
 			int id;
@@ -2354,7 +2354,7 @@ public class SQLManager {
 			}
 			return exist;
 		}
-		public static void HOUSE_BUY(Personnage P, House h) 
+		public static void HOUSE_BUY(Personaje P, House h)
 		{	
 			
 			PreparedStatement p;
@@ -2418,7 +2418,7 @@ public class SQLManager {
 				GameServer.addToLog("Game: Query: "+query);
 			}
 		}
-		public static void HOUSE_CODE(Personnage P, House h, String packet) 
+		public static void HOUSE_CODE(Personaje P, House h, String packet)
 		{	
 			PreparedStatement p;
 			String query = "UPDATE `houses` SET `key`=? WHERE `id`=? AND owner_id=?;";
@@ -2747,7 +2747,7 @@ public class SQLManager {
                 }
                 return nbr;
         }
-        public static void TRUNK_CODE(Personnage P, Trunk t, String packet)
+        public static void TRUNK_CODE(Personaje P, Trunk t, String packet)
         {      
                 PreparedStatement p;
                 String query = "UPDATE `coffres` SET `key`=? WHERE `id`=? AND owner_id=?;";

@@ -86,7 +86,7 @@ public class Challenge
 		return packet.toString();
 	}
 	
-	public void show_cibleToPerso(Personnage p)
+	public void show_cibleToPerso(Personaje p)
 	{
 		if(!challengeAlive || _cible == null || _cible.get_fightCell() == null || p == null) return;
 		

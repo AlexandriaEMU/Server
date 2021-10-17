@@ -10,7 +10,7 @@ import objects.*;
 
 public class ConditionParser
 {
-	public static boolean validConditions(Personnage perso,String req)
+	public static boolean validConditions(Personaje perso, String req)
 	{
 		if(req == null || req.equals(""))return true;
 		if(req.contains("BI"))return false;
@@ -71,7 +71,7 @@ public class ConditionParser
 		return true;
 	}
 	
-	public static String havePO(String cond,Personnage perso)//On remplace les PO par leurs valeurs si possession de l'item
+	public static String havePO(String cond, Personaje perso)//On remplace les PO par leurs valeurs si possession de l'item
 	{
 		boolean Jump = false;
 		boolean ContainsPO = false;
@@ -270,7 +270,7 @@ public class ConditionParser
 		return copyCond.toString();
 	}
 	
-	public static String canPN(String cond,Personnage perso)//On remplace le PN par 1 et si le nom correspond == 1 sinon == 0
+	public static String canPN(String cond, Personaje perso)//On remplace le PN par 1 et si le nom correspond == 1 sinon == 0
 	{
 		StringBuilder copyCond = new StringBuilder();
 		for(String cur : cond.split("=="))
@@ -291,7 +291,7 @@ public class ConditionParser
 		return copyCond.toString();
 	}
 	
-	public static String canPJ(String cond,Personnage perso)//On remplace le PJ par 1 et si le metier correspond == 1 sinon == 0
+	public static String canPJ(String cond, Personaje perso)//On remplace le PJ par 1 et si le metier correspond == 1 sinon == 0
 	{
 		StringBuilder copyCond = new StringBuilder();
 		for(String cur : cond.split("=="))

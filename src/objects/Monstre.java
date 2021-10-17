@@ -9,9 +9,9 @@ import java.util.Map.Entry;
 
 import java.util.Timer;
 
-import objects.Carte.Case;
+import objects.Mapa.Case;
 import objects.Fight.Fighter;
-import objects.Personnage.Stats;
+import objects.Personaje.Stats;
 import objects.Sort.SortStats;
 import common.*;
 import common.World.*;
@@ -42,7 +42,7 @@ public class Monstre
 		private Timer _condTimer;
 		private long creationTime;
 		
-		public MobGroup(int Aid,int Aalign, ArrayList<MobGrade> possibles,Carte Map,int cell,int maxSize)
+		public MobGroup(int Aid, int Aalign, ArrayList<MobGrade> possibles, Mapa Map, int cell, int maxSize)
 		{
 			id = Aid;
 			align = Aalign;
