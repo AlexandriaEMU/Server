@@ -261,7 +261,7 @@ object Comandos {
             "KAMAS" -> {
                 kamas(imprimir, personaje, infos)
             }  //Comando OBJETO - Agregar cualquier item u objeto a un personaje
-            "OBJETO" -> {
+            "OBJETO", "ITEM" -> {
                 objeto(imprimir, personaje, infos, cuenta)
             }  //Comando TITULO - Cambia el titulo de cualquier personaje
             "TITULO" -> {
